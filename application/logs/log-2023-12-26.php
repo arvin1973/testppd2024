@@ -1,0 +1,31 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2023-12-26 17:21:05 --> 404 Page Not Found: Package/css
+ERROR - 2023-12-26 17:21:37 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:21:37 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:29:53 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:29:53 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:31:48 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:31:48 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:32:02 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:32:02 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:33:55 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:33:55 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:34:41 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:34:41 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:39:01 --> 404 Page Not Found: Package/css
+ERROR - 2023-12-26 17:39:11 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:39:12 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:39:33 --> 404 Page Not Found: Package/css
+ERROR - 2023-12-26 17:39:47 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:39:47 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:40:47 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:40:47 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:44:04 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:44:04 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:45:34 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:45:35 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:45:45 --> 404 Page Not Found: Attachments/provinsi
+ERROR - 2023-12-26 17:47:00 --> 404 Page Not Found: PPD1_M_Dokumen_Prov/update_inovasi_dok
+ERROR - 2023-12-26 17:47:15 --> 404 Page Not Found: Assets/libs
+ERROR - 2023-12-26 17:47:15 --> 404 Page Not Found: Assets/libs

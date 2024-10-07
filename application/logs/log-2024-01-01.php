@@ -1,0 +1,31 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2024-01-01 13:35:50 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 13:36:13 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 13:42:20 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 13:42:42 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 13:56:31 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 13:56:57 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 13:57:14 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 13:58:00 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 14:02:06 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-01-01 14:02:18 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 14:16:25 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 14:16:39 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 14:18:10 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 14:19:21 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 14:24:21 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 14:28:49 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 14:29:05 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 14:29:41 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 15:21:34 --> 404 Page Not Found: Package/css
+ERROR - 2024-01-01 15:22:55 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-01-01 15:34:02 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-01-01 15:34:48 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-01-01 15:34:54 --> 404 Page Not Found: Assets/icons
+ERROR - 2024-01-01 15:34:54 --> 404 Page Not Found: Assets/icons
+ERROR - 2024-01-01 15:36:42 --> 404 Page Not Found: Assets/icons
+ERROR - 2024-01-01 15:36:42 --> 404 Page Not Found: Assets/icons
+ERROR - 2024-01-01 15:45:38 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-01-01 15:46:09 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-01-01 15:46:27 --> 404 Page Not Found: Assets/video_tutorial_3

@@ -1,0 +1,299 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title text-center text-secondary" style="font-family: inherit" >Dokumen Pendukung</h4>
+                <div class="page-title-right">
+                    <ol class="breadcrumb p-0 m-0">
+                        <li class="breadcrumb-item"><a href="#">Upload Dokumen</a></li>
+                        <li class="breadcrumb-item active">Kab/Kota</li>
+                    </ol>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row _wrapper_wlyh">
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" style="font-size: 12px"></h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive isitable">
+                                  <table id="dataUser" class="table table-small-font table-bordered table-striped" style="width:100%">                          
+                                    <thead>
+                                        <tr>
+                                            <th style="">Id</th>
+                                            <th style="">Provinsi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+
+                            </div>
+                            <div class="panel-footer">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>  
+    
+    <div class="row _wrapper_info" style="display: none">
+        <div class="col-md-12">
+            <div class="card card-border">
+                <div class="card-header border-primary bg-transparent pb-0">
+                    <h3 class="card-title text-primary">Informasi</h3>
+                </div>
+                <div class="card-body">
+                    <div style="overflow-x: auto;">
+                        <table class="table-description table-modified">
+                            
+                            <tr style="">
+                                <td class="lbl_hdr_nmwlyh"></td>
+                                <td  class="text-uppercase lbl_hdr_katewlyh"></td>
+                                <td></td>
+                            </tr>
+                            
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row _wrapper_bahan" style="display: none">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">List Bahan Dukung</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <input type="hidden" id="inp_wlyh" />
+                        <input type="hidden" id="inp_dok" />
+                        <table class="table table-bordered table-hover" id="t_bahan">
+                            <thead>
+                                <tr>
+                                    <th class="" title="No Urut" style="width:5px">NO</th>
+                                    <th class="text">Nama Dokumen</th>
+                                    <th class="" title=" Tag di " style="width:10px"> Tag di?</th>
+                                    <th class="" title="Diupload Oleh" style="width:15px">Diupload Oleh</th>
+                                    <th class="" title="Aktivitas" style="width:15px">Aktivitas</th>
+                                    <th class="" style="width:5px">Unduh</th>
+                                    <th class="" style="width:5px">Edit</th>
+                                    <th class="" style="width:5px">Hapus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-warning btnShwHd"  data-show="._wrapper_wlyh"  data-hide="._wrapper_bahan,._wrapper_info" data-hdrhide=".lbl_hdr_nmwlyh"  data-reload="kabko"><i class="fas fa-arrow-left"></i>&nbsp;Kembali</button>
+                    <button class="btn btn-success" id="btnShwMdlSindiAdd"><i class=" mdi mdi-file-download-outline "></i>&nbsp;Unduh Semua</button>
+                    <button class="btn btn-info" id="btnShwMdlSindiAdd"><i class="fas fa-plus"></i>&nbsp;Data Baru</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row _wrapper_infoG" style="display: none;">
+            
+        <div class="col-md-12">
+            <div class="card card-border">
+                <div class="card-header border-primary bg-transparent pb-0">
+                    <h3 class="card-title text-primary">Dokumen</h3>
+                </div>
+                <div class="card-body">
+                    
+                    <div style="overflow-x: auto;">
+                        <input type="hidden" class="" id="iddok" name="iddok" placeholder='iddok'>
+                        <input type="hidden" class="" id="idgro" name="idgro" placeholder='idgro'>
+                        <table class="table-description table-modified">
+                            <tr style="">
+                                <td  class="text">Nama Dokumen</td>
+                                <td>:</td>
+                                <td class="lbl_id_jdl"></td>
+                            </tr>
+                            <tr style="">
+                                <td  class="text">Diupload Oleh</td>
+                                <td>:</td>
+                                <td class="lbl_nm_upload"></td>
+                            </tr>
+                            <tr style="">
+                                <td  class="text">Aktivitas</td>
+                                <td>:</td>
+                                <td class="lbl_aktiv"></td>
+                            </tr>
+                            <tr style="">
+                                <td  class="text">Tag di</td>
+                                <td>:</td>
+                                <td class="lbl_email_user" style="width:500px">
+                                    <table id="t_dataGroup" class="table mb-0">
+                                                <tbody class="table_wilayah">
+                                                </tbody>
+                                            </table>
+                                </td>
+                                
+                            </tr>
+                            
+                            <tr style="">
+                                <td  class="text"> </td>
+                                <td></td>
+                                <td class="" style="width:500px" id="t_dataSel">                            
+                                    <div class="form-group" >
+<!--                                <label for="field-4" class="control-label">Tag di ? <span class="text-danger">*</span></label>-->
+                                    <select class="form-control" id="select_gr" name="select_gr">
+<!--                                        <option value="">- Pilih -</option>-->
+                                       
+                                    </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="_wrpTahap" style="display: none;">
+                                    <td  class="text">Tahap?</td>
+                                    <td>:</td>
+                                    <td class="" style="width:500px">
+                                        <table id="t_dataTahap" class="table mb-0">
+                                            <tbody class="table_tahap"> </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="_wrpGruTahap" style="display: none;">
+                                <td  class="text"></td>
+                                <td></td>
+                                <td class="" style="width:500px" id="t_datatah">
+                                    <div class="form-group" >
+                                        <select class="form-control" id="select_thp" name="select_thp">
+                                       
+                                    </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-warning btnShwHd"  data-show="._wrapper_bahan"  data-hide="._wrapper_infoG" data-hdrhide="._wrapper_infoG"  data-reload="GUser"><i class="fas fa-arrow-left"></i>&nbsp;Kembali</button>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+<form id="frmDokAdd">
+    <div id="mdl_dok_add" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Dokumen</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="field-3" class="control-label">Nama Dokumen<span class="text-danger">*</span></label>
+                                <span class="text-info" style='font-size: 10px'>Format: Nama Dokumen (spasi) Tahun (spasi) Daerah, </span>
+                                    <span class="text-info" style='font-size: 10px'>Contoh : RKPD 2020 Provinsi A</span>
+                                <input type="text" class="form-control" id="field-3" name="nama" placeholder="" required="">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="field-3" class="control-label">File Dokumen<span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" id="field-3" name="attch" placeholder="" required="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <div id="uploadStatus"></div>
+
+
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp;Batal</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light"><i class="fas fa-save"></i>&nbsp;Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.modal -->
+</form>
+
+<form id="frmDokEdt">
+    <div id="mdl_dok_edt" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Dokumen</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="field-3" class="control-label">Nama Dokumen<span class="text-danger">*</span></label></Br>
+                                <span class="text-info" style='font-size: 10px'>Format: Nama Dokumen (spasi) Tahun (spasi) Daerah.</span>
+                                    <span class="text-info" style='font-size: 10px'>Contoh : RKPD 2020 Provinsi A</span>
+                                    <input type="text" class="form-control" id="nama" name="nama" placeholder="" required="">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="field-3" class="control-label">File Dokumen<span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" id="filedok" name="filedok" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <div id="uploadStatus"></div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp;Batal</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light"><i class="fas fa-save"></i>&nbsp;Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.modal -->
+</form>

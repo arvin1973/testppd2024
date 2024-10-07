@@ -1,0 +1,197 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2024-09-18 09:06:01 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 09:18:18 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 09:18:34 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:18:35 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:18:43 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:18:43 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:18:45 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:18:45 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:18:52 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:18:52 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:18:52 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:18:52 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:19:02 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:19:02 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:19:02 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:19:02 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:20:06 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:20:06 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:20:06 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:20:06 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:20:19 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:20:19 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:20:19 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:20:19 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:20:26 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:20:26 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:20:27 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:20:27 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:20:33 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:20:33 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:20:33 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 09:20:33 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:40:06 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:40:06 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:58:19 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 09:58:30 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 09:58:30 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:01:11 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 10:01:19 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:01:19 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:32:56 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:32:56 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:34:04 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:34:04 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:46:13 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:46:13 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:46:43 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:46:43 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:46:51 --> 404 Page Not Found: M_Kertaskerja_Kab_daerah/index
+ERROR - 2024-09-18 10:46:53 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:46:53 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:56:54 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:56:54 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:57:49 --> 404 Page Not Found: M_Kertaskerja_Kab_kota/index
+ERROR - 2024-09-18 10:57:52 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:57:52 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:59:59 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 10:59:59 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:12:28 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 11:12:46 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 11:12:46 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:12:46 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:14:30 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 11:14:30 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:14:30 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:24:18 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 11:24:18 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:24:18 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:24:34 --> 404 Page Not Found: PPD4_M_kertas_kerja_kab_daerah/index
+ERROR - 2024-09-18 11:24:36 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 11:24:37 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:24:37 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:32:08 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 11:32:08 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:32:08 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:32:13 --> 404 Page Not Found: PPD4_M_kertas_kerja_kab_daerah/index
+ERROR - 2024-09-18 11:32:15 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 11:32:15 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:32:15 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:32:19 --> 404 Page Not Found: PPD4_M_kertas_kerja_kab_daerah/index
+ERROR - 2024-09-18 11:32:21 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 11:32:21 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:32:21 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:33:18 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 11:33:18 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:33:18 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:39:25 --> 404 Page Not Found: PPD4_M_Kertaskerja_kota_daerah/index
+ERROR - 2024-09-18 11:39:28 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 11:39:28 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:39:28 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:39:31 --> 404 Page Not Found: PPD4_M_Kertaskerja_kota_daerah/index
+ERROR - 2024-09-18 11:39:34 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 11:39:34 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:39:34 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:40:37 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 11:40:38 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:40:38 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:40:41 --> 404 Page Not Found: PPD4_M_Kertaskerja_Kota_daerah/index
+ERROR - 2024-09-18 11:40:44 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 11:40:44 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:40:44 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:40:47 --> 404 Page Not Found: PPD4_M_Kertaskerja_Kota_daerah/index
+ERROR - 2024-09-18 11:40:50 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 11:40:50 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 11:40:50 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 14:36:42 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 14:37:14 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 14:37:15 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 14:37:15 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 14:50:03 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 14:56:07 --> 404 Page Not Found: Attachments/kertaskerja
+ERROR - 2024-09-18 15:20:19 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 15:20:28 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:21:16 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 15:21:17 --> 404 Page Not Found: Assets/js
+ERROR - 2024-09-18 15:34:26 --> 404 Page Not Found: Attachments/penilaian
+ERROR - 2024-09-18 15:45:17 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 15:45:48 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:46:35 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 15:48:18 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 15:48:35 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:48:35 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:48:35 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:54:45 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:54:45 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:54:45 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:55:23 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 15:55:23 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 15:55:26 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 15:56:16 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:56:16 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:56:16 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:56:45 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 15:56:45 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 15:56:48 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:56:48 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:56:48 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 15:56:48 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 15:56:48 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 15:57:05 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 15:57:05 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 15:57:08 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 15:58:01 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 15:58:01 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 15:58:16 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 15:58:16 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 15:58:18 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 15:58:46 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 15:58:46 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 15:59:20 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 15:59:20 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 16:00:36 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 16:00:36 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 16:00:36 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-09-18 16:00:36 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:00:36 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:00:49 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 16:00:49 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 16:00:52 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 16:01:02 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:01:02 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:01:16 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 16:01:16 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 16:01:22 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:01:22 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:01:39 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 16:01:39 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 395
+ERROR - 2024-09-18 16:02:52 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:02:52 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:03:04 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 16:03:11 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:03:11 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:04:29 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:04:29 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:05:22 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:05:22 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:05:46 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 393
+ERROR - 2024-09-18 16:07:13 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:07:13 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:07:26 --> Severity: Notice --> Undefined property: stdClass::$jenisid C:\xampp5\htdocs\ppd2024\application\controllers\PPD5_M_Dokumen_Kab.php 393
+ERROR - 2024-09-18 16:07:28 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 16:07:40 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:07:40 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:08:36 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:08:36 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:08:49 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 16:13:07 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:13:07 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:13:31 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:13:31 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:13:46 --> 404 Page Not Found: Package/css
+ERROR - 2024-09-18 16:14:04 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:14:04 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:16:01 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-09-18 16:16:01 --> 404 Page Not Found: Assets/libs

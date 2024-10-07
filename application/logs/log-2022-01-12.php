@@ -1,0 +1,294 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2022-01-12 00:00:52 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 00:02:30 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 09:41:18 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 09:41:33 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 09:42:37 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 09:47:02 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 09:56:29 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 09:57:06 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 09:57:25 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 09:57:40 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 09:58:17 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 09:59:30 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 09:59:42 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:02:50 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:03:26 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:04:07 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:04:14 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:06:58 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:07:14 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:08:30 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:13:27 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:14:52 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:15:22 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:18:31 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:18:42 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:19:08 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:19:34 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:20:22 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:20:29 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:20:41 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:21:15 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:21:51 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:21:56 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:23:36 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:23:49 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:24:18 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:24:21 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:24:37 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:25:18 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:25:37 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:25:45 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:25:48 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:25:57 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:26:01 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:26:16 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:26:27 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:26:31 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:26:33 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:26:44 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:27:20 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:27:29 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:27:35 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:29:02 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:29:12 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:30:38 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:30:52 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:31:02 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:35:17 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:55:55 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:56:39 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:56:48 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:57:05 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:58:24 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:58:32 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:59:19 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 10:59:36 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 10:59:48 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:00:11 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 11:00:18 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:04:36 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 11:04:51 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:06:03 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 11:06:16 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:09:19 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 11:09:28 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:11:06 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 11:11:10 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 11:11:18 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:13:18 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:16:09 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 11:16:26 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:24:49 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:36:20 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:39:24 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:39:32 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:39:32 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:39:32 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:39:39 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:39:39 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 11:39:39 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 12:03:45 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 12:03:49 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 12:03:53 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 12:05:34 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 12:05:53 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:03:46 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:05:54 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:06:53 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:09:01 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:11:52 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 13:11:59 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:12:08 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 13:16:09 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:16:09 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:16:09 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:16:53 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:26:16 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:26:16 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:26:16 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:26:21 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:26:21 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:26:21 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:27:05 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:31:28 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:41:51 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:41:51 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:41:51 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:52:49 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:56:50 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 13:57:06 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 13:58:23 --> Query error: Table 'peppd_demo_ppd2022.t_mdl3_skor_p' doesn't exist - Invalid query: SELECT A.`id` mapid,P.id idprov,P.id_kode,P.`nama_provinsi` nmprov,P.`label`,JML.jml, ST.id stts,IFNULL(RS.jml,0) jml_rsm
+                            FROM tbl_user_wilayah A
+                            JOIN `provinsi` P ON P.`id`=A.`idwilayah`
+                            LEFT JOIN(
+                                    SELECT W.`idwilayah` idprov, COUNT(1) jml
+                                    FROM `tbl_user_wilayah` W
+                                    JOIN `t_mdl3_skor_p` SKR ON SKR.`mapid`=W.`id`
+                                    JOIN `r_mdl3_item` II ON II.id = SKR.itemindi
+                                    WHERE W.`iduser`='28'
+                                    GROUP BY W.`idwilayah`
+                                    )JML ON JML.idprov=A.`idwilayah`
+                            LEFT JOIN (
+                                    SELECT W.`idwilayah` idprov,COUNT(1) jml
+                                    FROM `tbl_user_wilayah` W
+                                    JOIN `t_mdl3_resume_prov` RS ON RS.`mapid`=W.`id` AND RS.stts='Y'
+                                    WHERE W.`iduser`='28'
+                                    GROUP BY W.`idwilayah`
+                                    )RS ON RS.idprov=A.`idwilayah`                                    
+                            LEFT JOIN t_mdl3_sttment_prov ST ON ST.mapid=A.id                         
+                            WHERE A.`iduser`='28'
+ERROR - 2022-01-12 13:58:23 --> tpi1 PPD3_modul3 : Table 'peppd_demo_ppd2022.t_mdl3_skor_p' doesn't exist
+ERROR - 2022-01-12 13:58:33 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 14:03:26 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 14:03:26 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 14:03:26 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 14:12:54 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 14:20:25 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 14:20:36 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 14:53:42 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 14:54:07 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 14:55:26 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 14:55:36 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:08:08 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:08:08 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:08:08 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:08:39 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:08:39 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:08:39 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:14:27 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:14:49 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:14:49 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:14:49 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:24:30 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 15:24:42 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:28:10 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:34:24 --> Severity: Parsing Error --> syntax error, unexpected '$str1' (T_VARIABLE) /var/www/peppd/demo_ppd2022/application/controllers/PPD4_dokumen.php 136
+ERROR - 2022-01-12 15:34:27 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:34:30 --> Severity: Parsing Error --> syntax error, unexpected '$str1' (T_VARIABLE) /var/www/peppd/demo_ppd2022/application/controllers/PPD4_dokumen.php 136
+ERROR - 2022-01-12 15:34:56 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:38:46 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:38:51 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:38:53 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:38:55 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:41:33 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 15:41:45 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:45:30 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 15:45:37 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 15:45:38 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:45:55 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:47:07 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:47:07 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:47:07 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:47:43 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:48:03 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:48:38 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:48:38 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:48:38 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:50:00 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:50:00 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:51:08 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:51:08 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:53:17 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:53:17 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:54:42 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:55:04 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:55:04 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:55:04 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:56:47 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:57:38 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:57:57 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:57:57 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:57:57 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:58:04 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 15:58:15 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:58:16 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:58:20 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:58:30 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:58:31 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 15:58:43 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:59:51 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 15:59:52 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:00:13 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:00:47 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:04:56 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:06:25 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 16:06:39 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:06:47 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 16:07:22 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 16:07:30 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:07:40 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:07:40 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:07:40 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:07:44 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:08:00 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 16:08:10 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:10:28 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:10:28 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:10:28 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:11:04 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 16:14:24 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:15:46 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:15:46 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:15:46 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:15:47 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 16:15:54 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:15:55 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:15:55 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:16:31 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:16:32 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:16:32 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:17:05 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:17:05 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:17:09 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:17:09 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 16:19:20 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 16:24:12 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 19:13:58 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 21:36:33 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 21:50:11 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 21:53:41 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 21:56:17 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 21:59:10 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 22:05:49 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 22:15:57 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 22:22:15 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 22:23:37 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 22:26:06 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 22:26:45 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 22:36:14 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 22:36:27 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 22:42:33 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 22:43:52 --> 404 Page Not Found: Attachments/provinsi
+ERROR - 2022-01-12 22:43:54 --> 404 Page Not Found: Attachments/provinsi
+ERROR - 2022-01-12 22:44:35 --> 404 Page Not Found: Attachments/provinsi
+ERROR - 2022-01-12 22:45:19 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 22:49:58 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 23:04:48 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:04:48 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:05:05 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:05:05 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:52:01 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 23:52:48 --> 404 Page Not Found: Assets/js
+ERROR - 2022-01-12 23:54:34 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:54:34 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:54:44 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:54:44 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:57:21 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:57:21 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:57:24 --> Severity: Warning --> Division by zero /var/www/peppd/demo_ppd2022/application/controllers/PPD3_modul3.php 276
+ERROR - 2022-01-12 23:57:27 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 23:57:31 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:57:31 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:57:40 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:57:40 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:57:46 --> Severity: Warning --> Division by zero /var/www/peppd/demo_ppd2022/application/controllers/PPD3_modul3.php 276
+ERROR - 2022-01-12 23:57:48 --> 404 Page Not Found: Package/css
+ERROR - 2022-01-12 23:58:06 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:58:06 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:58:08 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:58:08 --> 404 Page Not Found: Assets/libs
+ERROR - 2022-01-12 23:58:15 --> Severity: Warning --> Division by zero /var/www/peppd/demo_ppd2022/application/controllers/PPD3_modul3.php 276
+ERROR - 2022-01-12 23:58:17 --> 404 Page Not Found: Package/css

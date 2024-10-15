@@ -101,3 +101,22 @@ ERROR - 2024-10-15 15:06:36 --> 404 Page Not Found: Assets/js
 ERROR - 2024-10-15 15:06:36 --> 404 Page Not Found: Assets/js
 ERROR - 2024-10-15 15:08:00 --> 404 Page Not Found: Assets/libs
 ERROR - 2024-10-15 15:08:00 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-15 16:08:11 --> Severity: Notice --> Undefined variable: mergeStartRow C:\xampp5\htdocs\ppd2024\application\controllers\PPD1_status_penilaian_kota_daerah.php 995
+ERROR - 2024-10-15 16:08:11 --> Severity: Notice --> Undefined variable: mergeStartRow C:\xampp5\htdocs\ppd2024\application\controllers\PPD1_status_penilaian_kota_daerah.php 996
+ERROR - 2024-10-15 16:08:11 --> Severity: error --> Exception: Invalid cell coordinate A C:\xampp5\htdocs\ppd2024\application\libraries\third_party\PHPExcel\Cell.php 558
+ERROR - 2024-10-15 16:09:40 --> Severity: error --> Exception: Rekap Nilai!L12 -> Rekap Nilai!L12 -> Cyclic Reference in Formula C:\xampp5\htdocs\ppd2024\application\libraries\third_party\PHPExcel\Cell.php 300
+ERROR - 2024-10-15 16:09:41 --> Severity: error --> Exception: Rekap Nilai!L12 -> Rekap Nilai!L12 -> Cyclic Reference in Formula C:\xampp5\htdocs\ppd2024\application\libraries\third_party\PHPExcel\Cell.php 300
+ERROR - 2024-10-15 16:09:43 --> Severity: error --> Exception: Rekap Nilai!L12 -> Rekap Nilai!L12 -> Cyclic Reference in Formula C:\xampp5\htdocs\ppd2024\application\libraries\third_party\PHPExcel\Cell.php 300
+ERROR - 2024-10-15 16:09:44 --> Severity: error --> Exception: Rekap Nilai!L12 -> Rekap Nilai!L12 -> Cyclic Reference in Formula C:\xampp5\htdocs\ppd2024\application\libraries\third_party\PHPExcel\Cell.php 300
+ERROR - 2024-10-15 16:14:26 --> Severity: Warning --> fsockopen(): unable to connect to webmail.bappenas.go.id:25 (A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+) C:\xampp5\htdocs\ppd2024\system\libraries\Email.php 2069
+ERROR - 2024-10-15 16:14:29 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-15 16:14:29 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-15 16:14:39 --> Severity: Warning --> fsockopen(): unable to connect to webmail.bappenas.go.id:25 (A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+) C:\xampp5\htdocs\ppd2024\system\libraries\Email.php 2069
+ERROR - 2024-10-15 16:16:10 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-15 16:16:10 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-15 16:16:12 --> Severity: Warning --> fsockopen(): unable to connect to webmail.bappenas.go.id:25 (A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+) C:\xampp5\htdocs\ppd2024\system\libraries\Email.php 2069
+ERROR - 2024-10-15 16:16:24 --> Severity: Warning --> fsockopen(): unable to connect to webmail.bappenas.go.id:25 (A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+) C:\xampp5\htdocs\ppd2024\system\libraries\Email.php 2069

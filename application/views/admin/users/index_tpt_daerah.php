@@ -1,23 +1,7 @@
 <div class="container-fluid">
-    <!-- <div class="row">
-        <div class="col-12">
-            <div class="page-title-box">
-                <h4 class="page-title text-center text-secondary" style="font-family: inherit">Manajemen User TPT</h4>
-                <div class="page-title-right">
-                    <ol class="breadcrumb p-0 m-0">
-                        <li class="breadcrumb-item"><a href="#">Manajemen</a></li>
-                        <li class="breadcrumb-item active">Data Modul I</li>
-                    </ol>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </div> -->
-    <!-- start page title -->
     <div class="row stepper-manajemen-user-tpt" style="margin-left: -40px;">
         <div class="col-12" style="background-color: #f1f1f1; position: fixed; z-index: 98; border-bottom: 1px solid rgba(49, 126, 235, 0.3); margin-top: 5px;">
             <div class="page-title-box" style="padding: 10px 0px 0px 20px; margin: 0px;">
-                <!-- <h4 class="page-title">Welcome !</h4> -->
                 <div style="display: flex;">
                     <div class="card" style="color: white; border: 2px solid white; border-style: dashed; background-color: rgba(49, 126, 235, 1); margin-bottom: 15px; margin-right: 1%;">
                         <div class="card-body" style="padding: 2px 8px;">
@@ -26,10 +10,6 @@
                     </div>
                 </div>
                 <div class="page-title-right">
-                    <!-- <ol class="breadcrumb p-0 m-0">
-                        <li class="breadcrumb-item"><a href="#">Moltran</a></li>
-                        <li class="breadcrumb-item active">Dashboard</li>
-                    </ol> -->
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -37,7 +17,70 @@
     </div>
     <!-- end page title -->
 
-    <div class="row _list_user" style="margin-top: 90px;">
+    <div class="row _list_prov" style="margin-top: 90px;">
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header bg-success" style="background: url(<?= base_url(); ?>/assets/icons/bg_modal_5.jpg) no-repeat center center; background-size: cover; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover;">
+                    <h2 class="card-title" style="font-size: 12px"></h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive isitable">
+                                <table id="listProv" class="table table-condensed table-bordered table-striped" style="border: 1px solid black; border-collapse: separate !important; border-spacing: 1.5px; width: 100%;">
+                                    <thead style="background-color: rgb(31, 56, 100) !important; color: white;">
+                                        <tr>
+                                            <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black;">
+                                                <center>Id </center>
+                                            </th>
+                                            <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black;">
+                                                <center>Provinsi</center>
+                                            </th>
+                                            <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black;">
+                                                <center>Jumlah TPT</center>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+
+                            </div>
+                            <div class="panel-footer">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row _list_user" style="display: none;">
+
+    <div class="col-lg-12" style="margin-top: 90px;">
+            <div class="card" style="border: 1px solid rgba(49, 126, 235, 1);">
+               
+                <div class="card-header border-info bg-transparent pb-0">
+                    <h3 class="card-title text-info">List TPT Daerah</h3>
+                </div>
+                <div class="card-body">
+                    <div class="text-left">
+                        <table style="width:100%;  border: 0px solid black">
+                            <tbody>
+                                <tr style=" border: 0px solid black">
+                                    <td style="width:70px; border: 0px solid black; font-size: 14px;">Provinsi </td>
+                                    <!-- <td >:</td> -->
+                                    <td style=" border: 0px solid black; font-size: 14px;" name="">:</td>
+                                    <td class="nm_prov"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="col-lg-12">
             <div class="card">
@@ -48,9 +91,10 @@
                     <div class="row">
                         <div class="col-12">
                             <a href="#" id="modal_add_show" class="btn btn-info waves-effect waves-light" style="border-radius: 0px; padding-left: 10px; padding-right: 10px;margin-right: 5px; margin-bottom: 10px; float: right;"><i class="fa fa-plus"></i> User Baru</a>
+                            <input type="hidden" id="inp_wlyh" />
                             <!-- <a href="#" class="btn btn-primary waves-effect waves-light"><i class="fa fa-refresh"></i> Muat Ulang</a> -->
                             <div class="table-responsive isitable">
-                                <table id="dataUser" class="table table-condensed table-bordered table-striped" style="border: 1px solid black; border-collapse: separate !important; border-spacing: 1.5px; width: 100%;">
+                                <table class="table table-condensed table-bordered table-striped" style="border: 1px solid black; border-collapse: separate !important; border-spacing: 1.5px; width: 100%;" id="t_bahan">
                                     <thead style="background-color: rgb(31, 56, 100) !important; color: white;">
                                         <tr>
                                             <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black;">
@@ -93,65 +137,6 @@
         </div>
 
     </div>
-
-    <!-- <div class="row _edituser" style="display: none;">
-
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Profil</h3>
-                </div>
-                <div class="card-body">
-                    <form id="form_edit">
-                        <div class="row">
-                            <div class="col-md-12 col-sm-6 col-xs-12 col-lg-6">
-                                <div class="form-group">
-                                    <label>Id User</label>
-                                    <input type="hidden" class="form-control" id="iduser" name="iduser" placeholder="">
-                                    <input type="text" class="form-control input-sm" id="userid" name="userid" placeholder="" readonly="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-6 col-xs-12 col-lg-6">
-                                <div class="form-group">
-                                    <label>Nama</label>
-                                    <input type="text" class="form-control input-sm" id="nama" name="nama" placeholder="">
-                                </div>
-
-                            </div>
-                            <div class="col-md-12 col-sm-12 col-xs-12 col-lg-6">
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input type="text" class="form-control input-sm" id="email" name="email" placeholder="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-6 col-xs-12 col-lg-6">
-                                <div class="form-group">
-                                    <label>Status </label>
-                                    <select class="form-control" id="stts" name="stts">
-                                        <option value=""> - Choose - </option>
-                                        <option value="Y"> Active </option>
-                                        <option value="N"> Not Active </option>
-
-                                    </select>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="modal-footer">
-                            <button class="btn btn-warning btnShwHd" data-show="._list_user" data-hide="._edituser" data-hdrhide=".lbl_hdr_nmwlyh" data-reload="DUser"><i class="fas fa-arrow-left"></i>&nbsp;Kembali</button>
-                            <button type="submit" class="btn btn-info waves-effect waves-light">Edit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-    </div> -->
 
     <div class="row _wrapper_info" style="display: none">
 
@@ -314,6 +299,7 @@
                 <div class="modal-body">
                     <h3 class="card-title mt-1 mb-1" style="color: black;">Tambah Data User TPT Daerah</h3>
                     <hr>
+                    <input type="hidden" class="form-control" id="prov" name="prov" placeholder="">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
@@ -335,23 +321,6 @@
                             <div class="form-group">
                                 <label for="field-4" class="control-label">Email</label>
                                 <input type="email" class="form-control" id="field-3" placeholder="Email" required="" name="email">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label>Provinsi</label>
-                                <select class="form-control" name="prov">
-                                    <option value=""> - Pilih - </option>
-                                    <?php
-                                    foreach ($list_prov->result() as $v) {
-                                    ?>
-                                        <option value="<?php echo $v->id; ?>"><?php echo $v->id_kode ?>-<?php echo $v->nama_provinsi ?></option>
-                                    <?php
-                                    }
-                                    ?>
-                                </select>
                             </div>
                         </div>
                     </div>

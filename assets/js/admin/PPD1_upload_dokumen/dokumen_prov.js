@@ -26,12 +26,10 @@ var main = function(){
 
                  },
                  "columnDefs": [                  
-//                     { "targets": 0, "orderable": false },
                      { "width": "2px", "targets": 0},
                  ],
                  "lengthMenu": [[5, 20, 25, 50], [5, 20, 25, 50]],
                  "initComplete": function(settings, json) {
-     //                console.log(settings);
                  },
                  paging: true,
                  "language": {

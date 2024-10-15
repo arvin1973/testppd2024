@@ -1,5 +1,5 @@
 <!-- <div class="container-fluid"> -->
-    <div class="row _wrapper _wrapper_katewlyh" style="display: block;">
+<div class="row _wrapper _wrapper_katewlyh" style="display: block;">
         <div class="row stepper-navigation-modul1-tpt">
             <div class="col-12" style="background-color: #f1f1f1; position: fixed; z-index: 98; border-bottom: 1px solid rgba(49, 126, 235, 0.3); margin-top: 5px;">
                 <div class="page-title-box" style="padding: 10px 0px 0px 20px; margin: 0px;">
@@ -90,13 +90,13 @@
                         <img src="<?php echo base_url();?>/assets/icons/kabupaten.svg" alt="Kabupaten" width="100" height="100">
                     </div>
                     <div class="mt-0" id="p_kab">
-                        <p style="margin-bottom: 0px; color: #98a6ad !important; font-size: 0.7rem;"><b>Progress</b> : 3/3 Completed</p>
-                        <div class="progress progress-sm" style="margin-bottom: 0px;">
-                            <div class="progress-bar bg-pink progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%; background-color: #ffd740!important;">
-                                <span class="sr-only">100% Complete</span>
-                            </div>
+                    <p style="margin-bottom: 0px; color: #98a6ad !important; font-size: 0.7rem;"><b>Progress</b> : 0/0 Selesai</p>
+                    <div class="progress progress-sm" style="margin-bottom: 0px;">
+                        <div class="progress-bar bg-pink progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100" style="width: 0.00%; background-color: #ef5350!important;">
+                            <span class="sr-only">0.0% Complete</span>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
             <div class="col-lg-4">
@@ -112,13 +112,13 @@
                         <img src="<?php echo base_url();?>/assets/icons/kota.svg" alt="Kota" width="100" height="100">
                     </div>
                     <div class="mt-0" id="p_kot">
-                        <p style="margin-bottom: 0px; color: #98a6ad !important; font-size: 0.7rem;"><b>Progress</b> : 3/3 Completed</p>
-                        <div class="progress progress-sm" style="margin-bottom: 0px;">
-                            <div class="progress-bar bg-pink progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="48" aria-valuemin="0" aria-valuemax="100" style="width: 100%; background-color: #29b6f6!important;">
-                                <span class="sr-only">100% Complete</span>
-                            </div>
+                    <p style="margin-bottom: 0px; color: #98a6ad !important; font-size: 0.7rem;"><b>Progress</b> : 0/0 Selesai</p>
+                    <div class="progress progress-sm" style="margin-bottom: 0px;">
+                        <div class="progress-bar bg-pink progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100" style="width: 0.00%; background-color: #ef5350!important;">
+                            <span class="sr-only">0.0% Complete</span>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -179,7 +179,7 @@
                     <!-- <h4 class="page-title">Welcome !</h4> -->
                     <div style="display: flex;">
                         <div class="card" style="color: black; border: 2px solid rgba(49, 126, 235, 1); border-style: dashed; background-color: white; margin-bottom: 15px; margin-right: 1%;">
-                            <a href="#" class="btnShwHd" data-show="._wrapper_katewlyh" data-hide="._wrapper,._wrapper_info" data-hdrhide=".lbl_hdr_nmwlyh">
+                            <a href="#" class="btnShwHd" data-show="._wrapper_katewlyh" data-hide="._wrapper,._wrapper_info" data-hdrhide=".lbl_hdr_nmwlyh" data-reload="wilapen">
                                 <div class="card-body" style="padding: 2px 8px;">
                                     <p class="mb-0">Wilayah Penilaian <i class="mdi mdi-numeric-1-box" style="color: #d1d1d1;"></i></p>
                                 </div>
@@ -350,7 +350,7 @@
                     <!-- <h4 class="page-title">Welcome !</h4> -->
                     <div style="display: flex;">
                         <div class="card" style="color: black; border: 2px solid rgba(49, 126, 235, 1); border-style: dashed; background-color: white; margin-bottom: 15px; margin-right: 1%;">
-                            <a href="#" class="btnShwHd" data-show="._wrapper_katewlyh" data-hide="._wrapper,._wrapper_info" data-hdrhide=".lbl_hdr_nmwlyh">
+                            <a href="#" class="btnShwHd" data-show="._wrapper_katewlyh" data-hide="._wrapper,._wrapper_info" data-hdrhide=".lbl_hdr_nmwlyh" data-reload="wilapen">
                                 <div class="card-body" style="padding: 2px 8px;">
                                     <p class="mb-0">Wilayah Penilaian <i class="mdi mdi-numeric-1-box" style="color: #d1d1d1;"></i></p>
                                 </div>
@@ -451,7 +451,7 @@
                     <!-- <h4 class="page-title">Welcome !</h4> -->
                     <div style="display: flex;">
                         <div class="card" style="color: black; border: 2px solid rgba(49, 126, 235, 1); border-style: dashed; background-color: white; margin-bottom: 15px; margin-right: 1%;">
-                            <a href="#" class="btnShwHd" data-show="._wrapper_katewlyh" data-hide="._wrapper,._wrapper_info" data-hdrhide=".lbl_hdr_nmwlyh">
+                            <a href="#" class="btnShwHd" data-show="._wrapper_katewlyh" data-hide="._wrapper,._wrapper_info" data-hdrhide=".lbl_hdr_nmwlyh" data-reload="wilapen">
                                 <div class="card-body" style="padding: 2px 8px;">
                                     <p class="mb-0">Wilayah Penilaian <i class="mdi mdi-numeric-1-box" style="color: #d1d1d1;"></i></p>
                                 </div>
@@ -596,9 +596,9 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <h3 class="card-title mt-1 mb-4" style="color: black;">Resume - <span id="lbl_jdl_aspek">Pencapaian</span></h3>
+                            <h3 class="card-title mt-1 mb-4" style="color: black;">Penilaian Kualitatif - <span class="lbl_jdl_aspek">Pencapaian</span></h3>
                             <div class="form-group">
-                                <label for="field-1" class="control-label">Catatan <span class="text-danger"></span></label>
+                                <label for="field-1" class="control-label">Keunggulan Daerah pada <span class="lbl_jdl_aspek"> </span></label>
                                 <textarea class="form-control" name="simpul" rows="3" required="" ></textarea>
                                 <input type="hidden" name="id"/>
                             </div>
@@ -607,7 +607,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="field-1" class="control-label">Masukan & Saran <span class="text-danger"></span></label>
+                                <label for="field-1" class="control-label">Rekomendasi Terhadap <span class="lbl_jdl_aspek"></span></label>
                                 <textarea class="form-control" name="saran" rows="3" required=""></textarea>
                             </div>
                         </div>

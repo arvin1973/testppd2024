@@ -492,6 +492,7 @@ $config['csrf_exclude_uris'] = array(
     "M_users_prov/get_datatable",
     "M_users_kabkota/g_pengguna_aktif",
     "M_users_kabkota/get_datatable",
+    "M_users_tpt_daerah/get_datatable_prov",
     "M_users_tpt_daerah/get_datatable",
     "M_users_tpt_daerah/kab_datatable",
     "M_users_tpt_daerah/list_kabkot_by_prov",

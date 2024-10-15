@@ -191,24 +191,6 @@ class PPD7_bahan_dukung_kab extends CI_Controller
                     $list_data = $this->db->query($sql, $bind);
                 }
                 if ($kate_wlyh == "kab") {
-                    //LIST Dokumen
-                    //                       $sql = "SELECT  1 AS `no`,D.id mapid, D.judul, D.tautan, D.cr_by, D.cr_dt 
-                    //                            FROM `t_doc` D  
-                    //                            JOIN `t_doc_groupuser` G ON D.id = G.docid 
-                    //                            JOIN `tbl_user_group` U ON G.`groupid` = U.id 
-                    //                            WHERE U.id=? AND D.isactive = 'Y'
-                    //                            UNION
-                    //                            SELECT 2 AS `no`,D.id mapid, D.judul, D.tautan, D.cr_by, D.cr_dt
-                    //                                FROM `t_doc_kab` D  
-                    //                                JOIN `t_doc_kab_groupuser` G ON D.id = G.docid 
-                    //                                JOIN `tbl_user_group` U ON G.`groupid` = U.id 
-                    //                                WHERE D.kabid =? AND D.isactive = 'Y'";
-                    // $sql = "
-                    //         SELECT 2 AS `no`,D.id mapid, D.judul, D.tautan, D.cr_by, D.cr_dt
-                    //             FROM `t_doc_kab` D  
-                    //             JOIN `t_doc_kab_groupuser` G ON D.id = G.docid 
-                    //             JOIN `tbl_user_group` U ON G.`groupid` = U.id 
-                    //             WHERE D.kabid =? AND D.isactive = 'Y' GROUP BY mapid ";
 
                     $sql = "
                                 SELECT 2 AS `no`,D.id mapid, D.judul, D.tautan, D.cr_by, D.cr_dt

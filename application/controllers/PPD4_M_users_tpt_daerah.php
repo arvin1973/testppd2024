@@ -180,7 +180,6 @@ class PPD4_M_users_tpt_daerah extends CI_Controller {
                     $nestedData[] = "<a href='javascript:void(0)' ".$tmp." title='Daftar Wilayah Dinilai'>".$row->name."</a>";
                     $nestedData[] = $row->email;
                     $nestedData[] = $row->groupname;
-                    $nestedData[] = $row->cr_by;
                     $str = "<span class='badge badge-pink'>Tidak Aktif</span>";
                     if($row->active_flag=='Y')
                         $str = "<span class='badge badge-success'>Aktif</span>";

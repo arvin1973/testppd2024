@@ -320,7 +320,6 @@ var main = function(){
                             }
                             $("._wrapper").hide();
                             $("._wrapper_info").show();
-                            // $("._wrapper_item").fadeIn();
                             $("._wrapper_item").css("display", "block");
                             loading.hide();
                         }

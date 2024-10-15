@@ -89,7 +89,7 @@ class PPD7_unduh_nilai_kota extends CI_Controller
                 //get jml item
                 $sql = "SELECT I.`id`
                             FROM r_mdl1_item I 
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov='N'
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                             JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y'";
                 $list_data = $this->db->query($sql);
                 if (!$list_data) {
@@ -116,7 +116,7 @@ class PPD7_unduh_nilai_kota extends CI_Controller
                                     JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     WHERE W.`iduser`=?
                                     GROUP BY W.`idkabkot`
@@ -258,7 +258,7 @@ class PPD7_unduh_nilai_kota extends CI_Controller
         $sharedStyleTitles = new PHPExcel_Style();
         $status_sql = "SELECT IT.`nourut` nr,IND.nourut,K.id nokr,K.`nama` nmkriteria,IND.nourut noindi,IND.`nama` nmindi,SI.`nama` nmsubindi,IT.`nama` nmitem,SKOR.skor,IND.bobot,RES.ksmplan, RES.saran
                             FROM `r_mdl1_item` IT
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                             JOIN `r_mdl1_indi` IND ON IND.`id`=SI.`indiid`
                             JOIN  `r_mdl1_krtria` K ON K.`id`=IND.`krtriaid`
                             JOIN `r_mdl1_aspek` A ON A.id = K.aspekid
@@ -817,7 +817,7 @@ class PPD7_unduh_nilai_kota extends CI_Controller
 
         $status_sql = "SELECT IT.`nourut` nr,IND.nourut,K.id nokr,K.`nama` nmkriteria,IND.nourut noindi,IND.`nama` nmindi,SI.`nama` nmsubindi,IT.`nama` nmitem,SKOR.skor,IND.bobot,RES.ksmplan, RES.saran
                             FROM `r_mdl1_item` IT
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                             JOIN `r_mdl1_indi` IND ON IND.`id`=SI.`indiid`
                             JOIN  `r_mdl1_krtria` K ON K.`id`=IND.`krtriaid`
                             JOIN `r_mdl1_aspek` A ON A.id = K.aspekid

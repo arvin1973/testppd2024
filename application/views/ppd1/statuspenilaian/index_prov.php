@@ -127,7 +127,6 @@
         <!-- start page title -->
         <div class="col-12" style="background-color: #f1f1f1; position: fixed; z-index: 98; border-bottom: 1px solid rgba(49, 126, 235, 0.3); margin-top: 5px; margin-left: -28px;">
             <div class="page-title-box" style="padding: 10px 0px 0px 20px; margin: 0px;">
-                <!-- <h4 class="page-title">Welcome !</h4> -->
                 <div style="display: flex;">
                     <div class="card" style="color: black; border: 2px solid rgba(49, 126, 235, 1); border-style: dashed; background-color: white; margin-bottom: 15px; margin-right: 1%;">
                         <a href="#" class="btnShwHd" data-show="._wrapper_wlyh,.stepper-status-penilaian-provinsi-tpt" data-hide="._wrapper_bahan,._wrapper_info" data-hdrhide=".lbl_hdr_nmwlyh" data-reload="kabko">

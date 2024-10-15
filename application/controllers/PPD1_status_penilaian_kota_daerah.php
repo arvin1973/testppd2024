@@ -261,7 +261,7 @@ class PPD1_status_penilaian_kota_daerah extends CI_Controller
                     //get jml item
                     $sql = "SELECT I.`id`
                             FROM r_mdl1_item I 
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov='N'
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                             JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y'";
                     $list_data = $this->db->query($sql);
                     if (!$list_data) {
@@ -281,7 +281,7 @@ class PPD1_status_penilaian_kota_daerah extends CI_Controller
                                         JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                         JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                         JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                                         JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                         WHERE 1=1
                                         GROUP BY W.`idkabkot`,W.iduser
@@ -1032,12 +1032,17 @@ class PPD1_status_penilaian_kota_daerah extends CI_Controller
             $lastAverage[$row] = $averageColumn.$row;
             $index_excelColumn++;
         }
+        $allTotal= array();
         for ($i = 2; $i <= $lastFilledColumn; $i++) { //0=A, 1=B, 2=C, 4=D.....
             $sumColumn = $excelColumn[$i]; // Get the column letter
             $sumFormula = "=SUM(".$sumColumn."$firstRow:".$sumColumn."$lastRow)"; // Sum from $firstRow to $lastRow
+            $allTotal[] = $sumColumn.($lastRow+1);
             $this->excel->getActiveSheet()->setCellValue($sumColumn.($lastRow + 1), $sumFormula); // Place sum at the bottom
             $lastColumn=$i;
         }
+        $firstRange = $allTotal[0];
+        $lastRange = $allTotal[count($allTotal)-1];
+
 
         $firstElement = reset($lastAverage); // Gets the first element
         $lastElement = end($lastAverage); 
@@ -1054,7 +1059,7 @@ class PPD1_status_penilaian_kota_daerah extends CI_Controller
         $this->excel->getActiveSheet()->mergeCells("A{$rowCoeff}:{$mergePenilaiLetter}{$rowCoeff}");
         
         $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowTotal, "=sum({$firstElement}:{$lastElement})");
-        $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowRange, "=max({$firstElement}:{$lastElement})-min({$firstElement}:{$lastElement})");
+        $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowRange, "=max({$firstRange}:{$lastRange})-min({$firstRange}:{$lastRange})");
         $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowCoeff, "stdev.s({$firstCoeff}:{$lastCoeff})/(".$averageColumn.$rowTotal.") * 100");             
         // $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowCoeff, "=STDEV.S({$firstCoeff}:{$lastCoeff})/(".$averageColumn.$rowRange.") * 100");  
         
@@ -1079,167 +1084,356 @@ class PPD1_status_penilaian_kota_daerah extends CI_Controller
         $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
         $objWriter->save("php://output");
     }
-    // function allrekap()
-    // {
-    //     if (!$this->session->userdata(SESSION_LOGIN)) {
-    //         throw new Exception("Session expired, please login", 2);
-    //     }
 
-    //     // $idwil    = decrypt_base64($_GET['kabid']);
-    //     $idwil    = ($_GET['kabid']);
+    function allrekap()
+    {
+        if (!$this->session->userdata(SESSION_LOGIN)) {
+            throw new Exception("Session expired, please login", 2);
+        }
+
+        // $idwil    = decrypt_base64($_GET['kabid']);
+        $idwil    = ($_GET['kabid']);
         
-    //     $kabkota = $this->db->query("SELECT K.id FROM `kabupaten` K 
-    //                 JOIN `provinsi` P ON K.prov_id=P.id_kode 
-    //                 WHERE K.urutan=1 AND P.id='$idwil'")->result_array();
+        $kabkota = $this->db->query("SELECT K.id FROM `kabupaten` K 
+                    JOIN `provinsi` P ON K.prov_id=P.id_kode 
+                    WHERE K.urutan=1 AND P.id='$idwil'")->result_array();
 
-    //     $kabkota_ids_string = implode(",", array_column($kabkota, 'id'));
+        $kabkota_ids_string = implode(",", array_column($kabkota, 'id'));
         
         
-    //     $select = "SELECT W.id,W.iduser,W.idkabkot, P.nama_kabupaten, U.userid,U.name 
-    //     FROM `tbl_user_kabkot` W 
-    //     JOIN `kabupaten` P ON W.idkabkot = P.id 
-    //     JOIN `tbl_user` U ON W.iduser = U.id 
-    //     WHERE W.idkabkot in ($kabkota_ids_string) AND U.id!=674 AND U.group=7";
-    //     $list_data  = $this->db->query($select)->result_array();
+        $select = "SELECT W.id,W.iduser,W.idkabkot, P.nama_kabupaten, U.userid,U.name 
+        FROM `tbl_user_kabkot` W 
+        JOIN `kabupaten` P ON W.idkabkot = P.id 
+        JOIN `tbl_user` U ON W.iduser = U.id 
+        WHERE W.idkabkot in ($kabkota_ids_string) AND U.id!=674 AND U.group=7";
+        $list_data  = $this->db->query($select)->result_array();
         
-    //     $grouped_data = [];
+        $grouped_data = [];
 
-    //     foreach ($list_data as $entry) {
-    //         $idkabkot = $entry['idkabkot'];
+        foreach ($list_data as $entry) {
+            $idkabkot = $entry['idkabkot'];
             
-    //         // Initialize the group if it doesn't exist
-    //         if (!isset($grouped_data[$idkabkot])) {
-    //             $grouped_data[$idkabkot] = [];
-    //         }
+            if (!isset($grouped_data[$idkabkot])) {
+                $grouped_data[$idkabkot] = [];
+            }
             
-    //         // Append the current entry to the corresponding group
-    //         $grouped_data[$idkabkot][] = $entry; // Ensure this line is correct
-    //     }
+            $grouped_data[$idkabkot][] = $entry; 
+        }
 
-    //     $key_kolom = '';
-    //     $kolom_nama = '';
-    //     $kolom = '';
-    //     $query_skor = '';
+        $key_kolom = '';
+        $kolom_nama = '';
+        $kolom = '';
+        $query_skor = '';
 
         
-    //     $this->load->library("Excel");
-    //     $this->excel->setActiveSheetIndex(0);
-    //     $sharedStyleTitles = new PHPExcel_Style();
-    //     $this->excel->getActiveSheet()->setTitle("test");
+        $this->load->library("Excel");
+        $this->excel->setActiveSheetIndex(0);
+        $sharedStyleTitles = new PHPExcel_Style();
+        $this->excel->getActiveSheet()->setTitle("Hasil Penilaian");
 
-    //     $this->excel->getActiveSheet()->getSheetView()->setZoomScale(50);
+        $this->excel->getActiveSheet()->getSheetView()->setZoomScale(50);
 
-    //     $sharedStyleTitles->applyFromArray(
-    //         array(
-    //             'borders' =>
-    //             array(
-    //                 'bottom' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-    //                 'top'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-    //                 'left'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-    //                 'right'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-    //             )
-    //         )
-    //     );
+        $sharedStyleTitles->applyFromArray(
+            array(
+                'borders' =>
+                array(
+                    'bottom' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                    'top'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                    'left'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                    'right'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                )
+            )
+        );
 
-    //     $this->excel->getActiveSheet()->setCellValue('A1', "Penghargaan Pembangunan Daerah  2024");
+        $this->excel->getActiveSheet()->setCellValue('A1', "Penghargaan Pembangunan Daerah  2024");
 
-    //     $excelColumn = range('A', 'ZZ');
-    //     $rowKab = 3;
-    //     $rowJudul = 4;
-    //     $row = 5;
+        $excelColumn = [];
 
-    //     $temp = "SELECT K.id NOKRITERIA,K.`nama` KRITERIA,IND.nourut NOINDI,IND.`nama` INDIKATOR,IT.`nourut` NOITEM,IT.`nama` ITEM, IND.bobot BOBOT
-    //             FROM `r_mdl1_item` IT
-    //             JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
-    //             JOIN `r_mdl1_indi` IND ON IND.`id`=SI.`indiid`
-    //             JOIN  `r_mdl1_krtria` K ON K.`id`=IND.`krtriaid`
-    //             JOIN `r_mdl1_aspek` A ON A.id = K.aspekid
-    //             ORDER BY IND.`nourut`,SI.nourut, IT.`nourut` ASC";
-    //     $temp_sql  = $this->db->query($temp)->result_array();
+        // Generate Excel column names from A to ZZ
+        for ($i = 0; $i < 702; $i++) { // 702 corresponds to 'ZZ'
+            if ($i < 26) {
+                $excelColumn[] = chr($i + 65); // A-Z
+            } else {
+                $firstLetter = chr(floor(($i - 26) / 26) + 65); // A-Z for the first character
+                $secondLetter = chr(($i - 26) % 26 + 65); // A-Z for the second character
+                $excelColumn[] = $firstLetter . $secondLetter; // Combine letters for AA-ZZ
+            }
+        }
 
-    //     $countKriteria = array();
-    //     $countIndikator = array();
-
-    //     foreach ($temp_sql as $data) {
-    //         if (isset($countKriteria[$data['KRITERIA']])) {
-    //             $countKriteria[$data['KRITERIA']]++;
-    //         } else {
-    //             $countKriteria[$data['KRITERIA']] = 1;
-    //         }
-    //         if (isset($countIndikator[$data['INDIKATOR']])) {
-    //             $countIndikator[$data['INDIKATOR']]++;
-    //         } else {
-    //             $countIndikator[$data['INDIKATOR']] = 1;
-    //         }
-    //     }
+        $rowKab = 3;
+        $rowJudul = 4;
+        $row = 5;
+        $rowawal = 5;
         
-    //     foreach ($grouped_data as $group){
-    //         foreach ($group as $d){
-    //             $namakab = $d['nama_kabupaten'];
-    //             $key_kolom .= $d['userid'];
-    //             $kolom_nama .= $d['name'];
-    //             $kolom .= $key_kolom.'.skor '. $kolom_nama.', ';
-    //             $nilai = $d['id'];
-    //             $query_skor .=  "LEFT JOIN(
-    //                 SELECT I.`id` iditem,II.`skor`
-    //                 FROM `t_mdl1_skor_kabkota` SK
-    //                 JOIN `r_mdl1_item_indi` II ON II.`id`=SK.`itemindi`
-    //                 JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-    //                 WHERE SK.`mapid`='$nilai'
-    //                 ) $key_kolom ON $key_kolom.iditem=IT.`id`";
-    //                 $key_kolom='';
-    //                 $kolom_nama='';
-    //         }
-    //         $sql = "SELECT K.id NOKRITERIA,K.`nama` KRITERIA,IND.nourut NOINDI,IND.`nama` INDIKATOR,IT.`nourut` NOITEM,IT.`nama` ITEM, $kolom IND.bobot BOBOT
-    //                     FROM `r_mdl1_item` IT
-    //                     JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
-    //                     JOIN `r_mdl1_indi` IND ON IND.`id`=SI.`indiid`
-    //                     JOIN  `r_mdl1_krtria` K ON K.`id`=IND.`krtriaid`
-    //                     JOIN `r_mdl1_aspek` A ON A.id = K.aspekid
-    //                     $query_skor
-    //                     ORDER BY IND.`nourut`,SI.nourut, IT.`nourut` ASC";
-    //         $query_skor='';
-    //         $kolom='';
-            
-    //         $query_results  = $this->db->query($sql)->result_array(); 
-           
-            
-    //         $this->excel->getActiveSheet()->setCellValue('A'.$rowKab, "Nama Kota");
-    //         $this->excel->getActiveSheet()->setCellValue('B'.$rowKab, ":");
-    //         $this->excel->getActiveSheet()->setCellValue('C'.$rowKab, $namakab);
-    //         if (!empty($temp_sql)) {
-    //             $columnNames = array_keys($temp_sql[0]);
-    //             foreach ($columnNames as $index => $columnName) {
-    //                 $this->excel->getActiveSheet()->setCellValue($excelColumn[$index] . $rowJudul, $columnName);
-    //             } 
-    //         }
-    //         foreach ($countKriteria as $criteria => $count) {
-    //             $endRow = $row + $count - 1;
-    //             $this->excel->getActiveSheet()->mergeCells("A{$row}:A{$endRow}"); 
-    //             $this->excel->getActiveSheet()->mergeCells("B{$row}:B{$endRow}"); 
-    //             $row = $endRow + 1; 
-    //         }
+        $list_kab = array();
+        $penilai = array();
+        $nm_penilai = array();
+        
+        $cell_sum = array();
+        $cell_range = array();
+        $cell_coeff = array();
 
-    //         $row = 5;
-    //         foreach ($countIndikator as $criteria => $count) {
-    //             $endRow = $row + $count - 1;
-    //             $this->excel->getActiveSheet()->mergeCells("C{$row}:C{$endRow}"); 
-    //             $this->excel->getActiveSheet()->mergeCells("D{$row}:D{$endRow}"); 
-    //             $this->excel->getActiveSheet()->mergeCells("G{$row}:G{$endRow}"); 
-    //             $row = $endRow + 1; 
-    //         }
+        $rekap = array();
+        foreach ($grouped_data as $group){
+            $nm_penilai = '';
+            foreach ($group as $d){
+                $namakab = $d['nama_kabupaten'];
+                $key_kab = 'C'.$rowKab;
+                $list_kab[$key_kab] = $namakab;
+
+                $key_kolom .= $d['userid'];
+                $dnama = $d['name'];
+                $kolom .= $key_kolom.'.skor '. $key_kolom.', ';
+                $nilai = $d['id'];
+                $penilai[] = $key_kolom;
+                $nm_penilai[] = $dnama;
+                $query_skor .=  "LEFT JOIN(
+                    SELECT I.`id` iditem,II.`skor`
+                    FROM `t_mdl1_skor_kabkota` SK
+                    JOIN `r_mdl1_item_indi` II ON II.`id`=SK.`itemindi`
+                    JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
+                    WHERE SK.`mapid`='$nilai'
+                    ) $key_kolom ON $key_kolom.iditem=IT.`id`";
+                    $key_kolom='';
+                    $kolom_nama='';
+            }
+            $kolom = rtrim($kolom, ', ');
+            $sql = "SELECT K.id NOKRITERIA,K.`nama` KRITERIA,IND.nourut NOINDI,IND.`nama` INDIKATOR,IT.`nourut` NOITEM,IT.`nama` ITEM, IND.bobot BOBOT, $kolom
+                        FROM `r_mdl1_item` IT
+                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
+                        JOIN `r_mdl1_indi` IND ON IND.`id`=SI.`indiid`
+                        JOIN  `r_mdl1_krtria` K ON K.`id`=IND.`krtriaid`
+                        JOIN `r_mdl1_aspek` A ON A.id = K.aspekid
+                        $query_skor
+                        ORDER BY IND.`nourut`,SI.nourut, IT.`nourut` ASC";
+            $query_skor='';
+            $kolom='';
             
-    //         $rowKab = $row+3;
-    //         $rowJudul = $row+4;
-    //         $row = $row+5;
+            $query_results  = $this->db->query($sql)->result_array(); 
+
+            $countKriteria = array();
+            $countIndikator = array();
+
+            foreach ($query_results as $data) {
+                if (isset($countKriteria[$data['KRITERIA']])) {
+                    $countKriteria[$data['KRITERIA']]++;
+                } else {
+                    $countKriteria[$data['KRITERIA']] = 1;
+                }
+                if (isset($countIndikator[$data['INDIKATOR']])) {
+                    $countIndikator[$data['INDIKATOR']]++;
+                } else {
+                    $countIndikator[$data['INDIKATOR']] = 1;
+                }
+            }
             
-    //         header("Content-Type:application/vnd.ms-excel");
-    //         header("Content-Disposition:attachment;filename = Rekap_Nilai_Kota.xls");
-    //         header("Cache-Control:max-age=0");
-    //         $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
-    //         $objWriter->save("php://output");
-    //     }           
-    // }
+            $this->excel->getActiveSheet()->setCellValue('A'.$rowKab, "Nama Kota");
+            $this->excel->getActiveSheet()->setCellValue('B'.$rowKab, ":");
+            $this->excel->getActiveSheet()->setCellValue('C'.$rowKab, $namakab);
+
+            $list_kab[$key_kab] = $namakab; // Store each namakab in an array at the key
+
+            $cell_skor = array();
+            $cell_bobot = array();
+            $nm_skor = array();
+            $nm_nilai_terbobot = array();
+            $nm_skor = '';
+            $nm_nilai_terbobot = '';
+            $judul= array('No Kriteria','Kriteria','No Indi','Indikator','No Item','Item','Bobot');
+            foreach($nm_penilai as $nm){
+                $nm_skor[] = 'Skor '.$nm;
+                $nm_nilai_terbobot[] = 'Nilai Terbobot '.$nm;
+            }
+            $merge_judul = array_merge($judul,$nm_penilai,$nm_skor,$nm_nilai_terbobot,array('Rata-Rata'));
+
+            if (!empty($query_results)) {
+                // $columnNames = array_keys($query_results[0]);
+                $columnNames = $merge_judul;
+                $jmlh_penilai =count($nm_penilai);
+                $iterasi = 1;
+                foreach ($columnNames as $index => $columnName) {
+                    $this->excel->getActiveSheet()->setCellValue($excelColumn[$index] . $rowJudul, $columnName);
+                    if($index>=7 && $iterasi <= $jmlh_penilai){
+                        $cell_nilai[] = $index; 
+                        $cell_skor[] = $index+$jmlh_penilai; 
+                        $cell_bobot[] = $index+$jmlh_penilai*2; 
+                        $iterasi++;
+                    }
+                } 
+            }
+            
+            foreach ($countKriteria as $criteria => $count) {
+                $endRow = $row + $count - 1;
+                $this->excel->getActiveSheet()->mergeCells("A{$row}:A{$endRow}"); 
+                $this->excel->getActiveSheet()->mergeCells("B{$row}:B{$endRow}"); 
+                $row = $endRow + 1; 
+            }
+
+            $averageColumn = end($cell_bobot) + 1;
+
+            $row = $rowawal;
+            foreach ($countIndikator as $criteria => $count) {
+                $endRow = $row + $count - 1;
+                foreach($cell_skor as $c){
+                    $knilai = $c-$jmlh_penilai;
+                    $ncells = $excelColumn[$knilai].$row.':'.$excelColumn[$knilai].$endRow;
+                    $this->excel->getActiveSheet()->setCellValue($excelColumn[$c].$row,"=10*sum($ncells)/count($ncells)");
+                    $this->excel->getActiveSheet()->mergeCells($excelColumn[$c].$row.':'.$excelColumn[$c].$endRow);
+                }
+
+                foreach($cell_bobot as $b)
+                {
+                    $kskor = $b-$jmlh_penilai;
+                    $skor = "G".$row.'*'.$excelColumn[$kskor].$row; 
+                    $firstIndex = $cell_bobot[0];
+                    $lastIndex = $cell_bobot[count($cell_bobot) - 1];
+                    $averageRange = $excelColumn[$firstIndex] . $row . ':' . $excelColumn[$lastIndex] . $row;
+                    $average = "AVERAGE(" . $averageRange . ")";
+
+                    $rekap[$key_kab][] = $excelColumn[$averageColumn].$row;
+                    $this->excel->getActiveSheet()->setCellValue($excelColumn[$b].$row,"=$skor");
+                    $this->excel->getActiveSheet()->mergeCells($excelColumn[$b].$row.':'.$excelColumn[$b].$endRow);
+                    $this->excel->getActiveSheet()->setCellValue($excelColumn[$averageColumn].$row,"=$average");
+                    $this->excel->getActiveSheet()->mergeCells($excelColumn[$averageColumn].$row.':'.$excelColumn[$averageColumn].$endRow);
+                } 
+
+                $this->excel->getActiveSheet()->mergeCells("C{$row}:C{$endRow}"); 
+                $this->excel->getActiveSheet()->mergeCells("D{$row}:D{$endRow}"); 
+                $this->excel->getActiveSheet()->mergeCells("G{$row}:G{$endRow}"); 
+                $row = $endRow + 1; 
+            }
+
+            $row = $rowawal;
+            $index_excelColumn = 0;
+            foreach ($query_results as $value) {
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value['NOKRITERIA']);
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value['KRITERIA']);
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value['NOINDI']);
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value['INDIKATOR']);
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value['NOITEM']);
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value['ITEM']);
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, ($value['BOBOT'] / 100));
+                foreach($penilai as $pe)
+                {
+                    $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value[$pe]);
+                }
+                $lastIndex = $index_excelColumn;
+                $index_excelColumn = 0;
+                $row++;
+            }
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$lastIndex].$row, "Total");
+            $this->excel->getActiveSheet()->mergeCells($excelColumn[$lastIndex].$row.":".$excelColumn[$lastIndex+$jmlh_penilai-1].$row);
+            
+            $index_excelColumn = $lastIndex+$jmlh_penilai-1;
+            $average = $jmlh_penilai+1;
+            $cell_rata2 = array();
+
+            for($i=0;$i<$average;$i++)
+            {
+                $index_excelColumn++;
+                $cell_rata2[]=$index_excelColumn;
+                $endofrow = $row-1;
+                $total = $excelColumn[$index_excelColumn].$rowawal.":".$excelColumn[$index_excelColumn].$endofrow;
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn].$row, "=SUM($total)");
+            }
+            $cell_sum[] = $excelColumn[$index_excelColumn].$row;
+            
+
+            $row++;
+            
+            $index1 = $cell_rata2[0];
+            $index2 = $cell_rata2[count($cell_rata2) - 2];
+            
+            $range = $lastIndex+$jmlh_penilai*2;
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$lastIndex].$row, "Range");
+            $this->excel->getActiveSheet()->mergeCells($excelColumn[$lastIndex].$row.":".$excelColumn[$lastIndex+$jmlh_penilai*2-1].$row);
+            
+            $valrange = $excelColumn[$index1].($row-1).":".$excelColumn[$index2].($row-1);
+            $cellRange = $excelColumn[$range].$row;
+            $cell_range[]=$cellRange;
+            $this->excel->getActiveSheet()->setCellValue($cellRange, "=MAX($valrange)-MIN($valrange)");
+            
+            $row++;
+            
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$lastIndex].$row, "Coeffisien Variasi");
+            $this->excel->getActiveSheet()->mergeCells($excelColumn[$lastIndex].$row.":".$excelColumn[$lastIndex+$jmlh_penilai*2-1].$row);
+            
+            $firstrange = $valrange = $excelColumn[$index1].($row-2).":".$excelColumn[$index2].($row-2);
+            $secondrange = $excelColumn[($index2+1)].($row-2);
+            $valcoeff = "=STDEV(".$firstrange.")/".$secondrange."*100";
+            $cellCoeff = $excelColumn[$range].$row;
+            $cell_coeff[] = $cellCoeff;
+            $this->excel->getActiveSheet()->setCellValue($cellCoeff, "$valcoeff");            
+
+            $penilai ='';
+            $index_excelColumn ='';
+
+            $rowKab = $row+3;
+            $rowJudul = $row+4;
+            $row = $row+5;
+            $rowawal = $row;
+        }           
+
+
+        $this->excel->createSheet();
+        $this->excel->setActiveSheetIndex(1);
+        $this->excel->getActiveSheet()->setTitle("Rekap Nilai");
+
+        // echo '<pre>';
+        // var_dump($cell_sum);
+        // echo '</pre>';
+        // echo '<pre>';
+        // var_dump($cell_range);
+        // echo '</pre>';
+        // echo '<pre>';
+        // var_dump($cell_coeff);
+        // echo '</pre>';
+        // die;
+
+        $row = 3;
+
+
+        $o=1;
+        $indi = count($countIndikator);
+        
+        $columnIndex = 1;
+        for($o;$o<=$indi;$o++){
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$columnIndex++].($row-1),"$o");
+        }
+        $this->excel->getActiveSheet()->setCellValue($excelColumn[$columnIndex++].($row-1),"Total Nilai");
+        $this->excel->getActiveSheet()->setCellValue($excelColumn[$columnIndex++].($row-1),"Range");
+        $this->excel->getActiveSheet()->setCellValue($excelColumn[$columnIndex++].($row-1),"Koefisien Variasi");
+
+        $i = 0;
+        
+        foreach($rekap as $key => $val){
+            $this->excel->getActiveSheet()->setCellValue("A".$row,"='Hasil Penilaian'!$key");
+            
+            $value = array_unique($val);
+            $value = array_values($value);
+            
+            $columnIndex = 1;
+            foreach ($value as $k){
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$columnIndex++].$row,"='Hasil Penilaian'!$k");
+            }
+            
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$columnIndex].$row,"='Hasil Penilaian'!".$cell_sum[$i]."");
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[($columnIndex+1)].$row,"='Hasil Penilaian'!".$cell_range[$i]."");
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[($columnIndex+2)].$row,"='Hasil Penilaian'!".$cell_coeff[$i]."");
+            
+            $i++;
+            $row++;
+        }
+        
+        // die;
+        
+        header("Content-Type:application/vnd.ms-excel");
+        header("Content-Disposition:attachment;filename = Rekap_Nilai_Kota.xls");
+        header("Cache-Control:max-age=0");
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+        $objWriter->save("php://output");
+    }
+
     function rekap_penilaian_tpt_by_user()
     {
         $this->load->library("Excel");

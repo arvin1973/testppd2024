@@ -1,14 +1,15 @@
 var main = function(){
     controller = "index.php/M_users_tpt_daerah";
     var datatable = function(){
-        var table = $("#dataUser");
+        var table = $("#listProv");
+        var table_detail = $("#t_bahan");
         var table_p = $("#t_dataProv");
         var table_kk = $("#t_dataKK");
         var datatable = table.DataTable({
                  "processing": true,
                  "serverSide": true,
                  "ajax":{
-                     url :base_url+controller+"/get_datatable", // json datasource
+                     url :base_url+controller+"/get_datatable_prov", // json datasource
                      type: "post",  // method  , by default get
                      error: function(){  // error handling
                              $(".employee-grid-error").html("");
@@ -24,14 +25,10 @@ var main = function(){
 
                  },
                  "columnDefs": [                  
-                     { "targets": 2, "orderable": false },
-                     { "width": "2px", "targets": 0},
-                     { "width": "150px", "targets": 1},
-//                     { "width": "80px", "targets": 2}                     
+                    { "width": "2px", "targets": 0},
                  ],
-                 "lengthMenu": [[5, 20, 25, 50, -1], [5, 20, 25, 50, "All"]],
+                 "lengthMenu": [[38, 50, -1], [38, 50, "All"]],
                  "initComplete": function(settings, json) {
-     //                console.log(settings);
                  },
                  paging: true,
                  "language": {
@@ -120,7 +117,7 @@ var main = function(){
                             //success msg
                             if(obj.status === 1){
                                 sweetAlert("Success", obj.msg, "success");
-                                forml[0].reset();
+                                get_datatable();
                                 $('#modal_add').modal('hide');
                             }
 
@@ -145,7 +142,76 @@ var main = function(){
             }
         });
 
-        table.on("click","a.getDetail",function(e){
+        function get_datatable(){
+            loading.show();
+            ajax_url = controller+"/get_datatable";
+            ajax_data="id="+$("#inp_wlyh").val();
+            ajax_data+="&"+csrf_name+"="+$("#csrf").val();
+            jQuery.ajax({
+                type: "POST",
+                url: base_url+ajax_url,
+                dataType:"text",
+                data:ajax_data,
+                success:function(response){
+                    var obj = null;
+                    try
+                    {
+                        obj = $.parseJSON(response); 
+                    }catch(e)
+                    {}
+
+                    if(obj)
+                    {
+                        $("#csrf").val(obj.csrf_hash);
+                        if(obj.status === 1){
+                            $("#t_bahan > tbody").html(obj.str);
+                            $("._list_user").show();
+                            $("._list_prov").hide();
+                            loading.hide();
+                        }
+                        else if(obj.status === 0){
+                            loading.hide();
+                            sweetAlert("Error", obj.msg, "error");
+                        }
+                        else if(obj.status === 2){
+                            sweetAlert("Caution", obj.msg, "warning");
+                            window.setTimeout(function(){
+                                window.location.href = base_url+"welcome";
+                            }, 2000);
+                        }
+
+                    }
+                    else{
+                        sweetAlert("Caution", response, "error");
+                        loading.hide();
+                        window.setTimeout(function(){
+                            window.location.href = base_url+"welcome";
+                        }, 2000);
+                        return false;
+                    }
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    loading.hide(); 
+                    alert(thrownError);
+                    return false;
+                }
+            });
+        }
+
+        table.on("click","a.getUser",function(e){
+            var _self       = $(this);
+            var id        = _self.data("id");
+            var lblkk     = _self.data("nmkk");
+            $("#inp_wlyh").val(id);
+            $("#prov").val(id);
+            $(".nm_prov").html(lblkk).parent("tr").show();            
+            $(".lbl_hdr_katewlyh").html("").parent("tr").show();
+            $(".lbl_hdr_nmwlyh").html(lblkk).parent("tr").show();
+            
+            get_datatable();
+        });
+
+        table_detail.on("click","a.getDetail",function(e){
             var _self       = $(this);
             var id        = _self.data("id");
             var lblus       = _self.data("ustpt");
@@ -160,7 +226,7 @@ var main = function(){
             d_view();
         });  
 
-        table.on('click', '.modal_edit_show', function(e){
+        table_detail.on('click', '.modal_edit_show', function(e){
             e.preventDefault();
             var id      = $(this).data("id");
             var msg_obj = $("#msg");
@@ -196,8 +262,6 @@ var main = function(){
                             $("#email").val(obj.data[0].email);
                             $("#stts").html(obj.str_stts);
                             
-                            // $("._list_user").hide();
-                            // $("._edituser").show();
                             
                         }
                         //error msg
@@ -230,73 +294,6 @@ var main = function(){
             });
         });
         
-        // table.on('click', 'a.getEdit', function(e){
-        //     e.preventDefault();
-        //     var id      = $(this).data("id");
-        //     var msg_obj = $("#msg");
-        //     ajax_url = controller+"/detail_view";
-        //     ajax_data = "id="+id;
-        //     ajax_data+="&"+csrf_name+"="+$("#csrf").val();
-        //     loading.show();
-        //     //$("#iduser").val(id);
-        //     jQuery.ajax({
-        //         type: "POST", // HTTP method POST or GET
-        //         url: base_url+ajax_url, //Where to make Ajax calls
-        //         dataType:"text", // Data type, HTML, json etc.
-        //         data:ajax_data, //Form variables
-        //         success:function(response){
-        //             var obj = null;
-        //             try
-        //             {
-        //                 obj = $.parseJSON(response);  
-        //             }catch(e)
-        //             {}
-        //             //var obj = jQuery.parseJSON(response);
-
-        //             if(obj)//if json data
-        //             {
-        //                 //success msg
-        //                 if(obj.status === 1){
-        //                     loading.hide();
-        //                     $("#iduser").val(id);
-        //                     $("#userid").val(obj.data[0].userid);
-        //                     $("#nama").val(obj.data[0].name);
-        //                     $("#email").val(obj.data[0].email);
-        //                     $("#stts").html(obj.str_stts);
-                            
-        //                     $("._list_user").hide();
-        //                     $("._edituser").show();
-                            
-        //                 }
-        //                 //error msg
-        //                 else if(obj.status === 0){
-        //                     loading.hide();
-        //                     sweetAlert("Error", obj.msg, "error");
-        //                 }
-
-        //                 //session ended msg
-        //                 else if(obj.status === 2){
-        //                     sweetAlert("Error", obj.msg, "error");
-
-        //                     window.setTimeout(function(){
-        //                         window.location.href = base_url+default_controller; //redirect ke login page
-        //                     }, 2000);
-        //                 }
-        //                 $("#csrf").val(obj.csrf_hash);
-        //             }
-        //             else
-        //             {
-        //                 show_alert_ms(msg_obj,99,response);loading.hide();
-        //                 return false;
-        //             }
-        //         },
-        //         error:function (xhr, ajaxOptions, thrownError){
-        //             loading.hide(); 
-        //             alert(thrownError);
-        //             return false;
-        //         }
-        //     });
-        // });
         
         function d_view(){
              loading.show();
@@ -324,9 +321,6 @@ var main = function(){
                              $("#t_dataKK > tbody").html(obj.tbl_kabupaten);
                              $("._list_user").hide();
                              $("._wrapper_info").show();
-//                             $("._wrapper_wlyh").hide();
-//                             $("._wrapper_info").show();
-//                             $("._wrapper_bahan").show();
                              $("._wrapper_info").fadeIn();
                              loading.hide();
                          }
@@ -357,7 +351,7 @@ var main = function(){
                      return false;
                  }
              });
-         }
+        }
          
         var formE = $("#form_edit");
         formE.validate({
@@ -414,8 +408,9 @@ var main = function(){
                                 sweetAlert("Success", obj.msg, "success");
                                 $('#modal_edit').modal('hide');
                                 
-                                // datatable.ajax.reload();
-                                datatable.ajax.reload(null, false);
+                                get_datatable();
+                                // // datatable.ajax.reload();
+                                // datatable.ajax.reload(null, false);
 
                                 toastr["success"](obj.msg);
 
@@ -458,13 +453,6 @@ var main = function(){
                 return false;
             }
         }); 
-        
-//        $(".btnBack").click(function(e){
-//                e.preventDefault();
-//                $('.list_user').show();
-//                $('.list_edituser').hide();
-//                datatable.ajax.reload();
-//            }); 
         
        
         
@@ -527,75 +515,7 @@ var main = function(){
                 }
             }
         });
-        
-        // $("#modal_add_kab").click(function(e){
-        //     e.preventDefault();
-        //     loading.show();
-        //     datatable_kab.ajax.reload(function(){
-        //         loading.hide();
-        //         $('#list_kab').modal('show');
-        //     });
-        // });
-        
-        // $("#list_kab").on('click', '#save_popup', function(e){
-        //     e.preventDefault();
-        //     var idkk = $('.radio:checked').data("id");
-        //     var userinp = $("#inp_user").val();
-        //     loading.show();
-        //      ajax_url = controller+"/add_kk";
-        //      ajax_data="id="+$("#inp_user").val()+"&kk="+idkk;
-        //      ajax_data+="&"+csrf_name+"="+$("#csrf").val();
-        //      jQuery.ajax({
-        //          type: "POST",
-        //          url: base_url+ajax_url,
-        //          dataType:"text",
-        //          data:ajax_data,
-        //          success:function(response){
-        //              var obj = null;
-        //              try
-        //              {
-        //                  obj = $.parseJSON(response);  
-        //              }catch(e)
-        //              {}
-
-        //              if(obj)
-        //              {
-        //                  $("#csrf").val(obj.csrf_hash);
-        //                  if(obj.status === 1){
-        //                      d_view();
-        //                      $('#list_kab').modal('toggle');
-        //                      loading.hide();
-        //                  }
-        //                  else if(obj.status === 0){
-        //                      loading.hide();
-        //                      sweetAlert("Error", obj.msg, "error");
-        //                  }
-        //                  else if(obj.status === 2){
-        //                      sweetAlert("Caution", obj.msg, "warning");
-        //                      window.setTimeout(function(){
-        //                          window.location.href = base_url+"welcome";
-        //                      }, 2000);
-        //                  }
-
-        //              }
-        //              else{
-        //                  sweetAlert("Caution", response, "error");
-        //                  loading.hide();
-        //                  window.setTimeout(function(){
-        //                      window.location.href = base_url+"welcome";
-        //                  }, 2000);
-        //                  return false;
-        //              }
-        //          },
-        //          error:function (xhr, ajaxOptions, thrownError){
-        //              loading.hide(); 
-        //              alert(thrownError);
-        //              return false;
-        //          }
-        //      });
-            
-        // });
-                
+       
         var form2 = $("#form_wil");
         form2.validate({
             errorElement: 'span', //default input error message container
@@ -773,7 +693,7 @@ var main = function(){
             });
         });
         
-        table.on('click', 'a.btnRes', function(e){
+        table_detail.on('click', 'a.btnRes', function(e){
             e.preventDefault();
             var id      = $(this).data("id");
             var title   = $(this).data("title");
@@ -880,7 +800,7 @@ var main = function(){
                 });
         });
         
-        table.on('click', 'a.btnDel', function(e){
+        table_detail.on('click', 'a.btnDel', function(e){
             e.preventDefault();
             var id      = $(this).data("id");
             var title   = $(this).data("title");
@@ -914,7 +834,7 @@ var main = function(){
                                     $("#csrf").val(obj.csrf_hash);
                                     if(obj.status === 1){
                                         loading.hide();
-                                      datatable.ajax.reload();
+                                        get_datatable();
                                         toastr["success"](obj.msg);
 
                                         toastr.options = {

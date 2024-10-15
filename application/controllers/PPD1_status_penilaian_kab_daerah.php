@@ -263,7 +263,7 @@ class PPD1_status_penilaian_kab_daerah extends CI_Controller
                     //get jml item
                     $sql = "SELECT I.`id`
                             FROM r_mdl1_item I 
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov='N'
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                             JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y'";
                     $list_data = $this->db->query($sql);
                     if (!$list_data) {
@@ -283,7 +283,7 @@ class PPD1_status_penilaian_kab_daerah extends CI_Controller
                                     JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     WHERE 1=1
                                     GROUP BY W.`idkabkot`,W.iduser
@@ -1035,12 +1035,16 @@ class PPD1_status_penilaian_kab_daerah extends CI_Controller
             $lastAverage[$row] = $averageColumn.$row;
             $index_excelColumn++;
         }
+        $allTotal= array();
         for ($i = 2; $i <= $lastFilledColumn; $i++) { //0=A, 1=B, 2=C, 4=D.....
             $sumColumn = $excelColumn[$i]; // Get the column letter
             $sumFormula = "=SUM(".$sumColumn."$firstRow:".$sumColumn."$lastRow)"; // Sum from $firstRow to $lastRow
+            $allTotal[] = $sumColumn.($lastRow+1);
             $this->excel->getActiveSheet()->setCellValue($sumColumn.($lastRow + 1), $sumFormula); // Place sum at the bottom
             $lastColumn=$i;
         }
+        $firstRange = $allTotal[0];
+        $lastRange = $allTotal[count($allTotal)-1];
 
         $firstElement = reset($lastAverage); // Gets the first element
         $lastElement = end($lastAverage); 
@@ -1057,7 +1061,7 @@ class PPD1_status_penilaian_kab_daerah extends CI_Controller
         $this->excel->getActiveSheet()->mergeCells("A{$rowCoeff}:{$mergePenilaiLetter}{$rowCoeff}");
         
         $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowTotal, "=sum({$firstElement}:{$lastElement})");
-        $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowRange, "=max({$firstElement}:{$lastElement})-min({$firstElement}:{$lastElement})");
+        $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowRange, "=max({$firstRange}:{$lastRange})-min({$firstRange}:{$lastRange})");
         $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowCoeff, "stdev.s({$firstCoeff}:{$lastCoeff})/(".$averageColumn.$rowTotal.") * 100");             
         // $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowCoeff, "=STDEV.S({$firstCoeff}:{$lastCoeff})/(".$averageColumn.$rowRange.") * 100");  
         

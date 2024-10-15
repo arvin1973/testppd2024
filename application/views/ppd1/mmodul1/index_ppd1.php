@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title text-center text-secondary" style="font-family: inherit" >MANAJEMEN DATA MODUL I</h4>
+                <h4 class="page-title text-center text-secondary" style="font-family: inherit">MANAJEMEN DATA MODUL I</h4>
                 <div class="page-title-right">
                     <ol class="breadcrumb p-0 m-0">
                         <li class="breadcrumb-item"><a href="#">Manajemen</a></li>
@@ -22,24 +22,24 @@
                 <div class="card-body">
                     <div style="overflow-x: auto;">
                         <table class="table-description table-modified">
-                            
+
                             <tr style="">
-                                <td  class="text-uppercase">Kriteria</td>
+                                <td class="text-uppercase">Kriteria</td>
                                 <td>:</td>
                                 <td class="lbl_hdr_krit"></td>
                             </tr>
                             <tr style="">
-                                <td  class="text-uppercase">Indikator</td>
+                                <td class="text-uppercase">Indikator</td>
                                 <td>:</td>
                                 <td class="lbl_hdr_indi"></td>
                             </tr>
                             <tr style="display: none">
-                                <td  class="text-uppercase">Sub Indikator</td>
+                                <td class="text-uppercase">Sub Indikator</td>
                                 <td>:</td>
                                 <td class="lbl_hdr_sindi"></td>
                             </tr>
                             <tr style="display: none">
-                                <td  class="text-uppercase">Item Penilaian</td>
+                                <td class="text-uppercase">Item Penilaian</td>
                                 <td>:</td>
                                 <td class="lbl_hdr_item"></td>
                             </tr>
@@ -47,8 +47,8 @@
                     </div>
                 </div>
             </div>
-            
-            
+
+
         </div>
     </div>
     <div class="row _wrapper _wrapper_indi">
@@ -62,9 +62,9 @@
                         <table class="table table-bordered table-hover" id="t_indi">
                             <thead>
                                 <tr>
-                                    <th class="" title="No Urut"style="width:10px">NO</th>
+                                    <th class="" title="No Urut" style="width:10px">NO</th>
                                     <th class="text-uppercase">NAMA Indikator</th>
-                                    <th class="text-uppercase"style="width:10px">Bobot</th>
+                                    <th class="text-uppercase" style="width:10px">Bobot</th>
                                     <th class="" style="width:10px">#AKSI</th>
                                 </tr>
 
@@ -74,7 +74,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-info" id="btnShwMdlIndiAdd"><i class="fas fa-plus"></i>&nbsp;Data Baru</button>
@@ -89,7 +89,7 @@
                     <h3 class="card-title pull-left">List Sub Indikator</h3>
                 </div>
                 <div class="card-body">
-                    <input type="hidden" id="inp_indi" value=""/>
+                    <input type="hidden" id="inp_indi" value="" />
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover" id="t_sindi">
                             <thead>
@@ -97,7 +97,7 @@
                                     <th class="" title="No Urut">NO</th>
                                     <th class="text-uppercase">NAMA Sub Indikator</th>
                                     <th class="text-uppercase">Tampilkan</th>
-                                    <th class="text-uppercase">Tag Provinsi</th>
+                                    <th class="text-uppercase">Tag Di</th>
                                     <th class="">#AKSI</th>
                                 </tr>
 
@@ -109,7 +109,7 @@
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-info" id="btnShwMdlSindiAdd"><i class="fas fa-plus"></i>&nbsp;Data Baru</button>
-                    <button class="btn btn-warning btnShwHd"  data-show="._wrapper_indi" data-hide="._wrapper,._wrapper_info" data-hdrhide=".lbl_hdr_indi,.lbl_hdr_krit"><i class="fas fa-arrow-left"></i>&nbsp;Kembali</button>
+                    <button class="btn btn-warning btnShwHd" data-show="._wrapper_indi" data-hide="._wrapper,._wrapper_info" data-hdrhide=".lbl_hdr_indi,.lbl_hdr_krit"><i class="fas fa-arrow-left"></i>&nbsp;Kembali</button>
                 </div>
             </div>
         </div>
@@ -118,11 +118,11 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    
+
                     <h3 class="card-title pull-left">List Item Penilaian</h3>
                 </div>
                 <div class="card-body">
-                    <input type="hidden" id="inp_sindi" value=""/>
+                    <input type="hidden" id="inp_sindi" value="" />
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover" id="t_item">
                             <thead>
@@ -138,11 +138,11 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-info" id="btnShwMdlItemAdd"><i class="fas fa-plus"></i>&nbsp;Data Baru</button>
-                    <button class="btn btn-warning btnShwHd"  data-show="._wrapper_sindi" data-hide="._wrapper" data-hdrhide=".lbl_hdr_sindi"><i class="fas fa-arrow-left"></i>&nbsp;Kembali</button>
+                    <button class="btn btn-warning btnShwHd" data-show="._wrapper_sindi" data-hide="._wrapper" data-hdrhide=".lbl_hdr_sindi"><i class="fas fa-arrow-left"></i>&nbsp;Kembali</button>
                 </div>
             </div>
         </div>
@@ -151,11 +151,11 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    
+
                     <h3 class="card-title pull-left">List Kategori Skor per Item</h3>
                 </div>
                 <div class="card-body">
-                    <input type="hidden" id="inp_item" value=""/>
+                    <input type="hidden" id="inp_item" value="" />
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover" id="t_indiitem">
                             <thead>
@@ -172,11 +172,11 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-info" id="btnShwMdlIndiitemAdd"><i class="fas fa-plus"></i>&nbsp;Data Baru</button>
-                    <button class="btn btn-warning btnShwHd"  data-show="._wrapper_item" data-hide="._wrapper" data-hdrhide=".lbl_hdr_item"><i class="fas fa-arrow-left"></i>&nbsp;Kembali</button>
+                    <button class="btn btn-warning btnShwHd" data-show="._wrapper_item" data-hide="._wrapper" data-hdrhide=".lbl_hdr_item"><i class="fas fa-arrow-left"></i>&nbsp;Kembali</button>
                 </div>
             </div>
         </div>
@@ -184,11 +184,11 @@
 </div>
 
 <form id="frmIndiAdd">
-    <div id="mdl_indi_add" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div id="mdl_indi_add" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                        <h5 class="modal-title">Tambah Data Indikator</h5>
+                    <h5 class="modal-title">Tambah Data Indikator</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -198,13 +198,13 @@
                         <div class="col-md-12">
                             <div class="form-group ">
                                 <label for="field-1" class="control-label">Kriteria</label>
-                                <select class="form-control" id="field-1" name="kriter"  required="">
+                                <select class="form-control" id="field-1" name="kriter" required="">
                                     <option value="">- Pilih -</option>
                                     <?php
                                     foreach ($list_kriteria->result() as $v) {
-                                        ?>
-                                    <option value="<?php echo $v->id?>"><?php echo $v->nm?></option>
-                                            <?php
+                                    ?>
+                                        <option value="<?php echo $v->id ?>"><?php echo $v->nm ?></option>
+                                    <?php
                                     }
                                     ?>
                                 </select>
@@ -241,7 +241,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp;Batal</button>
@@ -253,11 +253,11 @@
 </form>
 
 <form id="frmIndiEdit">
-    <div id="mdl_indi_edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div id="mdl_indi_edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                        <h5 class="modal-title">Ubah Data Indikator</h5>
+                    <h5 class="modal-title">Ubah Data Indikator</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -267,17 +267,17 @@
                         <div class="col-md-12">
                             <div class="form-group ">
                                 <label for="field-1" class="control-label">Kriteria</label>
-                                <select class="form-control" id="field-1" name="kriter"  disabled="">
+                                <select class="form-control" id="field-1" name="kriter" disabled="">
                                     <option value="">- Pilih -</option>
                                     <?php
                                     foreach ($list_kriteria->result() as $v) {
-                                        ?>
-                                    <option value="<?php echo $v->id?>"><?php echo $v->nm?></option>
-                                            <?php
+                                    ?>
+                                        <option value="<?php echo $v->id ?>"><?php echo $v->nm ?></option>
+                                    <?php
                                     }
                                     ?>
                                 </select>
-                                <input type="hidden"name="id"required="">
+                                <input type="hidden" name="id" required="">
                             </div>
                         </div>
                     </div>
@@ -312,7 +312,7 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="row">
                         <div class="col-md-12">
@@ -334,7 +334,7 @@
 
 
 <form id="frmSindiAdd">
-    <div id="mdl_sindi_add" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div id="mdl_sindi_add" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -351,7 +351,7 @@
                                 <input type="text" class="form-control" id="field-3" name="nama" placeholder="" required="">
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="row">
                         <div class="col-md-4">
@@ -370,13 +370,26 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                             <div class="form-group">
-                                <label for="field-4" class="control-label">Tag di Provinsi? <span class="text-danger">*</span></label>
+                                <label for="field-4" class="control-label">Hanya Tag di Provinsi? <span class="text-danger">*</span></label>
                                 <select class="form-control" id="field-4" required="" name="tag_prov">
                                     <option value="">- Pilih -</option>
                                     <option value="Y">Ya</option>
                                     <option value="N">Tidak</option>
+                                </select>
+                            </div>
+                        </div> -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="field-4" class="control-label">Tag Di? <span class="text-danger">*</span></label>
+                                <select class="form-control" id="field-4" required="" name="tag_prov">
+                                    <option value="">- Pilih -</option>
+                                    <option value="ALL">Semua</option>
+                                    <option value="PROV">Provinsi</option>
+                                    <option value="KOTKAB">Kota dan Kabupaten</option>
+                                    <option value="KOT">Kota</option>
+                                    <option value="KAB">Kabupaten</option>
                                 </select>
                             </div>
                         </div>
@@ -400,23 +413,23 @@
 </form>
 
 <form id="frmSindiEdit">
-    <div id="mdl_sindi_edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div id="mdl_sindi_edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                        <h5 class="modal-title">Ubah Data Sub Indikator</h5>
+                    <h5 class="modal-title">Ubah Data Sub Indikator</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    
+
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="field-3" class="control-label">Nama Indikator</label>
                                 <input type="text" class="form-control" id="field-3" name="nama" placeholder="Nama Indikator" required="">
-                                <input type="hidden"name="id"required="">
+                                <input type="hidden" name="id" required="">
                             </div>
                         </div>
                     </div>
@@ -431,13 +444,26 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <!-- <div class="col-md-3">
                             <div class="form-group">
-                                <label for="field-4" class="control-label">Tag di Provinsi? <span class="text-danger">*</span></label>
+                                <label for="field-4" class="control-label">Hanya Tag di Provinsi? <span class="text-danger">*</span></label>
                                 <select class="form-control" id="field-4" required="" name="tag_prov">
                                     <option value="">- Pilih -</option>
                                     <option value="Y">Ya</option>
                                     <option value="N">Tidak</option>
+                                </select>
+                            </div>
+                        </div> -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="field-4" class="control-label">Tag Di? <span class="text-danger">*</span></label>
+                                <select class="form-control" id="field-4" required="" name="tag_prov">
+                                    <option value="">- Pilih -</option>
+                                    <option value="ALL">Semua</option>
+                                    <option value="PROV">Provinsi</option>
+                                    <option value="KOTKAB">Kota dan Kabupaten</option>
+                                    <option value="KOT">Kota</option>
+                                    <option value="KAB">Kabupaten</option>
                                 </select>
                             </div>
                         </div>
@@ -466,7 +492,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp;Batal</button>
@@ -478,7 +504,7 @@
 </form>
 
 <form id="frmItemAdd">
-    <div id="mdl_item_add" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div id="mdl_item_add" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -521,23 +547,23 @@
 </form>
 
 <form id="frmItemEdit">
-    <div id="mdl_item_edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div id="mdl_item_edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                        <h5 class="modal-title">Ubah Data Item Penilaian</h5>
+                    <h5 class="modal-title">Ubah Data Item Penilaian</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    
+
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="field-3" class="control-label">Nama Item Penilaian<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="field-3" name="nama" required="">
-                                <input type="hidden"name="id"required="">
+                                <input type="hidden" name="id" required="">
                             </div>
                         </div>
                     </div>
@@ -576,7 +602,7 @@
 </form>
 
 <form id="frmIndiitemAdd">
-    <div id="mdl_indiitem_add" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div id="mdl_indiitem_add" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -625,23 +651,23 @@
 </form>
 
 <form id="frmIndiitemEdit">
-    <div id="mdl_indiitem_edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div id="mdl_indiitem_edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                        <h5 class="modal-title">Ubah Data Kategori Skor per Item </h5>
+                    <h5 class="modal-title">Ubah Data Kategori Skor per Item </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    
+
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="field-3" class="control-label">Nama Kategori Skor per Item <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="field-3" name="nama" required="">
-                                <input type="hidden"name="id"required="">
+                                <input type="hidden" name="id" required="">
                             </div>
                         </div>
                     </div>
@@ -668,7 +694,7 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="row">
                         <div class="col-md-12">

@@ -124,7 +124,206 @@ class M_users_tpt_daerah extends CI_Controller
      * author : FSM 
      * date : 19 des 2021
      */
+    function get_datatable_prov()
+    {
+        if ($this->input->is_ajax_request()) {
+            try {
+                $requestData = $_REQUEST;
+                $satkercode = $this->session->userdata(SESSION_LOGIN)->satker;
+                $userid = $this->session->userdata(SESSION_LOGIN)->id;
+                $idx = 0;
+                $columns = array(
+                    $idx++   => 'K.`id_kode`',
+                    $idx++   => 'K.`id`',
+                    $idx++   => 'K.`nama_provinsi`',
+                    $idx++   => 'jml_tpt',
+                );
+
+                // $sql = "SELECT K.id mapid,K.id_kode, K.nama_provinsi
+                //         FROM `provinsi` K 
+                //         WHERE K.id !='-1'";
+                $sql = "SELECT K.id mapid,K.id_kode, K.nama_provinsi, IFNULL(JML.jml,0) jml_tpt
+                        FROM `provinsi` K 
+                        LEFT JOIN(
+				        SELECT P.id, P.`nama_provinsi`,COUNT(1) jml  
+                                    FROM  `tbl_user` D
+                                    JOIN `provinsi` P  ON P.id=D.satker
+                                    WHERE D.`group`=7
+                                    GROUP BY P.`id`
+                        )JML ON JML.id=K.`id`
+                        WHERE K.id !='-1'";
+
+                $totalData = $this->db->query($sql)->num_rows();
+                $totalFiltered = $totalData;
+
+                if (!empty($requestData['search']['value'])) {   // if there is a search parameter, $requestData['search']['value'] contains search parameter
+                    $sql .= " AND ( "
+                        . " K.`nama_provinsi` LIKE '%" . $requestData['search']['value'] . "%' "
+                        . " OR K.`id_kode` LIKE '%" . $requestData['search']['value'] . "%' "
+                        . ")";
+                }
+                $list_data = $this->db->query($sql);
+                $totalFiltered = $list_data->num_rows();
+                $sql .= " ORDER BY "
+                    . $columns[$requestData['order'][0]['column']] . "   "
+                    . $requestData['order'][0]['dir'] . "  "
+                    . "LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   ";
+                $list_data = $this->db->query($sql);
+                $data = array();
+                $i = 1;
+                foreach ($list_data->result() as $row) {
+                    $nestedData = array();
+                    $id      = $row->mapid;
+                    $idkab = "prov_" . $row->mapid;
+
+                    $encrypted_id = base64_encode(openssl_encrypt($idkab, "AES-128-ECB", ENCRYPT_PASS));
+                    $tmp = "class='getUser' data-id='" . $encrypted_id . "'";
+                    $tmp .= " data-nmkk='" . $row->nama_provinsi . "'";
+                    $id_kode = $row->id_kode;
+                    if ($row->id_kode == '-1')
+                        $id_kode = '';
+
+                    $nestedData[] = $id_kode;
+                    $nestedData[] = "<a href='javascript:void(0)' " . $tmp . ">" . $row->nama_provinsi . "</a>";
+                    if ($row->jml_tpt > 0) {
+                        $nestedData[] = "<span class='badge-warning'>" . $row->jml_tpt . " Penilai</span>";
+                    } else {
+                        $nestedData[] = "<span class='badge-danger'>" . $row->jml_tpt . " Penilai</span>";
+                    }
+                    $data[] = $nestedData;
+                }
+                $json_data = array(
+                    "draw"            => intval($requestData['draw']),   // for every request/draw by clientside , they send a number as a parameter, when they recieve a response/data they first check the draw number, so we are sending same number in draw. 
+                    "recordsTotal"    => intval($totalData),  // total number of records
+                    "recordsFiltered" => intval($totalFiltered), // total number of records after searching, if there is no searching then totalFiltered = totalData
+                    "data"            => $data   // total data array
+                );
+                exit(json_encode($json_data));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        } else
+            die;
+    }
     function get_datatable()
+    {
+        if ($this->input->is_ajax_request()) {
+            try {
+                if (!$this->session->userdata(SESSION_LOGIN)) {
+                    session_write_close();
+                    throw new Exception("Session expired, please login", 2);
+                }
+                $session = $this->session->userdata(SESSION_LOGIN);
+                session_write_close();
+
+                $this->form_validation->set_rules('id', 'ID Data Indikator', 'required');
+                if ($this->form_validation->run() == FALSE) {
+                    throw new Exception(validation_errors("", ""), 0);
+                }
+
+                $idcomb = decrypt_base64($this->input->post("id"));
+
+
+                $tmp = explode('_', $idcomb);
+                if (count($tmp) != 2)
+                    throw new Exception("Invalid ID");
+                $kate_wlyh = $tmp[0];
+                $idmap = $tmp[1];
+
+                $satkercode = $this->session->userdata(SESSION_LOGIN)->satker;
+                $userid = $this->session->userdata(SESSION_LOGIN)->id;
+                $idx = 0;
+                $columns = array(
+                    // datatable column index  => database column name
+                    $idx++   => 'A.`userid`',
+                    $idx++   => 'A.`name`',
+                    $idx++   => 'A.`email`',
+                    $idx++   => 'P.`nama_provinsi`',
+                    $idx++   => 'B.`name`',
+                );
+
+                $sql = "SELECT A.id, A.userid,A.`name`,A.email,A.`active_flag`,A.`group`,B.`groupid`,P.nama_provinsi,B.`name` groupname,A.satker, A.last_access
+                        FROM tbl_user A
+                        INNER JOIN `tbl_user_group` B ON A.`group`=B.`id`
+                        LEFT JOIN `provinsi` P ON A.satker = P.id
+                        WHERE B.`id`='7' AND P.`id`=?";
+                $bind = array($idmap);
+                $list_data = $this->db->query($sql, $bind);
+
+                if (!$list_data) {
+                    $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                    log_message("error", $msg);
+                    throw new Exception("Invalid SQL!");
+                }
+                $str = "";
+                if ($list_data->num_rows() == 0)
+                    $str = "<tr><td colspan='8'>Data tidak ditemukan</td></tr>";
+
+                $no=1;
+                foreach($list_data->result() as $row){
+
+                    $id      = "tpt-" . $row->id;
+                    $encrypted_id = base64_encode(openssl_encrypt($id, "AES-128-ECB", ENCRYPT_PASS));
+                    $tmp = "class='text-info btn btn-sm getDetail' data-id='" . $encrypted_id . "'";
+                    $tmp .= " data-ustpt='" . $row->userid . "'";
+                    $tmp .= " data-nmtpt='" . $row->name . "'";
+                    $tmp .= " data-emtpt='" . $row->email . "'";
+                    $tmp .= " data-provtpt='" . $row->nama_provinsi . "'";
+
+                    $tmp1 = "class='text-info btn btn-sm modal_edit_show' data-toggle='modal' data-target='#modal_edit' data-id='" . $encrypted_id . "'";
+                    $tmp1 .= " data-ustpt='" . $row->userid . "'";
+                    $tmp1 .= " data-nmtpt='" . $row->name . "'";
+                    $tmp1 .= " data-emtpt='" . $row->email . "'";
+                    $tmp1 .= " data-provtpt='" . $row->nama_provinsi . "'";
+
+                    $tmp2 = "class='text-warning btn btn-sm btnRes' data-id='" . $encrypted_id . "'";
+                    $tmp2 .= " data-title='" . $row->name . "'";
+
+                    $tmp3 = "class='text-danger btn btn-sm btnDel' data-id='" . $encrypted_id . "'";
+                    $tmp3 .= " data-title='" . $row->name . "'";
+
+                    $str.="<tr title='Dokumen'>";
+                    $str.="<td>".$row->userid."</td>";
+                    $str.="<td>"."<a href='javascript:void(0)' " . $tmp . " title='Daftar Wilayah Dinilai'>" . $row->name . "</a>"."</td>";
+                    $str.="<td>".$row->email."</td>";
+                    $str.="<td>".$row->nama_provinsi."</td>";
+                    $str.="<td>".$row->groupname."</td>";
+                    $text = "<span class='badge badge-pink'>Tidak Aktif</span>";
+                    if ($row->active_flag == 'Y')
+                    $text = "<span class='badge badge-success'>Aktif</span>";
+                    $str.="<td>".$text."</td>";
+                    $str.="<td>".$row->last_access."</td>";
+                    $str.="<td>"."<a href='javascript:void(0)' " . $tmp . " title='Daftar Wilayah Dinilai'><i class='text fas  ion ion-md-clipboard'></i></a>  "
+                        . "<a href='javascript:void(0)' " . $tmp1 . " title='Edit Data'><i class='fas fa-pencil-alt'></i></a> "
+                        . "<a  href='javascript:void(0)' " . $tmp2 . " title='Reset Password'>     <i class='fas mdi mdi-lock-reset'></i>      </a>"
+                        . "<a  href='javascript:void(0)' " . $tmp3 . " title='Hapus Data'>     <i class='text fas fa-trash-alt'></i>      </a>"."</td>";
+                    $str.="<tr>";
+                }
+                
+
+                $response = array(
+                    "status"    => 1,
+                    "csrf_hash" => $this->security->get_csrf_hash(),
+                    "str"       => $str,
+                );
+                $this->output
+                    ->set_status_header(200)
+                    ->set_content_type('application/json', 'utf-8')
+                    ->set_output(json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))
+                    ->_display();
+                exit;
+            } catch (Exception $exc) {
+                $json_data = array(
+                    "status"    => 0,
+                    "csrf_hash" => $this->security->get_csrf_hash(),
+                    "msg"       => $exc->getMessage(),
+                );
+                exit(json_encode($json_data));
+            }
+        } else die("Die!");
+    }
+
+    function get_datatable1()
     {
         if ($this->input->is_ajax_request()) {
             try {
@@ -243,7 +442,12 @@ class M_users_tpt_daerah extends CI_Controller
                 $name = $this->input->post("name");
                 //$group = $this->input->post("group");
                 $email = $this->input->post("email");
-                $satker = $this->input->post("prov");
+                $idcomb = decrypt_base64($this->input->post("prov"));
+                $tmp = explode('_', $idcomb);
+                if (count($tmp) != 2)
+                    throw new Exception("Invalid ID");
+                $kate_wlyh = $tmp[0];
+                $satker = $tmp[1];
 
                 date_default_timezone_set("Asia/Jakarta");
                 $current_date_time = date("Y-m-d H:i:s");

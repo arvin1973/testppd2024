@@ -83,71 +83,75 @@ class PPD2_modul1 extends CI_Controller
                 session_write_close();
                 $iduaer   = $session->id;
                 //jumlah wilayah penilaian provinsi
-                $sql = "SELECT W.* FROM `tbl_user_wilayah` W WHERE W.`iduser`='" . $iduaer . "'";
-                $list_data = $this->db->query($sql);
-                if (!$list_data) {
+                $sql_w_prov = "SELECT W.* FROM `tbl_user_wilayah` W WHERE W.`iduser`='" . $iduaer . "'";
+                $list_data_w_prov = $this->db->query($sql_w_prov);
+                if (!$list_data_w_prov) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                     log_message("error", $msg);
-                    throw new Exception("Invalid SQL 1!");
+                    throw new Exception("Invalid SQL wilayah penilaian provinsi!");
                 }
-                $jml_prov = $list_data->num_rows();
+                $jml_prov = $list_data_w_prov->num_rows();
 
                 //jumlah item provinsi
-                $sql = "SELECT COUNT(1) jml FROM `r_mdl1_item` IT JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid`  JOIN `r_mdl1_indi` I ON I.`id`=SI.`indiid` JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`";
-                $list_data = $this->db->query($sql);
-                if (!$list_data) {
+                $sql_i_prov = "SELECT COUNT(1) jml 
+                        FROM `r_mdl1_item` IT 
+                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'PROV')  
+                        JOIN `r_mdl1_indi` I ON I.`id`=SI.`indiid` 
+                        JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`";
+                $list_data_i_prov = $this->db->query($sql_i_prov);
+                if (!$list_data_i_prov) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                     log_message("error", $msg);
-                    throw new Exception("Invalid SQL 1!");
+                    throw new Exception("Invalid SQL item provinsi!");
                 }
-                $jml_item_prov = $list_data->num_rows();
-                $sum_item_prov = $list_data->row()->jml;
+                $jml_item_prov = $list_data_i_prov->num_rows();
+                $sum_item_prov = $list_data_i_prov->row()->jml;
                 $total_item_prov = $jml_prov * $sum_item_prov;
 
                 //jumlah lembar kertas kerja
-                $sql = "SELECT COUNT(1) jml FROM `t_mdl1_sttment_prov` S
+                $sql_l_prov = "SELECT COUNT(1) jml FROM `t_mdl1_sttment_prov` S
                     JOIN `tbl_user_wilayah` W ON W.`id`=S.mapid
                     JOIN `tbl_user` U ON U.id = W.`iduser`
                     WHERE U.id='" . $iduaer . "'";
 
-                $list_data_l = $this->db->query($sql);
-                if (!$list_data_l) {
+                $list_data_l_prov = $this->db->query($sql_l_prov);
+                if (!$list_data_l_prov) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                     log_message("error", $msg);
-                    throw new Exception("Invalid SQL 1!");
+                    throw new Exception("Invalid SQL lembar kerja provinsi!");
                 }
-                $jml_lembar_prov = $list_data_l->row()->jml;
+                $jml_lembar_prov = $list_data_l_prov->row()->jml;
 
                 //Jumlah penyelesaian modul
-                $sql = "SELECT COUNT(1) jml_ttl
+                $sql_p_prov = "SELECT COUNT(1) jml_ttl
                     FROM `tbl_user` U
                                     JOIN `tbl_user_wilayah` W ON W.`iduser`=U.id
                                     JOIN `t_mdl1_skor_prov` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'PROV')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     WHERE U.`id`=" . $iduaer . " ";
 
-                $list_data = $this->db->query($sql);
-                if (!$list_data) {
+                $list_data_p_prov = $this->db->query($sql_p_prov);
+                if (!$list_data_p_prov) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                     log_message("error", $msg);
-                    throw new Exception("Invalid SQL 1!");
+                    throw new Exception("Invalid SQL penyelesaian modul provinsi!");
                 }
-                $jml_penyelesain = $list_data->row()->jml_ttl;
-                if ($jml_penyelesain == '0') {
-                    $total_penyelesaian = '0';
+                $jml_penyelesaian_prov = $list_data_p_prov->row()->jml_ttl;
+                if ($jml_penyelesaian_prov == '0') {
+                    $total_penyelesaian_prov = '0';
                 } else {
-                    $total_penyelesaian = $jml_penyelesain / $total_item_prov * 100;
+                    $total_penyelesaian_prov = $jml_penyelesaian_prov / $total_item_prov * 100;
                 }
 
                 $warna_p = '';
-                if ($total_penyelesaian <= '33') {
+                if ($total_penyelesaian_prov <= '33') {
                     $warna_p = '#ef5350'; //merah
-                } elseif ($total_penyelesaian > '33' || $total_penyelesaian <= '66') {
+                } elseif ($total_penyelesaian_prov > '33' || $total_penyelesaian_prov <= '66') {
                     $warna_p = '#ffd740'; //kuning
-                } elseif ($total_penyelesaian > '66') {
+                } elseif ($total_penyelesaian_prov > '66') {
                     if ($jml_lembar_prov <= '2') {
                         $warna_p = '#ffd740'; //kuning
                     } else {
@@ -159,69 +163,69 @@ class PPD2_modul1 extends CI_Controller
                     <div class='progress progress-sm' style='margin-bottom: 0px;' >
                     <div class='progress-bar bg-pink progress-bar-striped progress-bar-animated' role='progressbar' 
                         aria-valuenow='66.6' aria-valuemin='66.6' aria-valuemax='100' 
-                        style='width: " . $total_penyelesaian . "%; background-color: " . $warna_p . "!important;'>
+                        style='width: " . $total_penyelesaian_prov . "%; background-color: " . $warna_p . "!important;'>
                               <span class='sr-only'>10.6% Complete</span>
                             </div></div>";
 
                 //jumlah wilayah penilaian kabupaten
-                $sql = "SELECT U.* 
+                $sql_w_kab = "SELECT U.* 
                         FROM `tbl_user_kabkot` U 
                         LEFT JOIN `kabupaten` K ON K.id=U.idkabkot 
                         WHERE U.`iduser`='" . $iduaer . "' AND K.urutan=0";
-                $list_data = $this->db->query($sql);
-                if (!$list_data) {
+                $list_data_w_kab = $this->db->query($sql_w_kab);
+                if (!$list_data_w_kab) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                     log_message("error", $msg);
-                    throw new Exception("Invalid SQL 1!");
+                    throw new Exception("Invalid SQL wilayah penilaian kabupaten!");
                 }
-                $jml_kab = $list_data->num_rows();
-                //jumlah item Kabupaten/kota
-                $sql = "SELECT COUNT(1) jml 
+                $jml_kab = $list_data_w_kab->num_rows();
+                //jumlah item Kabupaten
+                $sql_i_kab = "SELECT COUNT(1) jml 
                         FROM `r_mdl1_item` IT 
-                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'  
+                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KAB')
                         JOIN `r_mdl1_indi` I ON I.`id`=SI.`indiid` 
                         JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`";
-                $list_data = $this->db->query($sql);
-                if (!$list_data) {
+                $list_data_i_kab = $this->db->query($sql_i_kab);
+                if (!$list_data_i_kab) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                     log_message("error", $msg);
-                    throw new Exception("Invalid SQL 1!");
+                    throw new Exception("Invalid SQL item kabupaten!");
                 }
-                $jml_item_kab = $list_data->num_rows();
-                $sum_item_kabko = $list_data->row()->jml;
-                $total_item_kab = $jml_kab * $sum_item_kabko;
+                $jml_item_kab = $list_data_i_kab->num_rows();
+                $sum_item_kab = $list_data_i_kab->row()->jml;
+                $total_item_kab = $jml_kab * $sum_item_kab;
 
                 //jumlah lembar kertas kerja kabupaten
-                $sql = "SELECT COUNT(1) jml FROM `t_mdl1_sttment_kabkota` S
+                $sql_l_kab = "SELECT COUNT(1) jml FROM `t_mdl1_sttment_kabkota` S
                     JOIN `tbl_user_kabkot` W ON W.`id`=S.mapid
                     JOIN `tbl_user` U ON U.id = W.`iduser`
                     JOIN `kabupaten` K ON K.id=W.`idkabkot` AND K.urutan=0
                     WHERE U.id='" . $iduaer . "' ";
-                $list_data_l = $this->db->query($sql);
-                if (!$list_data_l) {
+                $list_data_l_kab = $this->db->query($sql_l_kab);
+                if (!$list_data_l_kab) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                     log_message("error", $msg);
-                    throw new Exception("Invalid SQL 1!");
+                    throw new Exception("Invalid SQL kertas kerja kabupaten!");
                 }
-                $jml_lembar_kab = $list_data_l->row()->jml;
+                $jml_lembar_kab = $list_data_l_kab->row()->jml;
                 //Jumlah penyelesaian modul Kabupaten
-                $sql = "SELECT COUNT(1) jml_ttl
+                $sql_p_kab = "SELECT COUNT(1) jml_ttl
                     FROM `tbl_user` U
                                     JOIN `tbl_user_kabkot` W ON W.`iduser`=U.id
                                     JOIN `kabupaten` KK ON KK.id=W.`idkabkot` AND KK.urutan=0
                                     JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND isprov IN ('ALL', 'KOTKAB', 'KAB')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     WHERE U.`id`=" . $iduaer . "  ";
-                $list_data = $this->db->query($sql);
-                if (!$list_data) {
+                $list_data_p_kab = $this->db->query($sql_p_kab);
+                if (!$list_data_p_kab) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                     log_message("error", $msg);
-                    throw new Exception("Invalid SQL 1!");
+                    throw new Exception("Invalid SQL penyelesaian modul kabupaten!");
                 }
-                $jml_penyelesain_kab = $list_data->row()->jml_ttl;
+                $jml_penyelesain_kab = $list_data_p_kab->row()->jml_ttl;
 
                 if ($jml_penyelesain_kab == '0') {
                     $total_penyelesaian_kab = '0';
@@ -250,49 +254,64 @@ class PPD2_modul1 extends CI_Controller
                             </div></div>";
 
                 //jumlah wilayah penilaian kota
-                $sql = "SELECT U.* 
+                $sql_w_kot = "SELECT U.* 
                         FROM `tbl_user_kabkot` U 
                         LEFT JOIN `kabupaten` K ON K.id=U.idkabkot 
                         WHERE U.`iduser`='" . $iduaer . "' AND K.urutan=1";
-                $list_data = $this->db->query($sql);
-                if (!$list_data) {
+                $list_data_w_kot = $this->db->query($sql_w_kot);
+                if (!$list_data_w_kot) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                     log_message("error", $msg);
-                    throw new Exception("Invalid SQL 1!");
+                    throw new Exception("Invalid SQL wilayah penilaian kota!");
                 }
-                $jml_kot = $list_data->num_rows();
-                $total_item_kot = $jml_kot * $sum_item_kabko;
+                $jml_kot = $list_data_w_kot->num_rows();
+                //jumlah item Kota
+                $sql_i_kot = "SELECT COUNT(1) jml 
+                        FROM `r_mdl1_item` IT 
+                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KOT')
+                        JOIN `r_mdl1_indi` I ON I.`id`=SI.`indiid` 
+                        JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`";
+                $list_data_i_kot = $this->db->query($sql_i_kot);
+                if (!$list_data_i_kot) {
+                    $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                    log_message("error", $msg);
+                    throw new Exception("Invalid SQL item kota!");
+                }
+                $jml_item_kota = $list_data_i_kot->num_rows();
+                $sum_item_kot = $list_data_i_kot->row()->jml;
+                $total_item_kot = $jml_kot * $sum_item_kot;
+
                 //jumlah lembar kertas kerja kota
-                $sql = "SELECT COUNT(1) jml FROM `t_mdl1_sttment_kabkota` S
+                $sql_l_kot = "SELECT COUNT(1) jml FROM `t_mdl1_sttment_kabkota` S
                     JOIN `tbl_user_kabkot` W ON W.`id`=S.mapid
                     JOIN `tbl_user` U ON U.id = W.`iduser`
                     JOIN `kabupaten` K ON K.id=W.`idkabkot` AND K.urutan=1
                     WHERE U.id='" . $iduaer . "' ";
-                $list_data_l = $this->db->query($sql);
-                if (!$list_data_l) {
+                $list_data_l_kot = $this->db->query($sql_l_kot);
+                if (!$list_data_l_kot) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                     log_message("error", $msg);
-                    throw new Exception("Invalid SQL 1!");
+                    throw new Exception("Invalid SQL lembar kerja kota!");
                 }
-                $jml_lembar_kot = $list_data_l->row()->jml;
+                $jml_lembar_kot = $list_data_l_kot->row()->jml;
                 //Jumlah penyelesaian modul kota
-                $sql = "SELECT COUNT(1) jml_ttl
+                $sql_p_kot = "SELECT COUNT(1) jml_ttl
                     FROM `tbl_user` U
                                     JOIN `tbl_user_kabkot` W ON W.`iduser`=U.id
                                     JOIN `kabupaten` KK ON KK.id=W.`idkabkot` AND KK.urutan=1
                                     JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     WHERE U.`id`=" . $iduaer . " ";
-                $list_data = $this->db->query($sql);
-                if (!$list_data) {
+                $list_data_p_kot = $this->db->query($sql_p_kot);
+                if (!$list_data_p_kot) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                     log_message("error", $msg);
-                    throw new Exception("Invalid SQL 1!");
+                    throw new Exception("Invalid SQL penyelesaian modul kota!");
                 }
-                $jml_penyelesain_kot = $list_data->row()->jml_ttl;
+                $jml_penyelesain_kot = $list_data_p_kot->row()->jml_ttl;
 
                 if ($jml_penyelesain_kot == '0') {
                     $total_penyelesaian_kot = '0';
@@ -375,7 +394,7 @@ class PPD2_modul1 extends CI_Controller
                 if (!$list_data) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                     log_message("error", $msg);
-                    throw new Exception("Invalid SQL!");
+                    throw new Exception("Invalid SQL Aspek!");
                 }
                 $jml_aspek = $list_data->num_rows();
 
@@ -395,13 +414,13 @@ class PPD2_modul1 extends CI_Controller
                     //get jml item
                     $sql = "SELECT I.`id`
                             FROM r_mdl1_item I 
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y'
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov IN ('ALL','PROV')
                             JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y'";
                     $list_data = $this->db->query($sql);
                     if (!$list_data) {
                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                         log_message("error", $msg);
-                        throw new Exception("Invalid SQL!");
+                        throw new Exception("Invalid SQL Item Prov!");
                     }
                     $jml_item = $list_data->num_rows();
 
@@ -415,7 +434,7 @@ class PPD2_modul1 extends CI_Controller
                                     JOIN `t_mdl1_skor_prov` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','PROV')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     WHERE W.`iduser`=?
                                     GROUP BY W.`idwilayah`
@@ -434,7 +453,7 @@ class PPD2_modul1 extends CI_Controller
                     if (!$list_data) {
                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                         log_message("error", $msg);
-                        throw new Exception("Invalid SQL!");
+                        throw new Exception("Invalid SQL List Prov!");
                     }
 
                     /* $str="";
@@ -583,13 +602,13 @@ class PPD2_modul1 extends CI_Controller
                     //get jml item
                     $sql = "SELECT I.`id`
                             FROM r_mdl1_item I 
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov='N'
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov IN ('ALL','KOTKAB','KAB')
                             JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y'";
                     $list_data = $this->db->query($sql);
                     if (!$list_data) {
                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                         log_message("error", $msg);
-                        throw new Exception("Invalid SQL!");
+                        throw new Exception("Invalid SQL Item Kab!");
                     }
                     $jml_item = $list_data->num_rows();
                     //LIST KABUPATEN
@@ -602,7 +621,7 @@ class PPD2_modul1 extends CI_Controller
                                     JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KAB')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     WHERE W.`iduser`=?
                                     GROUP BY W.`idkabkot`
@@ -621,7 +640,7 @@ class PPD2_modul1 extends CI_Controller
                     if (!$list_data) {
                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                         log_message("error", $msg);
-                        throw new Exception("Invalid SQL!");
+                        throw new Exception("Invalid SQL List Kab!");
                     }
 
                     $str = "";
@@ -721,13 +740,13 @@ class PPD2_modul1 extends CI_Controller
                     //get jml item
                     $sql = "SELECT I.`id`
                             FROM r_mdl1_item I 
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov='N'
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov IN ('ALL','KOTKAB','KOT')
                             JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y'";
                     $list_data = $this->db->query($sql);
                     if (!$list_data) {
                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                         log_message("error", $msg);
-                        throw new Exception("Invalid SQL!");
+                        throw new Exception("Invalid SQL Item Kota!");
                     }
                     $jml_item = $list_data->num_rows();
 
@@ -741,7 +760,7 @@ class PPD2_modul1 extends CI_Controller
                                     JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KOT')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     WHERE W.`iduser`=?
                                     GROUP BY W.`idkabkot`
@@ -760,7 +779,7 @@ class PPD2_modul1 extends CI_Controller
                     if (!$list_data) {
                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                         log_message("error", $msg);
-                        throw new Exception("Invalid SQL!");
+                        throw new Exception("Invalid SQL List Kota!");
                     }
 
                     $str = "";
@@ -926,19 +945,19 @@ class PPD2_modul1 extends CI_Controller
                     /*
                      * check data PROV - start
                      */
-                    $sql = "SELECT A.`id`
+                    $sql_data_prov = "SELECT A.`id`
                             FROM `provinsi` A
                             WHERE A.`id`=?";
-                    $bind = array($idwlyh);
-                    $list_data = $this->db->query($sql, $bind);
-                    if (!$list_data) {
+                    $bind_data_prov = array($idwlyh);
+                    $list_data_prov = $this->db->query($sql_data_prov, $bind_data_prov);
+                    if (!$list_data_prov) {
                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                         log_message("error", $msg);
-                        throw new Exception("Invalid SQL!");
+                        throw new Exception("Invalid SQL data prov!");
                     }
-                    if ($list_data->num_rows() == 0) {
-                        $msg = $session->userid . " " . $this->router->fetch_class() . " : Prov ID : " . $idwlyh . " not found";
-                        log_message("error", $msg);
+                    if ($list_data_prov->num_rows() == 0) {
+                        $msg_data_prov = $session->userid . " " . $this->router->fetch_class() . " : Prov ID : " . $idwlyh . " not found";
+                        log_message("error", $msg_data_prov);
                         throw new Exception("Data Provinsi tidak ditemukan!");
                     }
                     /*
@@ -946,7 +965,7 @@ class PPD2_modul1 extends CI_Controller
                      */
 
                     //get LIST tautan doc
-                    $sql = "SELECT A.`id`,A.`judul`,A.`tautan`, 'umum' kate
+                    $sql_tautan_doc_prov = "SELECT A.`id`,A.`judul`,A.`tautan`, 'umum' kate
                             FROM `t_doc` A
                             JOIN `t_doc_groupuser` B ON B.`docid`=A.`id` AND B.`groupid`=?
                             WHERE A.`isactive`='Y'
@@ -955,30 +974,30 @@ class PPD2_modul1 extends CI_Controller
                             FROM `t_doc_prov` A
                             JOIN `t_doc_prov_groupuser` B ON B.`docid`=A.`id` AND B.`groupid`=?
                             WHERE A.`isactive`='Y' AND A.provid=?";
-                    $bind = array($usergroupid, $usergroupid, $idwlyh);
-                    $list_data = $this->db->query($sql, $bind);
+                    $bind_tautan_doc_prov = array($usergroupid, $usergroupid, $idwlyh);
+                    $list_data = $this->db->query($sql_tautan_doc_prov, $bind_tautan_doc_prov);
                     if (!$list_data) {
-                        $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-                        log_message("error", $msg);
-                        throw new Exception("Invalid SQL!");
+                        $msg_tautan_doc_prov = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                        log_message("error", $msg_tautan_doc_prov);
+                        throw new Exception("Invalid SQL tautan doc prov!");
                     }
                 } elseif ($kate_wlyh == "KAB" || $kate_wlyh == "KOTA") {
                     /*
                      * check data KAB / KOTA - start
                      */
-                    $sql = "SELECT A.`id`
+                    $sql_data_kabkot = "SELECT A.`id`
                             FROM `kabupaten` A
                             WHERE A.`id`=?";
-                    $bind = array($idwlyh);
-                    $list_data = $this->db->query($sql, $bind);
-                    if (!$list_data) {
-                        $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-                        log_message("error", $msg);
-                        throw new Exception("Invalid SQL!");
+                    $bind_data_kabkot = array($idwlyh);
+                    $list_data_kabkot = $this->db->query($sql_data_kabkot, $bind_data_kabkot);
+                    if (!$list_data_kabkot) {
+                        $msg_data_kabkot = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                        log_message("error", $msg_data_kabkot);
+                        throw new Exception("Invalid SQL data kabkot!");
                     }
-                    if ($list_data->num_rows() == 0) {
-                        $msg = $session->userid . " " . $this->router->fetch_class() . " : Kab/Kota ID : " . $idwlyh . " not found";
-                        log_message("error", $msg);
+                    if ($list_data_kabkot->num_rows() == 0) {
+                        $msg_data_kabkot = $session->userid . " " . $this->router->fetch_class() . " : Kab/Kota ID : " . $idwlyh . " not found";
+                        log_message("error", $msg_data_kabkot);
                         throw new Exception("Data Kabupaten / Kota tidak ditemukan!");
                     }
                     /*
@@ -986,7 +1005,7 @@ class PPD2_modul1 extends CI_Controller
                      */
 
                     //get LIST tautan doc
-                    $sql = "SELECT A.`id`,A.`judul`,A.`tautan`, 'umum' kate
+                    $sql_tautan_doc_kabkot = "SELECT A.`id`,A.`judul`,A.`tautan`, 'umum' kate
                             FROM `t_doc` A
                             JOIN `t_doc_groupuser` B ON B.`docid`=A.`id` AND B.`groupid`=?
                             WHERE A.`isactive`='Y'
@@ -996,12 +1015,12 @@ class PPD2_modul1 extends CI_Controller
                             JOIN `t_doc_kab_groupuser` B ON B.`docid`=A.`id` AND B.`groupid`=?
                             WHERE A.`isactive`='Y' AND A.kabid=?";
 
-                    $bind = array($usergroupid, $usergroupid, $idwlyh);
-                    $list_data = $this->db->query($sql, $bind);
+                    $bind_tautan_doc_kabkot = array($usergroupid, $usergroupid, $idwlyh);
+                    $list_data = $this->db->query($sql_tautan_doc_kabkot, $bind_tautan_doc_kabkot);
                     if (!$list_data) {
-                        $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-                        log_message("error", $msg);
-                        throw new Exception("Invalid SQL!");
+                        $msg_tautan_doc_kabkot = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                        log_message("error", $msg_tautan_doc_kabkot);
+                        throw new Exception("Invalid SQL tautan doc kabkot!");
                     }
                 }
 
@@ -1146,12 +1165,12 @@ class PPD2_modul1 extends CI_Controller
                  */
                 if ($kate_wlyh == "PROV") {
                     //LIST INDIKATOR
-                    $sql = "SELECT A.id idindi,B.id idkriteria,ASP.id idaspek,ASP.nama nmaspek,B.`nama` nmkriteria,A.`nama` nmindi,ASP.bobot bobotaspek,A.`bobot` bobotindi,B.`bobot` bobotkriteria,A.`note` noteindi
+                    $sql_ind_prov = "SELECT A.id idindi,B.id idkriteria,ASP.id idaspek,ASP.nama nmaspek,B.`nama` nmkriteria,A.`nama` nmindi,ASP.bobot bobotaspek,A.`bobot` bobotindi,B.`bobot` bobotkriteria,A.`note` noteindi
                             ,A.nourut,COUNT(1) jml,IFNULL(LAPOR.jml,0) jmllapor,RSM.`stts` stts_rsm
                             FROM `r_mdl1_indi` A
                             JOIN `r_mdl1_krtria` B ON B.`id`=A.`krtriaid`
                             JOIN `r_mdl1_aspek` ASP ON ASP.id=B.aspekid
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`indiid`=A.`id`
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`indiid`=A.`id` AND SI.isprov IN ('ALL', 'PROV')
                             JOIN `r_mdl1_item` I ON I.`subindiid`=SI.`id`
                             LEFT JOIN(
                                     SELECT MI.`id` idindi,COUNT(1) jml
@@ -1159,7 +1178,7 @@ class PPD2_modul1 extends CI_Controller
                                     JOIN `t_mdl1_skor_prov` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','PROV')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     WHERE W.`id`=?
                                     GROUP BY MI.`id`
@@ -1167,8 +1186,8 @@ class PPD2_modul1 extends CI_Controller
                             LEFT JOIN `t_mdl1_resume_prov` RSM ON RSM.`aspekid`=ASP.`id` AND RSM.`mapid`=?
                             GROUP BY A.`id`
                             ORDER BY B.`id`,A.nourut";
-                    $bind = array($idmap, $idmap);
-                    $list_data = $this->db->query($sql, $bind);
+                    $bind_ind_prov = array($idmap, $idmap);
+                    $list_data = $this->db->query($sql_ind_prov, $bind_ind_prov);
 
 
                     /*
@@ -1176,22 +1195,22 @@ class PPD2_modul1 extends CI_Controller
                     * CHECK KELENGKAPAN RESUME PROVINSI - START
                     * +++++++++++++++++++++++++++++++++++++++++
                     */
-                    $sql = "SELECT COUNT(A.id) jml, SUM(CASE WHEN B.`id` IS NULL THEN 0 ELSE 1 END) jml_rsm
+                    $sql_resume_prov = "SELECT COUNT(A.id) jml, SUM(CASE WHEN B.`id` IS NULL THEN 0 ELSE 1 END) jml_rsm
                            FROM `r_mdl1_aspek` A
                            LEFT JOIN `t_mdl1_resume_prov` B ON A.`id`=B.`aspekid` AND B.`mapid`=?
                            WHERE A.`isactive`='Y'";
-                    $bind = array($idmap);
-                    $list_check = $this->db->query($sql, $bind);
-                    if (!$list_check) {
-                        $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-                        log_message("error", $msg);
-                        throw new Exception("Invalid SQL!");
+                    $bind_resume_prov = array($idmap);
+                    $list_check_resume_prov = $this->db->query($sql_resume_prov, $bind_resume_prov);
+                    if (!$list_check_resume_prov) {
+                        $msg_resume_prov = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                        log_message("error", $msg_resume_prov);
+                        throw new Exception("Invalid SQL Resume Prov!");
                     }
-                    if ($list_check->num_rows() == 0)
+                    if ($list_check_resume_prov->num_rows() == 0)
                         throw new Exception("Data Kriteria tidak ditemukan!");
 
                     $sttsDispSttment = 'N';
-                    if ($list_check->row()->jml > 0 && $list_check->row()->jml == $list_check->row()->jml_rsm)
+                    if ($list_check_resume_prov->row()->jml > 0 && $list_check_resume_prov->row()->jml == $list_check_resume_prov->row()->jml_rsm)
                         $sttsDispSttment = 'Y';
 
                     /*
@@ -1201,25 +1220,25 @@ class PPD2_modul1 extends CI_Controller
                     */
 
                     if ($sttsDispSttment == 'Y') {
-                        $sql = "SELECT id FROM t_mdl1_sttment_prov WHERE mapid=?";
-                        $bind = array($idmap);
-                        $list_check = $this->db->query($sql, $bind);
-                        if (!$list_check) {
+                        $sql_sttment_prov = "SELECT id FROM t_mdl1_sttment_prov WHERE mapid=?";
+                        $bind_sttment_prov = array($idmap);
+                        $list_check_sttment_prov = $this->db->query($sql_sttment_prov, $bind_sttment_prov);
+                        if (!$list_check_sttment_prov) {
                             $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                             log_message("error", $msg);
-                            throw new Exception("Invalid SQL!");
+                            throw new Exception("Invalid SQL sttment prov!");
                         }
-                        if ($list_check->num_rows() > 0)
+                        if ($list_check_sttment_prov->num_rows() > 0)
                             $sttsDispSttment = 'N';
                     }
-                } elseif ($kate_wlyh == "KAB" || $kate_wlyh == "KOTA") {
+                } elseif ($kate_wlyh == "KAB") {
                     //LIST INDIKATOR
-                    $sql = "SELECT A.id idindi,B.id idkriteria,B.`nama` nmkriteria,ASP.id idaspek,ASP.nama nmaspek,A.`nama` nmindi,ASP.bobot bobotaspek,A.`bobot` bobotindi,B.`bobot` bobotkriteria,A.`note` noteindi
+                    $sql_ind_kab = "SELECT A.id idindi,B.id idkriteria,B.`nama` nmkriteria,ASP.id idaspek,ASP.nama nmaspek,A.`nama` nmindi,ASP.bobot bobotaspek,A.`bobot` bobotindi,B.`bobot` bobotkriteria,A.`note` noteindi
                             ,A.nourut,COUNT(1) jml,IFNULL(LAPOR.jml,0) jmllapor,RSM.`stts` stts_rsm
                             FROM `r_mdl1_indi` A
                             JOIN `r_mdl1_krtria` B ON B.`id`=A.`krtriaid`
                             JOIN `r_mdl1_aspek` ASP ON ASP.id=B.aspekid
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`indiid`=A.`id` AND SI.isprov='N'
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`indiid`=A.`id` AND SI.isprov IN ('ALL','KOTKAB','KAB')
                             JOIN `r_mdl1_item` I ON I.`subindiid`=SI.`id`
                             LEFT JOIN(
                                     SELECT MI.`id` idindi,COUNT(1) jml
@@ -1227,7 +1246,7 @@ class PPD2_modul1 extends CI_Controller
                                     JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KAB')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     WHERE W.`id`=?
                                     GROUP BY MI.`id`
@@ -1235,8 +1254,8 @@ class PPD2_modul1 extends CI_Controller
                             LEFT JOIN `t_mdl1_resume_kabkota` RSM ON RSM.`aspekid`=ASP.`id` AND RSM.`mapid`=?
                             GROUP BY A.`id`
                             ORDER BY B.`id`,A.nourut";
-                    $bind = array($idmap, $idmap);
-                    $list_data = $this->db->query($sql, $bind);
+                    $bind_ind_kab = array($idmap, $idmap);
+                    $list_data = $this->db->query($sql_ind_kab, $bind_ind_kab);
 
 
                     /*
@@ -1244,22 +1263,22 @@ class PPD2_modul1 extends CI_Controller
                     * CHECK KELENGKAPAN RESUME KABUPATEN - START
                     * +++++++++++++++++++++++++++++++++++++++++++
                     */
-                    $sql = "SELECT COUNT(A.id) jml, SUM(CASE WHEN B.`id` IS NULL THEN 0 ELSE 1 END) jml_rsm
+                    $sql_res_kab = "SELECT COUNT(A.id) jml, SUM(CASE WHEN B.`id` IS NULL THEN 0 ELSE 1 END) jml_rsm
                            FROM `r_mdl1_aspek` A
                            LEFT JOIN `t_mdl1_resume_kabkota` B ON A.`id`=B.`aspekid` AND B.`mapid`=?
                            WHERE A.`isactive`='Y'";
-                    $bind = array($idmap);
-                    $list_check = $this->db->query($sql, $bind);
-                    if (!$list_check) {
+                    $bind_res_kab = array($idmap);
+                    $list_check_res_kab = $this->db->query($sql_res_kab, $bind_res_kab);
+                    if (!$list_check_res_kab) {
                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                         log_message("error", $msg);
-                        throw new Exception("Invalid SQL!");
+                        throw new Exception("Invalid SQL Resume Kab!");
                     }
-                    if ($list_check->num_rows() == 0)
+                    if ($list_check_res_kab->num_rows() == 0)
                         throw new Exception("Data Kriteria tidak ditemukan!");
 
                     $sttsDispSttment = 'N';
-                    if ($list_check->row()->jml > 0 && $list_check->row()->jml == $list_check->row()->jml_rsm)
+                    if ($list_check_res_kab->row()->jml > 0 && $list_check_res_kab->row()->jml == $list_check_res_kab->row()->jml_rsm)
                         $sttsDispSttment = 'Y';
 
                     /*
@@ -1269,15 +1288,83 @@ class PPD2_modul1 extends CI_Controller
                     */
 
                     if ($sttsDispSttment == 'Y') {
-                        $sql = "SELECT id FROM t_mdl1_sttment_kabkota WHERE mapid=?";
-                        $bind = array($idmap);
-                        $list_check = $this->db->query($sql, $bind);
-                        if (!$list_check) {
-                            $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-                            log_message("error", $msg);
-                            throw new Exception("Invalid SQL!");
+                        $sql_sttment_kab = "SELECT id FROM t_mdl1_sttment_kabkota WHERE mapid=?";
+                        $bind_sttment_kab = array($idmap);
+                        $list_check_sttment_kab = $this->db->query($sql_sttment_kab, $bind_sttment_kab);
+                        if (!$list_check_sttment_kab) {
+                            $msg_sttment_kab = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                            log_message("error", $msg_sttment_kab);
+                            throw new Exception("Invalid SQL Sttment Kab!");
                         }
-                        if ($list_check->num_rows() > 0)
+                        if ($list_check_sttment_kab->num_rows() > 0)
+                            $sttsDispSttment = 'N';
+                    }
+                } elseif ($kate_wlyh == "KOTA") {
+                    //LIST INDIKATOR
+                    $sql_ind_kot = "SELECT A.id idindi,B.id idkriteria,B.`nama` nmkriteria,ASP.id idaspek,ASP.nama nmaspek,A.`nama` nmindi,ASP.bobot bobotaspek,A.`bobot` bobotindi,B.`bobot` bobotkriteria,A.`note` noteindi
+                            ,A.nourut,COUNT(1) jml,IFNULL(LAPOR.jml,0) jmllapor,RSM.`stts` stts_rsm
+                            FROM `r_mdl1_indi` A
+                            JOIN `r_mdl1_krtria` B ON B.`id`=A.`krtriaid`
+                            JOIN `r_mdl1_aspek` ASP ON ASP.id=B.aspekid
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`indiid`=A.`id` AND SI.isprov IN ('ALL','KOTKAB','KOT')
+                            JOIN `r_mdl1_item` I ON I.`subindiid`=SI.`id`
+                            LEFT JOIN(
+                                    SELECT MI.`id` idindi,COUNT(1) jml
+                                    FROM `tbl_user_kabkot` W
+                                    JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
+                                    JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
+                                    JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KOT')
+                                    JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
+                                    WHERE W.`id`=?
+                                    GROUP BY MI.`id`
+                            ) LAPOR ON LAPOR.idindi=A.`id`
+                            LEFT JOIN `t_mdl1_resume_kabkota` RSM ON RSM.`aspekid`=ASP.`id` AND RSM.`mapid`=?
+                            GROUP BY A.`id`
+                            ORDER BY B.`id`,A.nourut";
+                    $bind_ind_kot = array($idmap, $idmap);
+                    $list_data = $this->db->query($sql_ind_kot, $bind_ind_kot);
+
+
+                    /*
+                    * +++++++++++++++++++++++++++++++++++++++++++
+                    * CHECK KELENGKAPAN RESUME KABUPATEN - START
+                    * +++++++++++++++++++++++++++++++++++++++++++
+                    */
+                    $sql_res_kot = "SELECT COUNT(A.id) jml, SUM(CASE WHEN B.`id` IS NULL THEN 0 ELSE 1 END) jml_rsm
+                           FROM `r_mdl1_aspek` A
+                           LEFT JOIN `t_mdl1_resume_kabkota` B ON A.`id`=B.`aspekid` AND B.`mapid`=?
+                           WHERE A.`isactive`='Y'";
+                    $bind_res_kot = array($idmap);
+                    $list_check_res_kot = $this->db->query($sql_res_kot, $bind_res_kot);
+                    if (!$list_check_res_kot) {
+                        $msg_res_kot = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                        log_message("error", $msg_res_kot);
+                        throw new Exception("Invalid SQL Resume Kota!");
+                    }
+                    if ($list_check_res_kot->num_rows() == 0)
+                        throw new Exception("Data Kriteria tidak ditemukan!");
+
+                    $sttsDispSttment = 'N';
+                    if ($list_check_res_kot->row()->jml > 0 && $list_check_res_kot->row()->jml == $list_check_res_kot->row()->jml_rsm)
+                        $sttsDispSttment = 'Y';
+
+                    /*
+                    * +++++++++++++++++++++++++++++++++++++++++
+                    * CHECK KELENGKAPAN RESUME KABUPATEN - END
+                    * +++++++++++++++++++++++++++++++++++++++++
+                    */
+
+                    if ($sttsDispSttment == 'Y') {
+                        $sql_sttment_kot = "SELECT id FROM t_mdl1_sttment_kabkota WHERE mapid=?";
+                        $bind_sttment_kot = array($idmap);
+                        $list_check_sttment_kot = $this->db->query($sql_sttment_kot, $bind_sttment_kot);
+                        if (!$list_check_sttment_kot) {
+                            $msg_sttment_kot = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                            log_message("error", $msg_sttment_kot);
+                            throw new Exception("Invalid SQL Sttment Kota!");
+                        }
+                        if ($list_check_sttment_kot->num_rows() > 0)
                             $sttsDispSttment = 'N';
                     }
                 }
@@ -1462,7 +1549,7 @@ class PPD2_modul1 extends CI_Controller
                                     JOIN `t_mdl1_skor_prov` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','PROV')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     WHERE W.`iduser`=?
                                     GROUP BY W.`idwilayah`
@@ -1507,7 +1594,7 @@ class PPD2_modul1 extends CI_Controller
                                             JOIN `t_mdl1_skor_prov` SKR ON SKR.`mapid`=W.`id`
                                             JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                             JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
+                                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','PROV')
                                             JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $vi->ID_INDIKATOR . "
                                             JOIN provinsi PROV ON PROV.id = W.idwilayah
                                             WHERE W.`id` =" . $vd->mapid . "
@@ -1517,7 +1604,7 @@ class PPD2_modul1 extends CI_Controller
                                 // sql untuk mengambil item berdasarkan id indikator
                                 $sql_item = "SELECT MI.id AS ID_INDIKATOR, MI.nama AS INDIKATOR, I.nama AS ITEM
                                             FROM r_mdl1_indi MI
-                                            JOIN r_mdl1_sub_indi SI ON SI.indiid = MI.id
+                                            JOIN r_mdl1_sub_indi SI ON SI.indiid = MI.id AND SI.isprov IN ('ALL','PROV')
                                             JOIN r_mdl1_item I ON I.subindiid = SI.id
                                             WHERE MI.id = '" . $vi->ID_INDIKATOR . "'";
                                 $list_data_item = $this->db->query($sql_item);
@@ -1557,7 +1644,7 @@ class PPD2_modul1 extends CI_Controller
                                                 JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                                 JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                                 JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KAB')
                                                 JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                                 WHERE W.`iduser`=?
                                                 GROUP BY W.`idkabkot`
@@ -1602,7 +1689,7 @@ class PPD2_modul1 extends CI_Controller
                                             JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                             JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                             JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KAB')
                                             JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $vi->ID_INDIKATOR . "
                                             JOIN kabupaten KAB ON KAB.id = W.idkabkot
                                             WHERE W.`id`=" . $vd->mapid  . "
@@ -1612,9 +1699,9 @@ class PPD2_modul1 extends CI_Controller
                                 // sql untuk mengambil item berdasarkan id indikator
                                 $sql_item = "SELECT MI.id AS ID_INDIKATOR, MI.nama AS INDIKATOR, I.nama AS ITEM
                                             FROM r_mdl1_indi MI
-                                            JOIN r_mdl1_sub_indi SI ON SI.indiid = MI.id
+                                            JOIN r_mdl1_sub_indi SI ON SI.indiid = MI.id AND SI.isprov IN ('ALL','KOTKAB','KAB')
                                             JOIN r_mdl1_item I ON I.subindiid = SI.id
-                                            WHERE SI.isprov = 'N' AND MI.id = '" . $vi->ID_INDIKATOR . "'";
+                                            WHERE SI.isprov = 'ALL' AND MI.id = '" . $vi->ID_INDIKATOR . "'";
                                 $list_data_item = $this->db->query($sql_item);
                                 //perhitungan nilai berdasarkan skor indikator
                                 $nilai = ($list_data_nilai_indi->result()[0]->total != null ? ($list_data_nilai_indi->result()[0]->total / $list_data_item->num_rows()) * 10 : 0);
@@ -1652,7 +1739,7 @@ class PPD2_modul1 extends CI_Controller
                                                 JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                                 JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                                 JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KOT')
                                                 JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                                 WHERE W.`iduser`=?
                                                 GROUP BY W.`idkabkot`
@@ -1697,7 +1784,7 @@ class PPD2_modul1 extends CI_Controller
                                             JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                             JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                             JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KOT')
                                             JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $vi->ID_INDIKATOR . "
                                             JOIN kabupaten KAB ON KAB.id = W.idkabkot
                                             WHERE W.`id`=" . $vd->mapid  . "
@@ -1707,9 +1794,9 @@ class PPD2_modul1 extends CI_Controller
                                 // sql untuk mengambil item berdasarkan id indikator
                                 $sql_item = "SELECT MI.id AS ID_INDIKATOR, MI.nama AS INDIKATOR, I.nama AS ITEM
                                                 FROM r_mdl1_indi MI
-                                                JOIN r_mdl1_sub_indi SI ON SI.indiid = MI.id
+                                                JOIN r_mdl1_sub_indi SI ON SI.indiid = MI.id AND SI.isprov IN ('ALL','KOTKAB','KOT')
                                                 JOIN r_mdl1_item I ON I.subindiid = SI.id
-                                                WHERE SI.isprov = 'N' AND MI.id = '" . $vi->ID_INDIKATOR . "'";
+                                                WHERE SI.isprov = 'ALL' AND MI.id = '" . $vi->ID_INDIKATOR . "'";
                                 $list_data_item = $this->db->query($sql_item);
                                 //perhitungan nilai berdasarkan skor indikator
                                 $nilai = ($list_data_nilai_indi->result()[0]->total != null ? ($list_data_nilai_indi->result()[0]->total / $list_data_item->num_rows()) * 10 : 0);
@@ -1870,7 +1957,7 @@ class PPD2_modul1 extends CI_Controller
                                                 JOIN `t_mdl1_skor_prov` SKR ON SKR.`mapid`=W.`id`
                                                 JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                                 JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
+                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','PROV')
                                                 JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                                 WHERE W.`iduser`=?
                                                 GROUP BY W.`idwilayah`
@@ -1897,7 +1984,7 @@ class PPD2_modul1 extends CI_Controller
                                                 JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                                 JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                                 JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KAB')
                                                 JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                                 WHERE W.`iduser`=?
                                                 GROUP BY W.`idkabkot`
@@ -1924,7 +2011,7 @@ class PPD2_modul1 extends CI_Controller
                                                 JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                                 JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                                 JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KOT')
                                                 JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                                 WHERE W.`iduser`=?
                                                 GROUP BY W.`idkabkot`
@@ -2100,11 +2187,11 @@ class PPD2_modul1 extends CI_Controller
                  */
                 if ($kate_wlyh == "PROV") {
                     //LIST INDIKATOR
-                    $sql = "SELECT IT.`nourut`,IT.`id`iditem,IT.`nama` nmitem,SI.`id` idsubindi ,SI.`nama` nmsubindi,SI.`istampil`
+                    $sql_list_ind_prov = "SELECT IT.`nourut`,IT.`id`iditem,IT.`nama` nmitem,SI.`id` idsubindi ,SI.`nama` nmsubindi,SI.`istampil`
                             ,NOL.idinditem idnol,NOL.nminditem nmnol,SATU.idinditem idsatu,SATU.nminditem nmsatu
                             ,ISI.skor isiskor,ISI.indiitemid
                             FROM `r_mdl1_item` IT
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid`
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL','PROV')
                             LEFT JOIN(
                                     SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                     FROM `r_mdl1_item_indi` MII
@@ -2116,7 +2203,7 @@ class PPD2_modul1 extends CI_Controller
                                     SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                     FROM `r_mdl1_item_indi` MII
                                     JOIN `r_mdl1_item` I ON I.`id`=MII.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $idindi . "
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $idindi . " AND SI.isprov IN ('ALL','PROV')
                                     WHERE MII.`skor`=1
                             ) SATU ON SATU.iditem=IT.`id`
                             LEFT JOIN(
@@ -2125,22 +2212,22 @@ class PPD2_modul1 extends CI_Controller
                                     JOIN `t_mdl1_skor_prov` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','PROV')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $idindi . "
                                     WHERE W.`id`=" . $idmap . "
                                     
                             ) ISI ON ISI.iditem=IT.`id`
                             WHERE SI.`indiid`=" . $idindi . " "
                         . " ORDER BY SI.`nourut`,IT.`nourut` ASC";
-                    $bind = array($idmap);
-                    $list_data = $this->db->query($sql, $bind);
-                } elseif ($kate_wlyh == "KAB" || $kate_wlyh == "KOTA") {
+                    $bind_list_ind_prov = array($idmap);
+                    $list_data = $this->db->query($sql_list_ind_prov, $bind_list_ind_prov);
+                } elseif ($kate_wlyh == "KAB") {
                     //LIST INDIKATOR
-                    $sql = "SELECT IT.`nourut`,IT.`id`iditem,IT.`nama` nmitem,SI.`id` idsubindi ,SI.`nama` nmsubindi,SI.`istampil`
+                    $sql_list_ind_kab = "SELECT IT.`nourut`,IT.`id`iditem,IT.`nama` nmitem,SI.`id` idsubindi ,SI.`nama` nmsubindi,SI.`istampil`
                             ,NOL.idinditem idnol,NOL.nminditem nmnol,SATU.idinditem idsatu,SATU.nminditem nmsatu
                             ,ISI.skor isiskor,ISI.indiitemid
                             FROM `r_mdl1_item` IT
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KAB')
                             LEFT JOIN(
                                     SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                     FROM `r_mdl1_item_indi` MII
@@ -2152,7 +2239,7 @@ class PPD2_modul1 extends CI_Controller
                                     SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                     FROM `r_mdl1_item_indi` MII
                                     JOIN `r_mdl1_item` I ON I.`id`=MII.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $idindi . " AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $idindi . " AND SI.isprov IN ('ALL','KOTKAB','KAB')
                                     WHERE MII.`skor`=1
                             ) SATU ON SATU.iditem=IT.`id`
                             LEFT JOIN(
@@ -2161,15 +2248,51 @@ class PPD2_modul1 extends CI_Controller
                                     JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KAB')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $idindi . "
                                     WHERE W.`id`=" . $idmap . "
                                     
                             ) ISI ON ISI.iditem=IT.`id`
                             WHERE SI.`indiid`=" . $idindi . " "
                         . " ORDER BY SI.`nourut`,IT.`nourut` ASC";
-                    $bind = array($idmap);
-                    $list_data = $this->db->query($sql, $bind);
+                    $bind_list_ind_kab = array($idmap);
+                    $list_data = $this->db->query($sql_list_ind_kab, $bind_list_ind_kab);
+                } elseif ($kate_wlyh == "KOTA") {
+                    //LIST INDIKATOR
+                    $sql_list_ind_kot = "SELECT IT.`nourut`,IT.`id`iditem,IT.`nama` nmitem,SI.`id` idsubindi ,SI.`nama` nmsubindi,SI.`istampil`
+                            ,NOL.idinditem idnol,NOL.nminditem nmnol,SATU.idinditem idsatu,SATU.nminditem nmsatu
+                            ,ISI.skor isiskor,ISI.indiitemid
+                            FROM `r_mdl1_item` IT
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KOT')
+                            LEFT JOIN(
+                                    SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
+                                    FROM `r_mdl1_item_indi` MII
+                                    JOIN `r_mdl1_item` I ON I.`id`=MII.`itemid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $idindi . "
+                                    WHERE MII.`skor`=0
+                            ) NOL ON NOL.iditem=IT.`id`
+                            LEFT JOIN(
+                                    SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
+                                    FROM `r_mdl1_item_indi` MII
+                                    JOIN `r_mdl1_item` I ON I.`id`=MII.`itemid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $idindi . " AND SI.isprov IN ('ALL','KOTKAB','KOT')
+                                    WHERE MII.`skor`=1
+                            ) SATU ON SATU.iditem=IT.`id`
+                            LEFT JOIN(
+                                    SELECT I.`id` iditem,II.`skor`,II.`id` indiitemid
+                                    FROM `tbl_user_kabkot` W
+                                    JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
+                                    JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
+                                    JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL','KOTKAB','KOT')
+                                    JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $idindi . "
+                                    WHERE W.`id`=" . $idmap . "
+                                    
+                            ) ISI ON ISI.iditem=IT.`id`
+                            WHERE SI.`indiid`=" . $idindi . " "
+                        . " ORDER BY SI.`nourut`,IT.`nourut` ASC";
+                    $bind_list_ind_kot = array($idmap);
+                    $list_data = $this->db->query($sql_list_ind_kot, $bind_list_ind_kot);
                 }
 
                 /* 
@@ -2395,7 +2518,7 @@ class PPD2_modul1 extends CI_Controller
                             $sql = "SELECT IT.`nourut`,IT.`id`iditem,IT.`nama` nmitem,SI.`id` idsubindi ,SI.`nama` nmsubindi,SI.`istampil`, 
                                     NOL.idinditem idnol, NOL.nminditem nmnol,SATU.idinditem idsatu,SATU.nminditem nmsatu
                                         FROM `r_mdl1_item` IT
-                                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid`
+                                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'PROV')
                                         LEFT JOIN(
                                                 SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                                 FROM `r_mdl1_item_indi` MII
@@ -2407,7 +2530,7 @@ class PPD2_modul1 extends CI_Controller
                                                 SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                                 FROM `r_mdl1_item_indi` MII
                                                 JOIN `r_mdl1_item` I ON I.`id`=MII.`itemid`
-                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $via->ID_INDIKATOR . "
+                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $via->ID_INDIKATOR . " AND SI.isprov IN ('ALL', 'PROV')
                                                 WHERE MII.`skor`=1
                                         ) SATU ON SATU.iditem=IT.`id`
                                         WHERE SI.`indiid`=" . $via->ID_INDIKATOR . " ORDER BY SI.nourut, `IT`.`nourut` ASC";
@@ -2425,7 +2548,7 @@ class PPD2_modul1 extends CI_Controller
                                                         JOIN `t_mdl1_skor_prov` SKR ON SKR.`mapid`=W.`id`
                                                         JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                                         JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
+                                                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'PROV')
                                                         JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                                         WHERE W.`iduser`=?
                                                         GROUP BY W.`idwilayah`
@@ -2446,7 +2569,7 @@ class PPD2_modul1 extends CI_Controller
                             $sql = "SELECT IT.`nourut`,IT.`id`iditem,IT.`nama` nmitem,SI.`id` idsubindi ,SI.`nama` nmsubindi,SI.`istampil`
                                     ,NOL.idinditem idnol,NOL.nminditem nmnol,SATU.idinditem idsatu,SATU.nminditem nmsatu
                                     FROM `r_mdl1_item` IT
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                                     LEFT JOIN(
                                             SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                             FROM `r_mdl1_item_indi` MII
@@ -2458,7 +2581,7 @@ class PPD2_modul1 extends CI_Controller
                                             SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                             FROM `r_mdl1_item_indi` MII
                                             JOIN `r_mdl1_item` I ON I.`id`=MII.`itemid`
-                                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $via->ID_INDIKATOR . " AND SI.isprov='N'
+                                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $via->ID_INDIKATOR . " AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                                             WHERE MII.`skor`=1
                                     ) SATU ON SATU.iditem=IT.`id`
                                     WHERE SI.`indiid`=" . $via->ID_INDIKATOR . " ORDER BY SI.`nourut`,IT.`nourut` ASC";
@@ -2475,7 +2598,7 @@ class PPD2_modul1 extends CI_Controller
                                                     JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                                     WHERE W.`iduser`=?
                                                     GROUP BY W.`idkabkot`
@@ -2496,7 +2619,7 @@ class PPD2_modul1 extends CI_Controller
                             $sql = "SELECT IT.`nourut`,IT.`id`iditem,IT.`nama` nmitem,SI.`id` idsubindi ,SI.`nama` nmsubindi,SI.`istampil`
                                     ,NOL.idinditem idnol,NOL.nminditem nmnol,SATU.idinditem idsatu,SATU.nminditem nmsatu
                                     FROM `r_mdl1_item` IT
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                                     LEFT JOIN(
                                             SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                             FROM `r_mdl1_item_indi` MII
@@ -2508,7 +2631,7 @@ class PPD2_modul1 extends CI_Controller
                                             SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                             FROM `r_mdl1_item_indi` MII
                                             JOIN `r_mdl1_item` I ON I.`id`=MII.`itemid`
-                                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $via->ID_INDIKATOR . " AND SI.isprov='N'
+                                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $via->ID_INDIKATOR . " AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                                             WHERE MII.`skor`=1
                                     ) SATU ON SATU.iditem=IT.`id`
                                     WHERE SI.`indiid`=" . $via->ID_INDIKATOR . " ORDER BY SI.`nourut`,IT.`nourut` ASC";
@@ -2524,7 +2647,7 @@ class PPD2_modul1 extends CI_Controller
                                                         JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                                         JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                                         JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                                                         JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                                         WHERE W.`iduser`=?
                                                         GROUP BY W.`idkabkot`
@@ -2614,7 +2737,19 @@ class PPD2_modul1 extends CI_Controller
                                                     JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
+                                                    JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $via->ID_INDIKATOR . "
+                                                    JOIN kabupaten KAB ON KAB.id = W.idkabkot
+                                                    WHERE W.`id`=" . $vd->mapid  . " AND I.`id` = " . $v->iditem . "
+                                                    ORDER BY `I`.`nourut` ASC";
+                                } elseif (($inp_katewlyh == "KOTA")) {
+
+                                    $sql_nilai_daerah = "SELECT I.nourut, I.`id` iditem,II.`skor`,II.`id` indiitemid, KAB.nama_kabupaten
+                                                    FROM `tbl_user_kabkot` W
+                                                    JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
+                                                    JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
+                                                    JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
+                                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $via->ID_INDIKATOR . "
                                                     JOIN kabupaten KAB ON KAB.id = W.idkabkot
                                                     WHERE W.`id`=" . $vd->mapid  . " AND I.`id` = " . $v->iditem . "
@@ -2807,7 +2942,7 @@ class PPD2_modul1 extends CI_Controller
                     $sql = "SELECT IT.`nourut`,IT.`id`iditem,IT.`nama` nmitem,SI.`id` idsubindi ,SI.`nama` nmsubindi,SI.`istampil`
                             ,NOL.idinditem idnol,NOL.nminditem nmnol,SATU.idinditem idsatu,SATU.nminditem nmsatu
                             FROM `r_mdl1_item` IT
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                             LEFT JOIN(
                                     SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                     FROM `r_mdl1_item_indi` MII
@@ -2819,7 +2954,7 @@ class PPD2_modul1 extends CI_Controller
                                     SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                     FROM `r_mdl1_item_indi` MII
                                     JOIN `r_mdl1_item` I ON I.`id`=MII.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $idindi . " AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $idindi . " AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                                     WHERE MII.`skor`=1
                             ) SATU ON SATU.iditem=IT.`id`
                             WHERE SI.`indiid`=" . $idindi . " ORDER BY SI.`nourut`,IT.`nourut` ASC";
@@ -2838,7 +2973,7 @@ class PPD2_modul1 extends CI_Controller
                                                 JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                                 JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                                 JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                                                 JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                                 WHERE W.`iduser`=?
                                                 GROUP BY W.`idkabkot`
@@ -2859,7 +2994,7 @@ class PPD2_modul1 extends CI_Controller
                     $sql = "SELECT IT.`nourut`,IT.`id`iditem,IT.`nama` nmitem,SI.`id` idsubindi ,SI.`nama` nmsubindi,SI.`istampil`
                             ,NOL.idinditem idnol,NOL.nminditem nmnol,SATU.idinditem idsatu,SATU.nminditem nmsatu
                             FROM `r_mdl1_item` IT
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                             LEFT JOIN(
                                     SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                     FROM `r_mdl1_item_indi` MII
@@ -2871,7 +3006,7 @@ class PPD2_modul1 extends CI_Controller
                                     SELECT I.`id` iditem,MII.`id` idinditem,MII.`nama` nminditem
                                     FROM `r_mdl1_item_indi` MII
                                     JOIN `r_mdl1_item` I ON I.`id`=MII.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $idindi . " AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`indiid`=" . $idindi . " AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                                     WHERE MII.`skor`=1
                             ) SATU ON SATU.iditem=IT.`id`
                             WHERE SI.`indiid`=" . $idindi . " ORDER BY SI.`nourut`,IT.`nourut` ASC";
@@ -2888,7 +3023,7 @@ class PPD2_modul1 extends CI_Controller
                                                 JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                                 JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                                 JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                                JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                                                 JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                                 WHERE W.`iduser`=?
                                                 GROUP BY W.`idkabkot`
@@ -2995,7 +3130,19 @@ class PPD2_modul1 extends CI_Controller
                                             JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                             JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                             JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
+                                            JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $idindi . "
+                                            JOIN kabupaten KAB ON KAB.id = W.idkabkot
+                                            WHERE W.`id`=" . $vd->mapid  . " AND I.`id` = " . $v->iditem . "
+                                            ORDER BY `I`.`nourut` ASC";
+                        } elseif (($kate_wlyh == "KOTA")) {
+
+                            $sql_nilai_daerah = "SELECT I.nourut, I.`id` iditem,II.`skor`,II.`id` indiitemid, KAB.nama_kabupaten
+                                            FROM `tbl_user_kabkot` W
+                                            JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
+                                            JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
+                                            JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
+                                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                                             JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $idindi . "
                                             JOIN kabupaten KAB ON KAB.id = W.idkabkot
                                             WHERE W.`id`=" . $vd->mapid  . " AND I.`id` = " . $v->iditem . "
@@ -3131,7 +3278,7 @@ class PPD2_modul1 extends CI_Controller
                     $sql = "SELECT MII.id,MII.skor,MII.itemid,MSI.indiid,I.`krtriaid`,K.`nama` nmkriteria,ASP.id aspekid,ASP.nama nmaspek "
                         . " FROM r_mdl1_item_indi MII "
                         . " JOIN `r_mdl1_item` MI ON MI.`id`=MII.`itemid`
-                                JOIN `r_mdl1_sub_indi` MSI ON MSI.`id`=MI.`subindiid` 
+                                JOIN `r_mdl1_sub_indi` MSI ON MSI.`id`=MI.`subindiid` AND MSI.isprov IN ('ALL', 'PROV')
                                 JOIN `r_mdl1_indi` I ON I.`id`=MSI.`indiid` 
                                 JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`
                                 JOIN r_mdl1_aspek ASP ON ASP.id=K.aspekid "
@@ -3205,7 +3352,7 @@ class PPD2_modul1 extends CI_Controller
                                     JOIN `t_mdl1_skor_prov` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'PROV')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $idindi . "
                                     WHERE W.`id`=" . $idmap . " "
                         . " GROUP BY MI.`id`";
@@ -3213,7 +3360,7 @@ class PPD2_modul1 extends CI_Controller
                     if (!$list_data) {
                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                         log_message("error", $msg);
-                        throw new Exception("Invalid SQL!");
+                        throw new Exception("Invalid SQL123!");
                     }
                     $ttl_skor = 0;
                     if ($list_data->num_rows() > 0)
@@ -3231,7 +3378,7 @@ class PPD2_modul1 extends CI_Controller
                      */
                     $sql = "SELECT IT.id
                             FROM `r_mdl1_item` IT
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid`
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'PROV')
                             WHERE SI.`indiid`=" . $idindi . " ";
                     $list_data = $this->db->query($sql);
                     if (!$list_data) {
@@ -3256,7 +3403,7 @@ class PPD2_modul1 extends CI_Controller
                             FROM(
                                     SELECT K.`aspekid`,COUNT(1) jml
                                     FROM `r_mdl1_item` IT
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'PROV')
                                     JOIN `r_mdl1_indi` I ON I.`id`=SI.`indiid`
                                     JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`
                                     WHERE K.`aspekid`=" . $idaspek . "
@@ -3268,7 +3415,7 @@ class PPD2_modul1 extends CI_Controller
                                     JOIN `t_mdl1_skor_prov` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'PROV')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     JOIN `r_mdl1_krtria` K ON K.`id`=MI.`krtriaid`
                                     WHERE W.`id`=" . $idmap . " AND K.`aspekid`=" . $idaspek . "
@@ -3343,7 +3490,7 @@ class PPD2_modul1 extends CI_Controller
                      * Check semua item sudah dinilai - END
                      * ++++++++++++++++++++++++++++++++++++++
                      */
-                }
+                
                 /*
                  * -------------------------------------------
                  * pengisian skor wilayah PROVINSI - END
@@ -3353,7 +3500,8 @@ class PPD2_modul1 extends CI_Controller
                  * -------------------------------------------
                  * pengisian skor wilayah KAB/KOTA - START
                  * -------------------------------------------
-                 */ elseif ($kate_wlyh == "KAB" || $kate_wlyh == "KOTA") {
+                 */ 
+                } elseif ($kate_wlyh == "KAB") {
 
                     /*
                      * check map wilayah - START
@@ -3377,7 +3525,7 @@ class PPD2_modul1 extends CI_Controller
                     $sql = "SELECT MII.id,MII.skor,MII.itemid,MSI.indiid,I.`krtriaid`,K.`nama` nmkriteria,ASP.id aspekid,ASP.nama nmaspek "
                         . " FROM r_mdl1_item_indi MII "
                         . " JOIN `r_mdl1_item` MI ON MI.`id`=MII.`itemid`
-                                JOIN `r_mdl1_sub_indi` MSI ON MSI.`id`=MI.`subindiid` AND MSI.isprov='N'
+                                JOIN `r_mdl1_sub_indi` MSI ON MSI.`id`=MI.`subindiid` AND MSI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                                 JOIN `r_mdl1_indi` I ON I.`id`=MSI.`indiid` 
                                 JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`
                                 JOIN r_mdl1_aspek ASP ON ASP.id=K.aspekid "
@@ -3451,7 +3599,7 @@ class PPD2_modul1 extends CI_Controller
                                     JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $idindi . "
                                     WHERE W.`id`=" . $idmap . " "
                         . " GROUP BY MI.`id`";
@@ -3477,7 +3625,7 @@ class PPD2_modul1 extends CI_Controller
                      */
                     $sql = "SELECT IT.id
                             FROM `r_mdl1_item` IT
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                             WHERE SI.`indiid`=" . $idindi . " ";
                     $list_data = $this->db->query($sql);
                     if (!$list_data) {
@@ -3502,7 +3650,7 @@ class PPD2_modul1 extends CI_Controller
                             FROM(
                                     SELECT K.`aspekid`,COUNT(1) jml
                                     FROM `r_mdl1_item` IT
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                                     JOIN `r_mdl1_indi` I ON I.`id`=SI.`indiid`
                                     JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`
                                     WHERE K.`aspekid`=" . $idaspek . "
@@ -3514,7 +3662,243 @@ class PPD2_modul1 extends CI_Controller
                                     JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
                                     JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
                                     JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
+                                    JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
+                                    JOIN `r_mdl1_krtria` K ON K.`id`=MI.`krtriaid`
+                                    WHERE W.`id`=" . $idmap . " AND K.`aspekid`=" . $idaspek . "
+                                    GROUP BY K.`aspekid`
+                            )LPR ON LPR.aspekid=A.aspekid";
+                    $list_data = $this->db->query($sql);
+                    if (!$list_data) {
+                        $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                        log_message("error", $msg);
+                        throw new Exception("Invalid SQL!");
+                    }
+
+                    $isdisplay_simpul = 'N';
+                    if ($list_data->num_rows() > 0) {
+                        if ($list_data->row()->jml == $list_data->row()->jml_lpr) {
+
+                            $isdisplay_simpul = 'Y';
+
+                            //tandai bahwa provinsi sudah harus isi form resume
+
+                            //check data simpul
+                            $sql = "SELECT A.`id`,A.`ksmplan`,A.`saran`
+                                    FROM `t_mdl1_resume_kabkota` A
+                                    WHERE A.`aspekid`=? AND A.`mapid`=?";
+                            $bind = array($idaspek, $idmap);
+                            $list_data = $this->db->query($sql, $bind);
+                            if (!$list_data) {
+                                $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                                log_message("error", $msg);
+                                throw new Exception("Invalid SQL!");
+                            }
+                            if ($list_data->num_rows() == 0) {
+                                $this->m_ref->setTableName("t_mdl1_resume_kabkota");
+                                $data_baru = array(
+                                    "mapid"     => $idmap,
+                                    "aspekid"   => $idaspek,
+                                    "stts"      => 'N',
+                                    "cr_by"     => $session->id,
+                                );
+                                $status_save = $this->m_ref->save($data_baru);
+                                if (!$status_save) {
+                                    $this->db->trans_rollback();
+                                    throw new Exception("SQL Error " . $this->db->error()["code"] . " : Gagal menyimpan skor!", 0);
+                                }
+                            }
+
+                            //get kesimpulan dan saran
+                            $sql = "SELECT A.`id`,A.`ksmplan`,A.`saran`
+                                    FROM `t_mdl1_resume_kabkota` A
+                                    WHERE A.`aspekid`=? AND A.`mapid`=?";
+                            $bind = array($idaspek, $idmap);
+                            $list_data = $this->db->query($sql, $bind);
+                            if (!$list_data) {
+                                $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                                log_message("error", $msg);
+                                throw new Exception("Invalid SQL!");
+                            }
+
+                            $val_ksmpln  = "";
+                            $val_saran   = "";
+                            if ($list_data->num_rows() > 0) {
+                                $val_ksmpln = $list_data->row()->ksmplan;
+                                $val_saran = $list_data->row()->saran;
+                            }
+                        }
+                    } else {
+                        $this->db->trans_rollback();
+                        throw new Exception("Data Master Item tidak ditemukan");
+                    }
+                    /*
+                     * ++++++++++++++++++++++++++++++++++++++
+                     * Check semua item sudah dinilai - END
+                     * ++++++++++++++++++++++++++++++++++++++
+                     */
+                } elseif ($kate_wlyh == "KOTA") {
+
+                    /*
+                     * check map wilayah - START
+                     */
+                    $sql = "SELECT * FROM tbl_user_kabkot WHERE id=?";
+                    $bind = array($idmap);
+                    $list_data = $this->db->query($sql, $bind);
+                    if (!$list_data) {
+                        $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                        log_message("error", $msg);
+                        throw new Exception("Invalid SQL!");
+                    }
+                    if ($list_data->num_rows() == 0)
+                        throw new Exception("Data Map tidak ditemukan!", 0);
+                    /*
+                     * check map wilayah - END
+                     */
+                    /*
+                     * check kategori penilaian item - START
+                     */
+                    $sql = "SELECT MII.id,MII.skor,MII.itemid,MSI.indiid,I.`krtriaid`,K.`nama` nmkriteria,ASP.id aspekid,ASP.nama nmaspek "
+                        . " FROM r_mdl1_item_indi MII "
+                        . " JOIN `r_mdl1_item` MI ON MI.`id`=MII.`itemid`
+                                JOIN `r_mdl1_sub_indi` MSI ON MSI.`id`=MI.`subindiid` AND MSI.isprov IN ('ALL', 'KOTKAB', 'KOT')
+                                JOIN `r_mdl1_indi` I ON I.`id`=MSI.`indiid` 
+                                JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`
+                                JOIN r_mdl1_aspek ASP ON ASP.id=K.aspekid "
+                        . " WHERE MII.id=?";
+                    $bind = array($iditemindi);
+                    $list_data = $this->db->query($sql, $bind);
+                    if (!$list_data) {
+                        $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                        log_message("error", $msg);
+                        throw new Exception("Invalid SQL!");
+                    }
+                    if ($list_data->num_rows() == 0)
+                        throw new Exception("Data Kategori Penilaian Item tidak ditemukan!", 0);
+
+                    $iditem     = $list_data->row()->itemid; //ID item
+                    $idindi     = $list_data->row()->indiid; // ID indikator
+                    $idkriteria = $list_data->row()->krtriaid; // ID Kriteria
+                    $nmkriteria = $list_data->row()->nmkriteria; // Nama Kriteria
+                    $idaspek    = $list_data->row()->aspekid; // ID Aspek
+                    $nmaspek    = $list_data->row()->nmaspek; // Nama Aspek
+                    /*
+                     * check kategori penilaian item - END
+                     */
+
+                    /*
+                     * +++++++++++++++++++++++++
+                     * catat penilaian - START
+                     * +++++++++++++++++++++++++
+                     */
+
+                    //1.pastikan skor item per wilayah 
+                    $sql = "DELETE A
+                            FROM `t_mdl1_skor_kabkota` A
+                            JOIN `r_mdl1_item_indi` B ON B.`id`=A.`itemindi`
+                            WHERE A.`mapid`=? AND B.`itemid`=?";
+                    $bind = array($idmap, $iditem);
+                    $stts = $this->db->query($sql, $bind);
+                    if (!$stts) {
+                        $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                        log_message("error", $msg);
+                        throw new Exception("SQL Error : Gagal Mencatat Penilaian!");
+                    }
+                    //2.simpan data
+                    $this->db->trans_begin();
+                    $this->m_ref->setTableName("t_mdl1_skor_kabkota");
+                    $data_baru = array(
+                        "mapid"     => $idmap,
+                        "itemindi"  => $iditemindi,
+                        "cr_by"     => $session->id,
+                    );
+                    $status_save = $this->m_ref->save($data_baru);
+                    if (!$status_save) {
+                        $this->db->trans_rollback();
+                        throw new Exception("SQL Error " . $this->db->error("code") . " : Gagal menyimpan skor!", 0);
+                    }
+
+
+                    /*
+                     * +++++++++++++++++++++++++
+                     * catat penilaian - END
+                     * +++++++++++++++++++++++++
+                     */
+
+                    /*
+                     * ++++++++++++++++++++++++++++
+                     * get last TOTAL SKOR - START
+                     * ++++++++++++++++++++++++++++
+                     */
+                    $sql = "SELECT MI.`id` idindi,SUM(II.`skor`) skor
+                                    FROM `tbl_user_kabkot` W
+                                    JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
+                                    JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
+                                    JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
+                                    JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $idindi . "
+                                    WHERE W.`id`=" . $idmap . " "
+                        . " GROUP BY MI.`id`";
+                    $list_data = $this->db->query($sql);
+                    if (!$list_data) {
+                        $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                        log_message("error", $msg);
+                        throw new Exception("Invalid SQL!");
+                    }
+                    $ttl_skor = 0;
+                    if ($list_data->num_rows() > 0)
+                        $ttl_skor = $list_data->row()->skor;
+                    /*
+                     * ++++++++++++++++++++++++++++
+                     * get last TOTAL SKOR - END
+                     * ++++++++++++++++++++++++++++
+                     */
+
+                    /*
+                     * ++++++++++++++++++++++++++++
+                     * get Nilai - START
+                     * ++++++++++++++++++++++++++++
+                     */
+                    $sql = "SELECT IT.id
+                            FROM `r_mdl1_item` IT
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
+                            WHERE SI.`indiid`=" . $idindi . " ";
+                    $list_data = $this->db->query($sql);
+                    if (!$list_data) {
+                        $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                        log_message("error", $msg);
+                        throw new Exception("Invalid SQL!");
+                    }
+                    $nilai = $ttl_skor / $list_data->num_rows() * 10;
+                    /*
+                     * ++++++++++++++++++++++++++++
+                     * get Nilai - END
+                     * ++++++++++++++++++++++++++++
+                     */
+
+
+                    /*
+                     * ++++++++++++++++++++++++++++++++++++++
+                     * Check semua item sudah dinilai - START
+                     * ++++++++++++++++++++++++++++++++++++++
+                     */
+                    $sql = "SELECT A.jml,LPR.jml jml_lpr
+                            FROM(
+                                    SELECT K.`aspekid`,COUNT(1) jml
+                                    FROM `r_mdl1_item` IT
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
+                                    JOIN `r_mdl1_indi` I ON I.`id`=SI.`indiid`
+                                    JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`
+                                    WHERE K.`aspekid`=" . $idaspek . "
+                                    GROUP BY K.`aspekid`
+                            ) A
+                            LEFT JOIN(
+                                    SELECT K.`aspekid`,COUNT(1) jml
+                                    FROM `tbl_user_kabkot` W
+                                    JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
+                                    JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
+                                    JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
                                     JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     JOIN `r_mdl1_krtria` K ON K.`id`=MI.`krtriaid`
                                     WHERE W.`id`=" . $idmap . " AND K.`aspekid`=" . $idaspek . "

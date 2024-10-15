@@ -49,9 +49,6 @@
                                                 <center>Email</center>
                                             </th>
                                             <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black;">
-                                                <center>Provinsi</center>
-                                            </th>
-                                            <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black;">
                                                 <center>Group User</center>
                                             </th>
                                             <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black;">

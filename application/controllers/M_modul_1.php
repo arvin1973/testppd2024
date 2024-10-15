@@ -534,9 +534,22 @@ class M_modul_1 extends CI_Controller {
                         $str_tmp = "<span class='text-danger' title='Tidak'><i class='fas fa-times-circle'></i></span>";
                     $str.="<td class='text-center'>".$str_tmp."</td>";
                     
-                    $str_tmp = "<span class='text-success' title='Ya'><i class='fas fa-check-circle'></i></span>";
-                    if($v->isprov!='Y')
-                        $str_tmp = "<span class='text-danger' title='Tidak'><i class='fas fa-times-circle'></i></span>";
+                    // $str_tmp = "<span class='text-success' title='Ya'><i class='fas fa-check-circle'></i></span>";
+                    // if($v->isprov!='Y')
+                    //     $str_tmp = "<span class='text-danger' title='Tidak'><i class='fas fa-times-circle'></i></span>";
+                    // $str.="<td class='text-center'>".$str_tmp."</td>";
+
+                    if($v->isprov =='ALL') {
+                        $str_tmp = "<span class='badge badge-secondary' title='Semua'>Semua</span>";
+                    }else if($v->isprov =='PROV') {
+                        $str_tmp = "<span class='badge badge-secondary' title='Provinsi'>Provinsi</span>";
+                    }else if($v->isprov =='KOTKAB') {
+                        $str_tmp = "<span class='badge badge-secondary' title='Kota dan Kabupaten'>Kota dan Kabupaten</span>";
+                    }else if($v->isprov =='KOT') {
+                        $str_tmp = "<span class='badge badge-secondary' title='Kota'>Kota</span>";
+                    }else if($v->isprov =='KAB') {
+                        $str_tmp = "<span class='badge badge-secondary' title='Kabupaten'>Kabupaten</span>";
+                    }
                     $str.="<td class='text-center'>".$str_tmp."</td>";
                 
                     
@@ -591,7 +604,7 @@ class M_modul_1 extends CI_Controller {
                 $this->form_validation->set_rules('id','ID Indikator','required|xss_clean');
                 $this->form_validation->set_rules('nama','Nama Indikator','required|xss_clean');
                 $this->form_validation->set_rules('tampil','Status Tampil','required|xss_clean|in_list[Y,N]');
-                $this->form_validation->set_rules('tag_prov','Status Tampil Provinsi','required|xss_clean|in_list[Y,N]');
+                $this->form_validation->set_rules('tag_prov','Status Tag','required|xss_clean|in_list[ALL,PROV,KOTKAB,KOT,KAB]');
                 $this->form_validation->set_rules('note','Catatan','xss_clean');
                 $this->form_validation->set_rules('nourut','No Urut','required|xss_clean|numeric');
 
@@ -809,7 +822,7 @@ class M_modul_1 extends CI_Controller {
                 $this->form_validation->set_rules('nama','Nama ','required|xss_clean');
                 $this->form_validation->set_rules('stts','Status aktif','required|xss_clean|in_list[Y,N]');
                 $this->form_validation->set_rules('tampil','Status Tampil','required|xss_clean|in_list[Y,N]');
-                $this->form_validation->set_rules('tag_prov','Status Tampil Provinsi','required|xss_clean|in_list[Y,N]');
+                $this->form_validation->set_rules('tag_prov','Status Tag','required|xss_clean|in_list[ALL,PROV,KOTKAB,KOT,KAB]');
                 $this->form_validation->set_rules('note','Catatan','xss_clean');
                 $this->form_validation->set_rules('nourut','No Urut','required|xss_clean|numeric');
 

@@ -676,7 +676,7 @@ class PPD1_status_penilaian_kota extends CI_Controller
             . "FROM `tbl_user_kabkot` W "
             . "JOIN `kabupaten` P ON W.idkabkot = P.id "
             . "JOIN `tbl_user` U ON W.iduser = U.id "
-            . "WHERE W.idkabkot='$idwil' AND U.id!=674";
+            . "WHERE W.idkabkot='$idwil' AND U.id!=674 AND U.group=7";
 
         $list_data  = $this->db->query($select);
 

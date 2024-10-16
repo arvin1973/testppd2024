@@ -503,6 +503,7 @@ $config['csrf_exclude_uris'] = array(
     "PPD1_status_penilaian_prov/get_datatable",
     "PPD1_status_penilaian_kab/get_datatable",
     "PPD1_status_penilaian_kab_daerah/get_datatable",
+    "PPD1_status_penilaian_kab_daerah/get_datatable_prov",
     "PPD1_status_penilaian_kota/get_datatable",
     "PPD1_status_penilaian_kota_daerah/get_datatable",
     "Upload_dukumen_PPD4/get_datatable",

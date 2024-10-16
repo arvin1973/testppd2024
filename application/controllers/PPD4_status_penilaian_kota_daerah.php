@@ -165,7 +165,7 @@ class PPD4_status_penilaian_kota_daerah extends CI_Controller
                     FROM `tbl_user_kabkot` A 
                     LEFT JOIN `tbl_user` B ON A.iduser=B.id 
                     LEFT JOIN `kabupaten` C ON A.idkabkot = C.id
-                    WHERE B.group=7 AND B.active_flag ='Y' AND C.urutan='1'
+                    WHERE B.group=7 AND B.active_flag ='Y' AND C.urutan='1' AND B.satker=$satkercode
                     GROUP BY C.id ";
 
                 $totalData = $this->db->query($sql)->num_rows();

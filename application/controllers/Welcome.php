@@ -315,51 +315,50 @@ class Welcome extends CI_Controller
 
                 $email = $this->input->post("nemail");
 
+                $config = [
+                    'mailtype'  => 'html',
+                    'charset'   => 'iso-8859-1',
+                    'protocol'  => 'smtp',
+                    'smtp_host' => 'webmail.bappenas.go.id',
+                    'smtp_user' => SMTP_USER,  // Email gmail
+                    'smtp_pass'   => SMTP_PASS,  // Password gmail
+                    'smtp_port '  => 465,
 
-                // $config = [
-                //     'mailtype'  => 'html',
-                //     'charset'   => 'iso-8859-1',
-                //     'protocol'  => 'smtp',
-                //     'smtp_host' => 'webmail.bappenas.go.id',
-                //     'smtp_user' => SMTP_USER,  // Email gmail
-                //     'smtp_pass'   => SMTP_PASS,  // Password gmail
-                //     'smtp_port '  => 465,
+                    //                 'smtp_host' => 'ssl://smtp.gmail.com',
+                    //                 'smtp_user' => 'nanang101295@gmail.com',  // Email gmail
+                    //                 'smtp_pass'   => 'emailpribadi123',  // Password gmail
+                    //                 'smtp_crypto' => 'ssl',
+                    //                 'smtp_port '  => 465,
+                    'crlf'    => "\r\n",
+                    'newline' => "\r\n",
+                    'wordwrap' => TRUE
+                ];
+                // Load library email dan konfigurasinya
+                $this->load->library('email', $config);
+                //$this->load->library('email');
+                $this->email->initialize($config);
 
-                //     //                 'smtp_host' => 'ssl://smtp.gmail.com',
-                //     //                 'smtp_user' => 'nanang101295@gmail.com',  // Email gmail
-                //     //                 'smtp_pass'   => 'emailpribadi123',  // Password gmail
-                //     //                 'smtp_crypto' => 'ssl',
-                //     //                 'smtp_port '  => 465,
-                //     'crlf'    => "\r\n",
-                //     'newline' => "\r\n",
-                //     'wordwrap' => TRUE
-                // ];
-                // // Load library email dan konfigurasinya
-                // $this->load->library('email', $config);
-                // //$this->load->library('email');
-                // $this->email->initialize($config);
+                // Email dan nama pengirim
+                $this->email->from('no-reply@bappenas.go.id', 'PPD 2024');
+                // Email penerima
+                $this->email->to($email); // Ganti dengan email tujuan
+                // Subject email
+                $this->email->subject('[PPD 2024] ');
+                // Isi email
+                $this->email->message("Yth. Bapak/Ibu " . $name . ",<br><br>"
+                    . "Terima kasih telah mendaftar di Sistem penilaian PPD 2024. Akun anda yang terdaftar di sistem kami adalah :<br><br>"
+                    . "Id Pengguna : " . $userid . "<br><br>"
+                    . "Password    : " . $npas . "<br><br>"
+                    . "Salam<br><br><br>"
+                    . "Direktorat Pemantauan, Evaluasi, dan Pengendalian Pembangunan Daerah<br><br>"
+                    . "--------------------------------------------------------------<br>"
+                    . "Email ini dikirim secara otomatis oleh sistem. Anda tidak perlu membalas atau mengirim email ke alamat ini.<br>"
+                    . "© 2024 Direktorat Pemantauan, Evaluasi, dan Pengendalian Pembangunan Daerah | https://peppd.bappenas.go.id | ppd@bappenas.go.id ");
 
-                // // Email dan nama pengirim
-                // $this->email->from('no-reply@bappenas.go.id', 'PPD 2024');
-                // // Email penerima
-                // $this->email->to($email); // Ganti dengan email tujuan
-                // // Subject email
-                // $this->email->subject('[PPD 2024] ');
-                // // Isi email
-                // $this->email->message("Yth. Bapak/Ibu " . $name . ",<br><br>"
-                //     . "Terima kasih telah mendaftar di Sistem penilaian PPD 2024. Akun anda yang terdaftar di sistem kami adalah :<br><br>"
-                //     . "Id Pengguna : " . $userid . "<br><br>"
-                //     . "Password    : " . $npas . "<br><br>"
-                //     . "Salam<br><br><br>"
-                //     . "Direktorat Pemantauan, Evaluasi, dan Pengendalian Pembangunan Daerah<br><br>"
-                //     . "--------------------------------------------------------------<br>"
-                //     . "Email ini dikirim secara otomatis oleh sistem. Anda tidak perlu membalas atau mengirim email ke alamat ini.<br>"
-                //     . "© 2024 Direktorat Pemantauan, Evaluasi, dan Pengendalian Pembangunan Daerah | https://peppd.bappenas.go.id | ppd@bappenas.go.id ");
-
-                // // Tampilkan pesan sukses atau error
-                // if (!$this->email->send()) {
-                //     throw new Exception($this->db->error()["code"] . ":Gagal Kirim", 0);
-                // }
+                // Tampilkan pesan sukses atau error
+                if (!$this->email->send()) {
+                    throw new Exception($this->db->error()["code"] . ":Gagal Kirim", 0);
+                }
                 //update
                 $this->db->trans_begin();
                 $this->m_ref->setTableName("tbl_user");

@@ -1452,24 +1452,39 @@ class PPD1_M_Dokumen_Kota extends CI_Controller
         echo json_encode($dokumen);
     }
 
-    function unduhspesifik()
-    {
+    function unduhspesifik() {
         if (!$this->session->userdata(SESSION_LOGIN)) {
             session_write_close();
             throw new Exception("Session expired, please login", 2);
-        };
-
+        }
+    
         $file = $this->input->post('id');
-        $sql = "SELECT tbl_jenis_doc.nama, t_doc_kab.judul, t_doc_kab.tautan FROM t_doc_kab JOIN tbl_jenis_doc ON t_doc_kab.jenisid=tbl_jenis_doc.id WHERE t_doc_kab.isactive = 'Y' AND t_doc_kab.judul LIKE '%kota%' AND t_doc_kab.jenisid=$file";
+        $part = (int)$this->input->post('part'); // Get the part number
+        $limit = 15; // Number of documents per part
+        $offset = ($part - 1) * $limit; // Calculate offset
+    
+        $sql = "SELECT tbl_jenis_doc.nama, t_doc_kab.judul, t_doc_kab.tautan 
+                FROM t_doc_kab 
+                JOIN tbl_jenis_doc ON t_doc_kab.jenisid=tbl_jenis_doc.id 
+                WHERE t_doc_kab.isactive = 'Y' 
+                AND t_doc_kab.judul LIKE '%kota%' 
+                AND t_doc_kab.jenisid=$file 
+                LIMIT $limit OFFSET $offset"; // Limit and offset for pagination
+    
         $data = $this->db->query($sql)->result_array();
-        $namafile = $data[0]['nama'] . '_kota.zip';
-
+    
+        if (empty($data)) {
+            throw new Exception("No documents found for this part", 5);
+        }
+    
+        $namafile = $data[0]['nama'] . '_kota_part' . $part . '.zip'; // Change filename to include part number
         $zipFilePath = FCPATH . 'attachments/kabkota/' . $namafile;
         $zip = new ZipArchive();
+        
         if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE) {
             throw new Exception("Cannot open ZIP file", 3);
         }
-
+    
         foreach ($data as $item) {
             $filePath = FCPATH . 'attachments/kabkota/' . $item['tautan'];
             if (file_exists($filePath)) {
@@ -1478,9 +1493,9 @@ class PPD1_M_Dokumen_Kota extends CI_Controller
                 $zip->addFile($filePath, $judul);
             }
         }
-
+    
         $zip->close();
-
+    
         if (file_exists($zipFilePath)) {
             header('Content-Type: application/zip');
             header('Content-Disposition: attachment; filename="' . $namafile . '"');
@@ -1490,6 +1505,7 @@ class PPD1_M_Dokumen_Kota extends CI_Controller
             throw new Exception("Failed to create ZIP file", 4);
         }
     }
+    
     // {
     //     if (!$this->session->userdata(SESSION_LOGIN)) {
     //         session_write_close();

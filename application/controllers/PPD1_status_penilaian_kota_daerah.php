@@ -67,7 +67,7 @@ class PPD1_status_penilaian_kota_daerah extends CI_Controller
                 session_write_close();
 
                 //---------------isi disini--------------------
-                $sql = "SELECT t1.*, ROUND((COUNT(skor.id) / (SELECT COUNT(I.`id`) FROM r_mdl1_item I JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' SI.isprov IN ('ALL', 'KOTKAB', 'KOT') JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y') * 100), 2) AS persentase_penilaian,
+                $sql = "SELECT t1.*, ROUND((COUNT(skor.id) / (SELECT COUNT(I.`id`) FROM r_mdl1_item I JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB') JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y') * 100), 2) AS persentase_penilaian,
                         CASE
                             WHEN sttment.id != 'null' THEN 'Sudah upload'
                             ELSE 'Belum upload'
@@ -1094,9 +1094,12 @@ class PPD1_status_penilaian_kota_daerah extends CI_Controller
         // $idwil    = decrypt_base64($_GET['kabid']);
         $idwil    = ($_GET['kabid']);
         
+        // $kabkota = $this->db->query("SELECT K.id FROM `kabupaten` K 
+        //             JOIN `provinsi` P ON K.prov_id=P.id_kode 
+        //             WHERE K.urutan=1 AND P.id='$idwil'")->result_array();
         $kabkota = $this->db->query("SELECT K.id FROM `kabupaten` K 
                     JOIN `provinsi` P ON K.prov_id=P.id_kode 
-                    WHERE K.urutan=1 AND P.id='$idwil'")->result_array();
+                    WHERE P.id='$idwil'")->result_array();
 
         $kabkota_ids_string = implode(",", array_column($kabkota, 'id'));
         
@@ -1378,17 +1381,6 @@ class PPD1_status_penilaian_kota_daerah extends CI_Controller
         $this->excel->createSheet();
         $this->excel->setActiveSheetIndex(1);
         $this->excel->getActiveSheet()->setTitle("Rekap Nilai");
-
-        // echo '<pre>';
-        // var_dump($cell_sum);
-        // echo '</pre>';
-        // echo '<pre>';
-        // var_dump($cell_range);
-        // echo '</pre>';
-        // echo '<pre>';
-        // var_dump($cell_coeff);
-        // echo '</pre>';
-        // die;
 
         $row = 3;
 

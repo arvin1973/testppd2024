@@ -80,23 +80,23 @@ class PPD1_M_Bahan_dukung extends CI_Controller
                     throw new Exception("You're not allowed access this page!", 0);
                 }
 
-                //                    $sql = "SELECT D.id mapid, D.judul, D.tautan, D.cr_dt, D.cr_by, D.up_dt, D.up_by, G.jml 
-                //                    FROM `t_doc` D  
-                //                    LEFT JOIN(SELECT COUNT(A.id) AS jml,A.docid,A.groupid FROM `t_doc_groupuser` A WHERE 1=1 GROUP BY A.docid) G ON D.id = G.docid 
-                //                    LEFT JOIN(SELECT B.* FROM `tbl_user_group` B WHERE 1=1) U ON G.`groupid` = U.id 
-                //                    WHERE D.isactive = 'Y'";
-                $sql = "SELECT * FROM (
-SELECT '1' kate, D.id mapid, D.judul, D.tautan, D.cr_dt, D.cr_by, D.up_dt, D.up_by, G.jml, 'Sekretariat PPD'  graoup 
-                    FROM `t_doc` D  
-                    LEFT JOIN(SELECT COUNT(A.id) AS jml,A.docid,A.groupid FROM `t_doc_groupuser` A WHERE 1=1 GROUP BY A.docid) G ON D.id = G.docid 
-                    LEFT JOIN(SELECT B.* FROM `tbl_user_group` B WHERE 1=1) U ON G.`groupid` = U.id 
-                    WHERE D.isactive = 'Y') AS a
-                    UNION
-                    SELECT * FROM (
-SELECT '2' kate ,PK.id mapid, PK.judul, PK.tautan,PK.cr_dt, PK.cr_by, PK.up_dt, PK.up_by, '0' jml, 'Tim Provinsi'  graoup 
-FROM `t_dok_pkk` PK 
-WHERE PK.isactive = 'Y') AS b
-ORDER BY kate, mapid ASC";
+                                   $sql = "SELECT D.id mapid, D.judul, D.tautan, D.cr_dt, D.cr_by, D.up_dt, D.up_by, G.jml 
+                                   FROM `t_doc` D  
+                                   LEFT JOIN(SELECT COUNT(A.id) AS jml,A.docid,A.groupid FROM `t_doc_groupuser` A WHERE 1=1 GROUP BY A.docid) G ON D.id = G.docid 
+                                   LEFT JOIN(SELECT B.* FROM `tbl_user_group` B WHERE 1=1) U ON G.`groupid` = U.id 
+                                   WHERE D.isactive = 'Y'";
+//                 $sql = "SELECT * FROM (
+// SELECT '1' kate, D.id mapid, D.judul, D.tautan, D.cr_dt, D.cr_by, D.up_dt, D.up_by, G.jml, 'Sekretariat PPD'  graoup 
+//                     FROM `t_doc` D  
+//                     LEFT JOIN(SELECT COUNT(A.id) AS jml,A.docid,A.groupid FROM `t_doc_groupuser` A WHERE 1=1 GROUP BY A.docid) G ON D.id = G.docid 
+//                     LEFT JOIN(SELECT B.* FROM `tbl_user_group` B WHERE 1=1) U ON G.`groupid` = U.id 
+//                     WHERE D.isactive = 'Y') AS a
+//                     UNION
+//                     SELECT * FROM (
+// SELECT '2' kate ,PK.id mapid, PK.judul, PK.tautan,PK.cr_dt, PK.cr_by, PK.up_dt, PK.up_by, '0' jml, 'Tim Provinsi'  graoup 
+// FROM `t_dok_pkk` PK 
+// WHERE PK.isactive = 'Y') AS b
+// ORDER BY kate, mapid ASC";
                 $list_data = $this->db->query($sql);
                 if (!$list_data) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
@@ -114,12 +114,12 @@ ORDER BY kate, mapid ASC";
                 $str_view = '';
                 foreach ($list_data->result() as $v) {
                     $val_link = $link . $v->tautan;
-                    if ($v->kate != $satu) {
-                        $str .= "<tr class='bg-secondary' title='Bahan Dukung'>";
-                        $str .= "<td colspan='8' class='text'><b><small></small><br/>" . $v->graoup . "</b></td>";
-                        $str .= "</tr>";
-                        $satu = $v->kate;
-                    }
+                    // if ($v->kate != $satu) {
+                    //     $str .= "<tr class='bg-secondary' title='Bahan Dukung'>";
+                    //     $str .= "<td colspan='8' class='text'><b><small></small><br/>" . $v->graoup . "</b></td>";
+                    //     $str .= "</tr>";
+                    //     $satu = $v->kate;
+                    // }
                     $idcomb = $v->mapid;
                     $encrypted_id = base64_encode(openssl_encrypt($idcomb, "AES-128-ECB", ENCRYPT_PASS));
                     $tmp = "class='btnDel' data-id='" . $encrypted_id . "'";
@@ -196,15 +196,11 @@ ORDER BY kate, mapid ASC";
                     $str .= "<td class='text-right'>" . $no++ . "</td>";
                     //$str.="<td  class='text'>".wordwrap($v->judul,50,"<br/>")."</td>";
                     $str .= $str_view;
-                    if ($v->kate == '1') {
-                        $str .= "<td class='p-l-25'><a href='javascript:void(0)' " . $tmpJml . ">" . $v->jml . " Group User</a></td>";
-                        $str1 = "<td  class=''><a href='javascript:void(0)' " . $tmped . " class='text-danger btn btn-sm ' title='Edit Data'><i class='text fas fa-pencil-alt'></i></a></td>";
-                        $str2 = "<td  class=''><a href='javascript:void(0)' " . $tmp . " class='text-danger btn btn-sm ' title='Hapus Data'><i class='text fas fa-trash-alt text-danger'></i></a></td>";
-                    } else {
-                        $str .= "<td class='p-l-25'><a href='javascript:void(0)' ></a></td>";
-                        $str1 = "<td  class=''></td>";
-                        $str2 = "<td  class=''></td>";
-                    }
+                    
+                    $str .= "<td class='p-l-25'><a href='javascript:void(0)' " . $tmpJml . ">" . $v->jml . " Group User</a></td>";
+                    $str1 = "<td  class=''><a href='javascript:void(0)' " . $tmped . " class='text-danger btn btn-sm ' title='Edit Data'><i class='text fas fa-pencil-alt'></i></a></td>";
+                    $str2 = "<td  class=''><a href='javascript:void(0)' " . $tmp . " class='text-danger btn btn-sm ' title='Hapus Data'><i class='text fas fa-trash-alt text-danger'></i></a></td>";
+                
 
                     $str .= "<td  class='text' title='Diedit oleh : $v->up_by' >" . $v->cr_by . "</td>";
                     $str .= "<td  class='text' title='Diedit : $v->up_dt'>" . $v->cr_dt . "</td>";

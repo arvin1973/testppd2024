@@ -294,34 +294,6 @@
                             </div>
                         </div>
                     </div>
-                    <!--                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12 col-lg-6">
-                                            <div class="form-group">
-                                                <label>Kab/Kota</label>
-                                                <select class="form-control" name="prov">
-                                                    <option value=""> - Pilih - </option>
-                                                    <?php
-                                                    foreach ($list_kab->result() as $v) {
-                                                    ?>
-                                                    <option value="<?php echo $v->id; ?>"><?php echo $v->id_kab ?>-<?php echo $v->nama_kabupaten ?></option>
-                                                            <?php
-                                                        }
-                                                            ?>
-                                                </select>
-                                            </div>
-                                        </div>   
-                    </div>-->
-
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="field-4" class="control-label">Tags 2</label>
-                                <select id="tagSelect" class="js-example-basic-multiple" multiple="multiple" style="width: 200px;">
-                                    <!-- Options will be dynamically added here -->
-                                </select>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer" style="border-top: 1px solid rgb(175, 175, 175); display: flex; justify-content: space-between;">
                     <button type="button" class="btn btn-sm btn-secondary waves-effect" data-dismiss="modal" style="border-radius: 0px; padding-left: 10px; padding-right: 10px;"><i class="fas fa-times"></i>&nbsp;Batal</button>

@@ -94,6 +94,7 @@ var main = function(){
             var _self       = $(this);
             var id          = _self.data("id");
             var lblwlyh     = _self.data("nmwlyh");
+            $("#d_wlyh").val(id);
             loading.show();
             ajax_url = controller+"/g_doc";
             ajax_data="id="+id;
@@ -147,6 +148,11 @@ var main = function(){
                     return false;
                 }
             });
+        });
+        $("#btnDowDoc").click(function(){
+            var id = $("#d_wlyh").val();
+            window.open(base_url+controller+"/d_bahan?token="+id); 
+          
         });
         
         function g_indi(){
@@ -234,12 +240,13 @@ var main = function(){
 
                         if(obj)
                         {
+                            console.log(obj);
                             $("#csrf").val(obj.csrf_hash);
                             if(obj.status === 1){
                                 $('form#frm_simpul input[name="id"]').val(id);
                                 $('form#frm_simpul textarea[name="simpul"]').val(obj.simpul);
                                 $('form#frm_simpul textarea[name="saran"]').val(obj.saran);
-                                $('form#frm_simpul #lbl_jdl_aspek').html(obj.nmaspek);
+                                $('form#frm_simpul .lbl_jdl_aspek').html(obj.nmaspek);
 
                                 $("#mdl_simpul").modal("show");
                                 loading.hide();
@@ -410,7 +417,7 @@ var main = function(){
                                     $('form#frm_simpul input[name="id"]').val(obj.idrsme);
                                     $('form#frm_simpul textarea[name="simpul"]').val(obj.val_ksmpln);
                                     $('form#frm_simpul textarea[name="saran"]').val(obj.val_saran);
-                                    $('form#frm_simpul #lbl_jdl_aspek').html(obj.nmaspek);
+                                    $('form#frm_simpul .lbl_jdl_aspek').html(obj.nmaspek);
                                     
                                     $("#mdl_simpul").modal("show");
                                 }

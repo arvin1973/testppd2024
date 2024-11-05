@@ -1,20 +1,26 @@
-function unduhDokumen(id) {
+function unduhDokumenPart(id, part) {
     var form = document.createElement("form");
     form.style.display = "none";
     form.method = "POST";
     form.action = base_url + "PPD1_M_Dokumen_Kota/unduhspesifik";
 
-    var input = document.createElement("input");
-    input.type = "hidden";
-    input.name = "id";
-    input.value = id;
+    var inputId = document.createElement("input");
+    inputId.type = "hidden";
+    inputId.name = "id";
+    inputId.value = id;
 
-    form.appendChild(input);
+    var inputPart = document.createElement("input");
+    inputPart.type = "hidden";
+    inputPart.name = "part";
+    inputPart.value = part;
+
+    form.appendChild(inputId);
+    form.appendChild(inputPart);
     document.body.appendChild(form);
 
     form.submit();
-
 }
+
 
 var main = function(){
     controller = "PPD1_M_Dokumen_Kota";
@@ -87,13 +93,23 @@ var main = function(){
                         tableBody.empty();
                         
                         data.forEach(function (item) {
+                            var jumlah = parseInt(item.jumlah); // Convert jumlah to an integer
+                            var parts = Math.ceil(jumlah / 15); // Calculate the number of parts
+                            var partButtons = '';
+                        
+                            // Create buttons for each part
+                            for (var i = 1; i <= parts; i++) {
+                                partButtons += '<button onclick="unduhDokumenPart(\'' + item.id + '\', ' + i + ')">Part ' + i + '</button> ';
+                            }
+                        
                             var row = '<tr>' +
                                 '<td>' + item.jndok + '</td>' +
                                 '<td>' + item.jumlah + '</td>' +
-                                '<td>' + '<a onclick="unduhDokumen(\'' + item.id + '\')"><i class="fas fa-download"></i></a>' + '</td>' +
+                                '<td>' + partButtons + '</td>' +
                                 '</tr>';
+                            
                             tableBody.append(row);
-                        });
+                        });                        
                     }else{
                         var tableBody = $('#isi-tabel-sdokumen');
                         tableBody.empty();

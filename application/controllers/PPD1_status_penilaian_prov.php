@@ -1133,7 +1133,7 @@ class PPD1_status_penilaian_prov extends CI_Controller
         
         $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowTotal, "=sum({$firstElement}:{$lastElement})");
         $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowRange, "=max({$firstRange}:{$lastRange})-min({$firstRange}:{$lastRange})");
-        $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowCoeff, "stdev.s({$firstCoeff}:{$lastCoeff})/(".$averageColumn.$rowTotal.") * 100");             
+        $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowCoeff, "=stdev({$firstCoeff}:{$lastCoeff})/(".$averageColumn.$rowTotal.") * 100");             
         // $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowCoeff, "=SUM({$firstCoeff}:{$lastCoeff})");
         // $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowCoeff, "=STDEV.S({$firstCoeff}:{$lastCoeff})/(".$averageColumn.$rowRange.") * 100");  
         

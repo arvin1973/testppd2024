@@ -1,42 +1,6 @@
 <div class="container-fluid">
-
-    <!-- <div class="row">
-        <div class="col-12">
-            <div class="page-title-box">
-                <h4 class="page-title text-center text-secondary" style="font-family: inherit" >Status Penilaian</h4>
-                <div class="page-title-right">
-                    <ol class="breadcrumb p-0 m-0">
-                        <li class="breadcrumb-item"><a href="#">Status Penilaian</a></li>
-                        <li class="breadcrumb-item active">Kabupaten</li>
-                    </ol>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </div> -->
-
     <!-- start page title -->
-    <div class="row stepper-status-penilaian-kabupaten-tpt" style="margin-left: -40px;">
-        <div class="col-12" style="background-color: #f1f1f1; position: fixed; z-index: 98; border-bottom: 1px solid rgba(49, 126, 235, 0.3); margin-top: 5px;">
-            <div class="page-title-box" style="padding: 10px 0px 0px 20px; margin: 0px;">
-                <!-- <h4 class="page-title">Welcome !</h4> -->
-                <div style="display: flex;">
-                    <div class="card" style="color: white; border: 2px solid white; border-style: dashed; background-color: rgba(49, 126, 235, 1); margin-bottom: 15px; margin-right: 1%;">
-                        <div class="card-body" style="padding: 2px 8px;">
-                            <p class="mb-0">Penilaian Kabupaten TPT <i class="mdi mdi-numeric-1-box-outline" style="color: white;"></i></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="page-title-right">
-                    <!-- <ol class="breadcrumb p-0 m-0">
-                        <li class="breadcrumb-item"><a href="#">Moltran</a></li>
-                        <li class="breadcrumb-item active">Dashboard</li>
-                    </ol> -->
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </div>
+    
     <!-- end page title -->
 
     <div class="row _list_prov" style="margin-top: 90px;">
@@ -85,18 +49,19 @@
                 <div class="card-body">
                     <a href="#" id="rekap_penilaian_daerah" class="btn btn-secondary waves-effect waves-light">Rekap Penilaian Daerah</a>
                     <a href="#" id="rekap_resume_by_user" class="btn btn-secondary waves-effect waves-light my-3">Rekap Resume by User</a>
+                    <a href='#' data-pr='' id='rekapall' class='btn btn-primary waves-effect waves-light' style='border-radius: 0px; padding-left: 10px; padding-right: 10px;margin-right: 5px; margin-bottom: 10px; float: right;'>Rekap Penilaian<i class='fas fa-download' style='padding-left: 5px;'></i></a>
                     <div class="row">
-                        <button type="button" class="btn btn-info waves-effect waves-light my-3 mx-3" id="export_penilaian" data-toggle="modal" data-target=".bs-example-modal-lg">Laporan Berdasarkan Penilai</button>
+                        <button type="button" class="btn btn-info waves-effect waves-light my-3 mx-3" id="export_penilaian"  data-toggle="modal" data-target=".bs-example-modal-lg">Laporan Berdasarkan Penilai</button>
                         <div class="col-12">
                             <div class="table-responsive isitable">
-                                <table id="dataUser" class="table table-condensed table-bordered table-striped" style="border: 1px solid black; border-collapse: separate !important; border-spacing: 1.5px; width: 100%;">
+                                <table id="t_bahan" class="table table-condensed table-bordered table-striped" style="border: 1px solid black; border-collapse: separate !important; border-spacing: 1.5px; width: 100%;">
                                     <thead style="background-color: rgb(31, 56, 100) !important; color: white;">
                                         <tr>
                                             <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black;">
                                                 <center>Id</center>
                                             </th>
                                             <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black;">
-                                                <center>Kabupaten</center>
+                                                <center>Kabupaten/Kota</center>
                                             </th>
                                         </tr>
                                     </thead>
@@ -115,39 +80,6 @@
     </div>
 
 
-    <div class="row stepper-status-penilaian-kabupaten-tpt-penilaian">
-        <!-- start page title -->
-        <div class="col-12" style="background-color: #f1f1f1; position: fixed; z-index: 98; border-bottom: 1px solid rgba(49, 126, 235, 0.3); margin-top: 5px; margin-left: -28px;">
-            <div class="page-title-box" style="padding: 10px 0px 0px 20px; margin: 0px;">
-                <!-- <h4 class="page-title">Welcome !</h4> -->
-                <div style="display: flex;">
-                    <div class="card" style="color: black; border: 2px solid rgba(49, 126, 235, 1); border-style: dashed; background-color: white; margin-bottom: 15px; margin-right: 1%;">
-                        <a href="#" class="btnShwHd" data-show="._wrapper_wlyh,.stepper-status-penilaian-kabupaten-tpt" data-hide="._wrapper_bahan,._wrapper_info" data-hdrhide=".lbl_hdr_nmwlyh" data-reload="kabko">
-                            <div class="card-body" style="padding: 2px 8px;">
-                                <p class="mb-0">Penilaian Kabupaten TPT <i class="mdi mdi-numeric-1-box" style="color: #d1d1d1;"></i></p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="card" style="color: white; border: 2px solid white; border-style: dashed; background-color: rgba(49, 126, 235, 1); margin-bottom: 15px; margin-right: 1%;">
-                        <div class="card-body" style="padding: 2px 8px;">
-                            <p class="mb-0">Daftar penilai <i class="mdi mdi-numeric-2-box-outline" style="color: white;"></i></p>
-                        </div>
-                    </div>
-                    <a href="#" class="btnShwHd" data-show="._wrapper_wlyh,.stepper-status-penilaian-kabupaten-tpt" data-hide="._wrapper_bahan,._wrapper_info" data-hdrhide=".lbl_hdr_nmwlyh" data-reload="kabko">
-                        <p style="padding: 5px; font-size: 0.8rem !important;"><strong><i class="mdi mdi-undo" style="color: #2ad408;"></i> Kembali</strong></p>
-                    </a>
-                </div>
-                <div class="page-title-right">
-                    <!-- <ol class="breadcrumb p-0 m-0">
-                            <li class="breadcrumb-item"><a href="#">Moltran</a></li>
-                            <li class="breadcrumb-item active">Dashboard</li>
-                        </ol> -->
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-        <!-- end page title -->
-    </div>
 
     <div class="row _wrapper_info" style="display: none">
         <!-- <div class="col-md-12">

@@ -929,9 +929,9 @@ class M_users_kabkota extends CI_Controller
                     // Load library email dan konfigurasinya
                     $this->load->library('email', $config);
                     $this->email->initialize($config);
-                    $this->email->from('no-reply@bappenas.go.id', 'PPD 2022');
+                    $this->email->from('no-reply@bappenas.go.id', 'PPD 2025');
                     $this->email->to($email);
-                    $this->email->subject('[PPD 2022] Ganti Password');
+                    $this->email->subject('[PPD 2025] Ganti Password');
                     $this->email->message("" . $name . " yang terhormat,<br><br>"
                         . "Id Pengguna    : " . $user . "<br>"
                         . "Untuk Password : " . $npas . "<br><br>"
@@ -939,7 +939,7 @@ class M_users_kabkota extends CI_Controller
                         . "Direktorat Pemantauan, Evaluasi, dan Pengendalian Pembangunan Daerah<br><br>"
                         . "--------------------------------------------------------------<br>"
                         . "Email ini dikirim secara otomatis oleh sistem. Anda tidak perlu membalas atau mengirim email ke alamat ini.<br>"
-                        . "© 2022 Direktorat Pemantauan, Evaluasi, dan Pengendalian Pembangunan Daerah | www.peppd.bappenas.go.id| dit.peppd@bappenas.go.id ");
+                        . "© 2025 Direktorat Pemantauan, Evaluasi, dan Pengendalian Pembangunan Daerah | www.peppd.bappenas.go.id| dit.peppd@bappenas.go.id ");
 
                     // Tampilkan pesan sukses atau error
                     if (!$this->email->send()) {

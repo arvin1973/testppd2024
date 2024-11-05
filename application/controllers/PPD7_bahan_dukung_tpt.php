@@ -80,24 +80,26 @@ class PPD7_bahan_dukung_tpt extends CI_Controller
                 if (!in_array($this->session->userdata(SESSION_LOGIN)->groupid, $this->allowed)) {
                     throw new Exception("You're not allowed access this page!", 0);
                 }
-                $group = $this->session->userdata(SESSION_LOGIN)->group;
-                $link = base_url() . "attachments/bahandukung/";
-                //                    $sql = "SELECT D.id mapid, D.judul, D.tautan, D.cr_by, D.cr_dt "
-                //                            . "FROM `t_doc` D  "
-                //                            . "JOIN `t_doc_groupuser` G ON D.id = G.docid "
-                //                            . "JOIN `tbl_user_group` U ON G.`groupid` = U.id AND U.id=? "
-                //                            . "JOIN `t_doc_tahap` T ON D.id= T.docid AND T.tahap=2 "
-                //                            . "WHERE D.isactive = 'Y'";
 
-
-                $sql = "SELECT  1 AS `no`,D.id mapid, D.judul, D.tautan, D.cr_by, D.cr_dt 
-                            FROM `t_doc` D  
-                            JOIN `t_doc_groupuser` G ON D.id = G.docid 
-                            JOIN `tbl_user_group` U ON G.`groupid` = U.id 
-                            WHERE U.id=? AND D.isactive = 'Y'";
-                $bind = array($group);
-                $list_data = $this->db->query($sql, $bind);
-
+                $satker = $this->session->userdata(SESSION_LOGIN)->satker;
+                //                    $sql = "SELECT D.id mapid, D.judul, D.tautan, D.cr_dt, D.cr_by, D.up_dt, D.up_by, G.jml 
+                //                    FROM `t_doc` D  
+                //                    LEFT JOIN(SELECT COUNT(A.id) AS jml,A.docid,A.groupid FROM `t_doc_groupuser` A WHERE 1=1 GROUP BY A.docid) G ON D.id = G.docid 
+                //                    LEFT JOIN(SELECT B.* FROM `tbl_user_group` B WHERE 1=1) U ON G.`groupid` = U.id 
+                //                    WHERE D.isactive = 'Y'";
+                $sql = "SELECT * FROM (
+                SELECT '1' kate, D.id mapid, D.judul, D.tautan, D.cr_dt, D.cr_by, D.up_dt, D.up_by, G.jml, 'Sekretariat PPD'  graoup 
+                                    FROM `t_doc` D  
+                                    LEFT JOIN(SELECT COUNT(A.id) AS jml,A.docid,A.groupid FROM `t_doc_groupuser` A WHERE 1=1 GROUP BY A.docid) G ON D.id = G.docid 
+                                    LEFT JOIN(SELECT B.* FROM `tbl_user_group` B WHERE 1=1) U ON G.`groupid` = U.id 
+                                    WHERE D.isactive = 'Y') AS a
+                                    UNION
+                                    SELECT * FROM (
+                SELECT '2' kate ,PK.id mapid, PK.judul, PK.tautan,PK.cr_dt, PK.cr_by, PK.up_dt, PK.up_by, '0' jml, 'Tim Provinsi'  graoup 
+                FROM `t_dok_pkk` PK 
+                WHERE PK.isactive = 'Y' AND PK.provid=$satker) AS b
+                ORDER BY kate, mapid ASC";
+                $list_data = $this->db->query($sql);
                 if (!$list_data) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
                     log_message("error", $msg);
@@ -106,60 +108,102 @@ class PPD7_bahan_dukung_tpt extends CI_Controller
 
                 $str = "";
                 if ($list_data->num_rows() == 0)
-                    $str = "<tr><td colspan='5'>Data tidak ditemukan</td></tr>";
-
-                $no = 1;
+                    $str = "<tr><td colspan='8'>Data tidak ditemukan</td></tr>";
                 $link = base_url() . "attachments/bahandukung/";
+                $no = 1;
+                $lnk = 'https';
+                $satu = "";
+                $str_view = '';
                 foreach ($list_data->result() as $v) {
-
+                    $val_link = $link . $v->tautan;
+                    if ($v->kate != $satu) {
+                        $str .= "<tr class='bg-secondary' title='Bahan Dukung'>";
+                        $str .= "<td colspan='8' class='text'><b><small></small><br/>" . $v->graoup . "</b></td>";
+                        $str .= "</tr>";
+                        $satu = $v->kate;
+                    }
                     $idcomb = $v->mapid;
                     $encrypted_id = base64_encode(openssl_encrypt($idcomb, "AES-128-ECB", ENCRYPT_PASS));
                     $tmp = "class='btnDel' data-id='" . $encrypted_id . "'";
                     $tmp .= " data-title='" . $v->judul . "'";
-                    //                    
-                    $val_link = $link . $v->tautan;
+
+                    $idcombJ = "-" . $v->mapid;
+                    $encrypted_idJ = base64_encode(openssl_encrypt($idcombJ, "AES-128-ECB", ENCRYPT_PASS));
+                    $tmpJml = "class='btnJml' data-id='" . $encrypted_idJ . "'";
+                    $tmpJml .= " data-judul='" . $v->judul . "'";
+                    $tmpJml .= " data-cr='" . $v->cr_by . "'";
+                    $tmpJml .= " data-dt='" . $v->cr_dt . "'";
+
+                    $idcomb1 = "prov_" . $v->mapid;
+                    $encrypted_id1 = base64_encode(openssl_encrypt($idcomb1, "AES-128-ECB", ENCRYPT_PASS));
+                    $tmped = "class='btnEdi' data-id='" . $encrypted_id1 . "'";
+                    $tmped .= " data-nama='" . $v->judul . "'";
+                    $tmped .= " data-file='" . $v->tautan . "'";
+
+                    $namefile = $v->judul;
+
+                    $idcomb_v = "umum-" . $v->mapid;
+                    $encrypted_id_v = base64_encode(openssl_encrypt($idcomb_v, "AES-128-ECB", ENCRYPT_PASS));
+                    $tmp_v = "font-size: 12px;' class='btn btn-xs text-primary text-left getView' data-id='" . $encrypted_id_v . "'";
+
                     if (substr($v->tautan, -3) == 'rar') {
                         $rename = $v->judul . ".rar";
+                        $str_view = "<td  class='text'><a style='font-size: 12px;' class='btn btn-xs text-secondary text-left'>" . wordwrap($v->judul, 50, "<br/>") . "</a></td>";
                     } elseif (substr($v->tautan, -3) == 'zip') {
                         $rename = $v->judul . ".zip";
+                        $str_view = "<td  class='text'><a style='font-size: 12px;' class='btn btn-xs text-secondary text-left'>" . wordwrap($v->judul, 50, "<br/>") . "</a></td>";
                     } elseif (substr($v->tautan, -3) == 'pdf') {
+                        $tmp_v .= " data-nmlink='" . $val_link . "'";
                         $rename = $v->judul . ".pdf";
-                    } elseif (substr($v->tautan, -3) == 'xls') {
-                        $rename = $v->judul . ".xls";
-                    } elseif (substr($v->tautan, -4) == 'xlsx') {
-                        $rename = $v->judul . ".xlsx";
+                        $str_view = "<td class='text' >" . wordwrap($v->judul, 50, "<br/>") . "</a></td>";
                     } elseif (substr($v->tautan, -3) == 'doc') {
-                        $rename = $v->judul . ".doc";
-                    } elseif (substr($v->tautan, -4) == 'docx') {
+                        $tautan = "https://view.officeapps.live.com/op/embed.aspx?src=" . $val_link . "&embedded=true";
+                        $tmp_v .= " data-nmlink='" . $tautan . "'";
                         $rename = $v->judul . ".docx";
-                    } elseif (substr($v->tautan, -3) == 'png') {
-                        $rename = $v->judul . ".png";
-                    } elseif (substr($v->tautan, -3) == 'PNG') {
-                        $rename = $v->judul . ".png";
-                    } elseif (substr($v->tautan, -3) == 'JPG') {
-                        $rename = $v->judul . ".jpg";
-                    } elseif (substr($v->tautan, -3) == 'jpg') {
-                        $rename = $v->judul . ".jpg";
+                        $str_view = "<td class='text' >" . wordwrap($v->judul, 50, "<br/>") . "</a></td>";
+                    } elseif (substr($v->tautan, -4) == 'docx') {
+                        $tautan = "https://view.officeapps.live.com/op/embed.aspx?src=" . $val_link . "&embedded=true";
+                        $tmp_v .= " data-nmlink='" . $tautan . "'";
+                        $rename = $v->judul . ".docx";
+                        $str_view = "<td class='text' >" . wordwrap($v->judul, 50, "<br/>") . "</a></td>";
+                    } elseif (substr($v->tautan, -4) == 'xlsx') {
+                        $tautan = "https://view.officeapps.live.com/op/embed.aspx?src=" . $val_link . "&embedded=true";
+                        $tmp_v .= " data-nmlink='" . $tautan . "'";
+                        $rename = $v->judul . ".xlsx";
+                        $str_view = "<td class='text' >" . wordwrap($v->judul, 50, "<br/>") . "</a></td>";
+                    } elseif (substr($v->tautan, -3) == 'xls') {
+                        $tautan = "https://view.officeapps.live.com/op/embed.aspx?src=" . $val_link . "&embedded=true";
+                        $tmp_v .= " data-nmlink='" . $tautan . "'";
+                        $rename = $v->judul . ".xls";
+                        $str_view = "<td class='text' >" . wordwrap($v->judul, 50, "<br/>") . "</a></td>";
                     } elseif (substr($v->tautan, -4) == 'jpeg') {
+                        $tmp_v .= " data-nmlink='" . $val_link . "'";
                         $rename = $v->judul . ".jpeg";
-                    } elseif (substr($v->tautan, -4) == 'jfif') {
-                        $rename = $v->judul . ".jpg";
+                        $str_view = "<td class='text' >" . wordwrap($v->judul, 50, "<br/>") . "</a></td>";
                     } elseif (substr($v->tautan, -4) == 'pptx') {
+                        $tautan = "https://view.officeapps.live.com/op/embed.aspx?src=" . $val_link . "&embedded=true";
+                        $tmp_v .= " data-nmlink='" . $tautan . "'";
                         $rename = $v->judul . ".pptx";
+                        $str_view = "<td class='text' >" . wordwrap($v->judul, 50, "<br/>") . "</a></td>";
+                    } elseif (substr($v->tautan, -3) == 'mp4') {
+                        $tmp_v .= " data-nmlink='" . $val_link . "'";
+                        $rename = $v->judul . ".mp4";
+                        $str_view = "<td class='text' >" . wordwrap($v->judul, 50, "<br/>") . "</a></td>";
                     } else {
                         $rename = $v->judul;
+                        $str_view = "<td  class='text'><a style='font-size: 12px;' class='btn btn-xs text-secondary text-left'>" . wordwrap($v->judul, 50, "<br/>") . "</a></td>";
                     }
+                    // $str .= "<tr class='bg-secondary' >";
+                    $str .= "<tr class='' >";
+                    $str .= "<td class='text-right'>" . $no++ . "</td>";
+                    //$str.="<td  class='text'>".wordwrap($v->judul,50,"<br/>")."</td>";
+                    $str .= $str_view;
+                    
+                    $str .= "<td  class='text' title='Diedit oleh : $v->up_by' >" . $v->cr_by . "</td>";
+                    $str .= "<td  class='text' title='Diedit : $v->up_dt'>" . $v->cr_dt . "</td>";
+                    $str .= "<td  class=''><a href='$val_link' download='$namefile' target='_blank' class='btn btn-xs btn-outline-info waves-purple waves-light '  title='Unduh Data'><i class='ion ion-md-archive'></i><h7 class='mt-3 mb-0'><small></small></h7></a></td>";
+                    
 
-                    // $str.="<tr class='bg-secondary' title='Dokumen'>";
-                    $str .= "<tr class='' title='Dokumen'>";
-                    $str .= "<td class='text-center' style='padding: 3px; padding-left: 10px; padding-right: 10px; vertical-align: inherit; white-space: inherit; border: 1px solid black'>" . $no++ . "</td>";
-                    $str .= "<td class='text' style='padding: 3px; padding-left: 10px; padding-right: 10px; vertical-align: inherit; white-space: inherit; border: 1px solid black'>" . $v->judul . "</td>";
-                    $str .= "<td class='text' style='padding: 3px; padding-left: 10px; padding-right: 10px; vertical-align: inherit; white-space: inherit; border: 1px solid black'>" . $v->cr_by . "</td>";
-                    $str .= "<td class='text' style='padding: 3px; padding-left: 10px; padding-right: 10px; vertical-align: inherit; white-space: inherit; border: 1px solid black'>" . $v->cr_dt . "</td>";
-                    //                        $str.="<td  class='text-uppercase'>".$v->judul."</td>";
-                    //                        $str.="<td  class='text-uppercase'>".$v->cr_by."</td>";
-                    //$str.="<td  class='text-uppercase'>".$v->cr_dt."</td>";
-                    $str .= "<td class='text-center' style='padding: 3px; padding-left: 10px; padding-right: 10px; vertical-align: inherit; white-space: inherit; border: 1px solid black'><a href='$val_link' download='$rename' target='_blank' class='btn text-primary' title='Unduh Data'><i class='fas fa-download'></i><h7 class='mt-3 mb-0'><small></small></h7></a></td>";
                     $str .= "</tr>";
                 }
                 $response = array(
@@ -183,10 +227,7 @@ class PPD7_bahan_dukung_tpt extends CI_Controller
             }
         } else die("Die!");
     }
-
-    /*
-     * Download zip Tahap 2
-     * author :  FSM
+    /* author :  FSM
      * date : 17 Feb 2021
      */
     function d_bahan()

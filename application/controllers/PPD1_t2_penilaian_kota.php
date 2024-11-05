@@ -382,7 +382,7 @@ class PPD1_t2_penilaian_kota extends CI_Controller
         $bind = array($idwlyh);
         $list_data = $this->db->query($sql, $bind);
         if ($list_data->num_rows() == 0) {
-            echo 'Data tidak ada';
+            echo 'Tidak ada data upload penilaian';
             exit();
         }
 

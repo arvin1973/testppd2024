@@ -1,0 +1,57 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2024-10-29 09:10:48 --> 404 Page Not Found: Package/css
+ERROR - 2024-10-29 09:38:09 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:38:09 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:38:58 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:38:58 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:40:43 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:40:43 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:41:43 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:41:43 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:44:16 --> 404 Page Not Found: Package/css
+ERROR - 2024-10-29 09:45:26 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:45:26 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:46:44 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:46:44 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:54:31 --> 404 Page Not Found: Package/css
+ERROR - 2024-10-29 09:55:22 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:55:22 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:55:50 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 09:55:50 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:00:00 --> Severity: Parsing Error --> syntax error, unexpected '$tmp' (T_VARIABLE) C:\xampp5\htdocs\ppd2024\application\controllers\PPD1_status_penilaian_daerah.php 139
+ERROR - 2024-10-29 10:00:32 --> Severity: Parsing Error --> syntax error, unexpected '$tmp' (T_VARIABLE) C:\xampp5\htdocs\ppd2024\application\controllers\PPD1_status_penilaian_daerah.php 139
+ERROR - 2024-10-29 10:02:49 --> 404 Page Not Found: Package/css
+ERROR - 2024-10-29 10:03:30 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:03:30 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:03:47 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:03:47 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:03:57 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:03:57 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:04:13 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:04:13 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:04:28 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:04:29 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:20:38 --> 404 Page Not Found: Package/css
+ERROR - 2024-10-29 10:20:53 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:20:53 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:25:31 --> 404 Page Not Found: Package/css
+ERROR - 2024-10-29 10:27:02 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:27:02 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:27:19 --> 404 Page Not Found: Package/css
+ERROR - 2024-10-29 10:27:57 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:27:57 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:28:31 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:28:31 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:34:52 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:34:52 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:43:03 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 10:43:03 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 11:21:08 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 11:21:08 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 11:23:32 --> 404 Page Not Found: Package/css
+ERROR - 2024-10-29 11:23:46 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 11:23:46 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 11:35:45 --> 404 Page Not Found: Package/css
+ERROR - 2024-10-29 11:40:03 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-10-29 11:40:03 --> 404 Page Not Found: Assets/libs

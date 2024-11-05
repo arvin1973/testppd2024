@@ -596,7 +596,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <h3 class="card-title mt-1 mb-4" style="color: black;">Penilaian Kualitatif - <span class="lbl_jdl_aspek">Pencapaian</span></h3>
+                            <h3 class="card-title mt-1 mb-4" style="color: black;">Penilaian Kualitatif <span class="lbl_jdl_aspek">Pencapaian</span></h3>
                             <div class="form-group">
                                 <label for="field-1" class="control-label">Keunggulan Daerah pada <span class="lbl_jdl_aspek"> </span></label>
                                 <textarea class="form-control" name="simpul" rows="3" required="" ></textarea>
@@ -703,6 +703,8 @@
                         <div class="col-md-12">
                             <h3 class="card-title mt-1 mb-1" style="color: black;">Dokumen Pendukung - <span class="lbl_jdl_wlyh"></span></h3>
                             <p class="text-muted font-13 mb-4">Silahkan unduh dokumen-dokumen dibawah sebelum melakukan penilaian</p>
+                            <button class='btn btn-sm btn-primary waves-effect waves-light' id='btnDowDoc' style='border-radius: 0px; padding-left: 10px; padding-right: 10px;margin-right: 5px; margin-bottom: 10px; float: right;'>Unduh Semua <i class='fas fa-download' style='padding-left: 5px;'></i></button>
+                            <input type="hidden" id="d_wlyh" />
                             <table class="table table-condensed table-bordered table-striped " id="t_doc" style="border: 1px solid black; margin-bottom: 0px; border-collapse: inherit;">
                                 <thead style="background-color: rgb(31, 56, 100) !important; color: white;">
                                     <tr>

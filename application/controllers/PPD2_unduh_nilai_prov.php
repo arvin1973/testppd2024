@@ -221,6 +221,263 @@ class PPD2_unduh_nilai_prov extends CI_Controller
     function Download_nilai()
     {
         if (!$this->session->userdata(SESSION_LOGIN)) {
+            throw new Exception("Session expired, please login", 2);
+        }
+
+        
+        $user = $this->session->userdata(SESSION_LOGIN)->id;
+        $nama = $this->session->userdata(SESSION_LOGIN)->name;
+
+        $provcomb = decrypt_base64($_GET['token']);
+        $tmp2 = explode('-', $provcomb);
+        if (count($tmp2) != 2)
+            throw new Exception("Invalid ID");
+        $kate_wlyh = $tmp2[0];
+        $idwil = $tmp2[1];
+        
+        //$user
+        $select = "SELECT W.id,W.iduser,W.idwilayah, P.nama_provinsi, U.userid
+                    FROM `tbl_user_wilayah` W
+                    JOIN `provinsi` P ON W.idwilayah = P.id
+                    JOIN `tbl_user` U ON W.iduser = U.id
+                    WHERE W.iduser='$user' AND W.idwilayah='$idwil'";
+
+        $list_data  = $this->db->query($select);
+        foreach ($list_data->result() as $d) {
+            $nilai = $d->id;
+            $user_d = $d->userid;
+            $namaprov = $d->nama_provinsi;
+        }
+
+        $status_sql = "SELECT IT.`nourut` nr,IND.nourut,K.id nokr,K.`nama` nmkriteria,IND.nourut noindi,IND.`nama` nmindi,SI.`nama` nmsubindi,IT.`nama` nmitem,SKOR.skor,IND.bobot,RES.ksmplan, RES.saran
+        FROM `r_mdl1_item` IT
+        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'PROV')
+        JOIN `r_mdl1_indi` IND ON IND.`id`=SI.`indiid`
+        JOIN `r_mdl1_krtria` K ON K.`id`=IND.`krtriaid`
+        JOIN `r_mdl1_aspek` A ON A.id = K.aspekid
+        LEFT JOIN `t_mdl1_resume_prov` RES ON RES.`aspekid` = A.id AND RES.mapid ='$nilai'
+        LEFT JOIN(
+                SELECT I.`id` iditem,II.`skor`
+                FROM `t_mdl1_skor_prov` SK
+                JOIN `r_mdl1_item_indi` II ON II.`id`=SK.`itemindi`
+                JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
+                WHERE SK.`mapid`='$nilai'
+        ) SKOR ON SKOR.iditem=IT.`id`
+        ORDER BY IND.`nourut`,SI.nourut, IT.`nourut` ASC";
+                
+        $list_data  = $this->db->query($status_sql);
+
+        $nmkriteriaCount = [];
+        $nmindiCount = [];
+        
+        foreach ($list_data->result_array() as $item) {
+            $nmkriteria = $item['nmkriteria'];
+            if (isset($nmkriteriaCount[$nmkriteria])) {
+                $nmkriteriaCount[$nmkriteria]++;
+            } else {
+                $nmkriteriaCount[$nmkriteria] = 1;
+            }
+            
+            $nmindi = $item['nmindi'];
+            if (isset($nmindiCount[$nmindi])) {
+                $nmindiCount[$nmindi]++;
+            } else {
+                $nmindiCount[$nmindi] = 1;
+            }
+        }
+
+        
+        $this->load->library("Excel");
+
+        $sharedStyleTitles = new PHPExcel_Style();
+
+        $this->excel->getActiveSheet()->getSheetView()->setZoomScale(50);
+        $this->excel->getSheet(0)->setTitle('Rekap Nilai');
+
+        $this->excel->getActiveSheet()->getStyle('B115')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_TOP);
+        $this->excel->getActiveSheet()->getStyle('B120')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::VERTICAL_TOP);
+
+        //garis
+        $sharedStyleTitles->applyFromArray(
+            array(
+                'borders' =>
+                array(
+                    'bottom' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                    'top'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                    'left'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                    'right'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                )
+            )
+        );
+
+        $headerRow = 10;
+
+        $this->excel->getActiveSheet()->setCellValue('A1', "Penghargaan Pembangunan Daerah  2024");
+        $this->excel->getActiveSheet()->mergeCells('A1:K1');
+        $this->excel->getActiveSheet()->getStyle('A1:A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $this->excel->getActiveSheet()->setCellValue('A2', "Kriteria dan Indikator Penilaian Dokumen RKPD");
+       
+        $this->excel->getActiveSheet()->mergeCells('A2:K2');
+
+        $this->excel->getActiveSheet()->setCellValue('A4', "Nama");
+        $this->excel->getActiveSheet()->mergeCells('A4:B4');
+        $this->excel->getActiveSheet()->setCellValue('C4', ":");
+        $this->excel->getActiveSheet()->setCellValue('A5', "Daerah Yang Dinilai ");
+        $this->excel->getActiveSheet()->mergeCells('A5:B5');
+        $this->excel->getActiveSheet()->setCellValue('C5', ":");
+        $this->excel->getActiveSheet()->setCellValue('D4', "$nama");
+        $this->excel->getActiveSheet()->setCellValue('D5', "$namaprov");
+        $this->excel->getActiveSheet()->mergeCells('A2:B2');
+        $this->excel->getActiveSheet()->mergeCells('A3:B3');
+
+        $this->excel->getActiveSheet()->setCellValue("A10", "NO");
+        $this->excel->getActiveSheet()->mergeCells('A10:A11');
+        $this->excel->getActiveSheet()->setCellValue("B10", "KRITERIA");
+        $this->excel->getActiveSheet()->mergeCells('B10:B11');
+
+        $this->excel->getActiveSheet()->setCellValue("C10", "INDIKATOR");
+        $this->excel->getActiveSheet()->mergeCells('C10:D11');
+        $this->excel->getActiveSheet()->setCellValue("E10", "ITEM");
+        $this->excel->getActiveSheet()->mergeCells('E10:F11');
+        $this->excel->getActiveSheet()->setCellValue("G10", "NILAI");
+        $this->excel->getActiveSheet()->mergeCells('G10:G11');
+        $this->excel->getActiveSheet()->setCellValue("H10", "KEUNGGULAN DAERAH");
+        $this->excel->getActiveSheet()->mergeCells('H10:H11');
+        $this->excel->getActiveSheet()->setCellValue("I10", "REKOMENDASI");
+        $this->excel->getActiveSheet()->mergeCells('I10:I11');
+        $this->excel->getActiveSheet()->setCellValue("J10", "SKOR");
+        $this->excel->getActiveSheet()->mergeCells('J10:J11');
+        $this->excel->getActiveSheet()->setCellValue("K10", "BOBOT");
+        $this->excel->getActiveSheet()->mergeCells('K10:K11');
+        $this->excel->getActiveSheet()->setCellValue("L10", "NILAI TERBOBOT");
+        $this->excel->getActiveSheet()->mergeCells('L10:L11');
+        $this->excel->getActiveSheet()->getStyle('A10:L11')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+    
+        
+        $inisialRow = 12;
+        $startRow = 12; // Starting row for merging
+        $excel = $this->excel->getActiveSheet(); // Get the active sheet
+        
+        foreach ($nmkriteriaCount as $criteria => $count) {
+            $endRow = $startRow + $count - 1;
+            $excel->mergeCells("A{$startRow}:A{$endRow}"); 
+            $excel->mergeCells("B{$startRow}:B{$endRow}"); 
+            $excel->mergeCells("H{$startRow}:H{$endRow}"); 
+            $excel->mergeCells("I{$startRow}:I{$endRow}"); 
+            $startRow = $endRow + 1; 
+        }
+        
+
+        $excelColumn = range('A', 'ZZ');
+        $index_excelColumn = 0;
+        $row = 12;
+        $nol = '';
+        foreach ($list_data->result() as $value) {
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->nokr);
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->nmkriteria);
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->noindi);
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->nmindi);
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->nr);
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->nmitem);
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->skor);
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, " " . $value->ksmplan);
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->saran);
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, '');
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->bobot / 100);
+            $index_excelColumn = 0;
+            $row++;
+        }
+        
+        $startRowIndikator = 12; // Starting rowIndkator for merging
+        $excel = $this->excel->getActiveSheet(); // Get the active sheet
+        foreach ($nmindiCount as $indikator => $count) {
+            $endRowIndkator = $startRowIndikator + $count - 1;
+            $excel->mergeCells("C{$startRowIndikator}:C{$endRowIndkator}"); 
+            $excel->mergeCells("D{$startRowIndikator}:D{$endRowIndkator}"); 
+            $excel->mergeCells("J{$startRowIndikator}:J{$endRowIndkator}"); 
+            $excel->setCellValue("J{$startRowIndikator}", "=10*SUM(G{$startRowIndikator}:G{$endRowIndkator})/COUNT(E{$startRowIndikator}:E{$endRowIndkator})");
+            $excel->mergeCells("K{$startRowIndikator}:K{$endRowIndkator}"); 
+            $excel->mergeCells("L{$startRowIndikator}:L{$endRowIndkator}"); 
+            $excel->setCellValue("L{$startRowIndikator}", "=J{$startRowIndikator}*K{$startRowIndikator}");
+
+            $startRowIndikator = $endRowIndkator + 1; 
+        }
+        
+        //lebar kolom
+        $this->excel->getActiveSheet()->getColumnDimension("A")->setWidth("8.64");
+        $this->excel->getActiveSheet()->getColumnDimension("B")->setWidth("27");
+        $this->excel->getActiveSheet()->getColumnDimension("C")->setWidth("3.3");
+        $this->excel->getActiveSheet()->getColumnDimension("D")->setWidth("55");
+        $this->excel->getActiveSheet()->getColumnDimension("E")->setWidth("4.64");
+        $this->excel->getActiveSheet()->getColumnDimension("F")->setWidth("80");
+        $this->excel->getActiveSheet()->getColumnDimension("G")->setWidth("10");
+        $this->excel->getActiveSheet()->getColumnDimension("H")->setWidth("57");
+        $this->excel->getActiveSheet()->getColumnDimension("I")->setWidth("57");
+        $this->excel->getActiveSheet()->getColumnDimension("L")->setWidth("20");
+        
+        $endnilai = $startRowIndikator-1;
+        $endbottomrow = $startRowIndikator;
+        
+        $this->excel->getActiveSheet()->setSharedStyle($sharedStyleTitles, "A{$headerRow}:L{$endbottomrow}");
+
+        $this->excel->getActiveSheet()->getStyle("L{$inisialRow}:L{$endnilai}")->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
+        $this->excel->getActiveSheet()->getStyle("J{$inisialRow}:J{$endnilai}")->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
+        
+        $this->excel->getActiveSheet()->setCellValue("A{$endbottomrow}", "TOTAL");
+        $this->excel->getActiveSheet()->mergeCells("A{$endbottomrow}:K{$endbottomrow}");
+        $this->excel->getActiveSheet()->setCellValue("L{$endbottomrow}", "=SUM(L{$inisialRow}:L{$endnilai})");
+        $this->excel->getActiveSheet()->getStyle("L{$endbottomrow}:L{$endbottomrow}")->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
+
+        $this->excel->getActiveSheet()->getStyle("G{$inisialRow}:G{$startRowIndikator}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $this->excel->getActiveSheet()->getStyle("J{$inisialRow}:L{$startRowIndikator}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $this->excel->getActiveSheet()->getStyle("D{$inisialRow}:I{$startRowIndikator}")->getAlignment()->setWrapText(true);
+        $this->excel->getActiveSheet()->getStyle("A{$endbottomrow}:L{$endbottomrow}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        
+        $this->excel->getActiveSheet()->getStyle("A{$inisialRow}:A{$startRowIndikator}")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $this->excel->getActiveSheet()->getStyle("B{$inisialRow}:B{$startRowIndikator}")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $this->excel->getActiveSheet()->getStyle("C{$inisialRow}:C{$startRowIndikator}")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $this->excel->getActiveSheet()->getStyle("D{$inisialRow}:D{$startRowIndikator}")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $this->excel->getActiveSheet()->getStyle("E{$inisialRow}:E{$startRowIndikator}")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $this->excel->getActiveSheet()->getStyle("H{$inisialRow}:H{$startRowIndikator}")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $this->excel->getActiveSheet()->getStyle("I{$inisialRow}:I{$startRowIndikator}")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $this->excel->getActiveSheet()->getStyle("J{$inisialRow}:J{$startRowIndikator}")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $this->excel->getActiveSheet()->getStyle("K{$inisialRow}:K{$startRowIndikator}")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $this->excel->getActiveSheet()->getStyle("l{$inisialRow}:l{$startRowIndikator}")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+
+        //font
+        $this->excel->getActiveSheet()->getStyle('A1:A2')->getFont()->setName('CMIIW');
+        $this->excel->getActiveSheet()->getStyle('A10:A11')->getFont()->setName('CMIIW');
+        //$this->excel->getActiveSheet()->getStyle('A203')->getFont()->setName('CMIIW');
+        //bolt
+        $this->excel->getActiveSheet()->getStyle('A2:C3')->getFont()->setBold(true);
+        $this->excel->getActiveSheet()->getStyle('A10:L11')->getFont()->setBold(true);
+        $this->excel->getActiveSheet()->getStyle("A{$endbottomrow}:L{$endbottomrow}")->getFont()->setBold(true);
+        //size    
+        $this->excel->getActiveSheet()->getStyle('A1:D5')->getFont()->setSize(20);
+        $this->excel->getActiveSheet()->getStyle('A10:L11')->getFont()->setSize(12);
+        $this->excel->getActiveSheet()->getStyle("A{$endbottomrow}")->getFont()->setSize(18);
+        $this->excel->getActiveSheet()->getStyle("L{$endbottomrow}")->getFont()->setSize(18);
+
+
+
+        $this->excel->getActiveSheet()->setShowGridlines(False);
+        //                $this->excel->getActiveSheet()->getStyle('D12:D181'.$this->excel->getActiveSheet()->getHighestRow())->getAlignment()->setWrapText(true);
+        //$this->excel->getActiveSheet()->mergeCells('D4:Q4');
+        $this->excel->getActiveSheet()->getProtection()->setSheet(true);
+        $this->excel->getActiveSheet()->getProtection()->setSort(true);
+        $this->excel->getActiveSheet()->getProtection()->setInsertRows(true);
+        $this->excel->getActiveSheet()->getProtection()->setFormatCells(true);
+        $this->excel->getActiveSheet()->getProtection()->setPassword('garuda');
+
+        header("Content-Type:application/vnd.ms-excel");
+        header("Content-Disposition:attachment;filename = Modul1_" . $user_d . "_" . $namaprov . ".xls");
+        header("Cache-Control:max-age=0");
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+        $objWriter->save("php://output");
+    }
+    function Download_nilai2()
+    {
+        if (!$this->session->userdata(SESSION_LOGIN)) {
             echo 'Invalid Token, silakan logon sistem';
             exit();
         }

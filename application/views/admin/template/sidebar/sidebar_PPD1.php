@@ -116,6 +116,7 @@
                                             <span class="menu-arrow"></span>
                                         </a>
                                         <ul class="nav-third-level nav" aria-expanded="false">
+                                            <li><a href="javascript:void(0);" class="waves-effect link_target" data-target="<?php echo site_url("PPD1_status_penilaian_daerah") ?>">Berdasarkan Provinsi</a></li>
                                             <li><a href="javascript:void(0);" class="waves-effect link_target" data-target="<?php echo site_url("PPD1_status_penilaian_kab_daerah") ?>">Kabupaten</a></li>
                                             <li><a href="javascript:void(0);" class="waves-effect link_target" data-target="<?php echo site_url("PPD1_status_penilaian_kota_daerah") ?>">Kota</a></li>
                                             <!--                                                <li>
@@ -155,6 +156,7 @@
                                             <span class="menu-arrow"></span>
                                         </a>
                                         <ul class="nav-third-level nav" aria-expanded="false">
+                                            <li><a href="javascript:void(0);" class="waves-effect link_target" data-target="<?php echo site_url("M_Kertaskerja_daerah") ?>">Berdasarkan Provinsi</a></li>
                                             <li><a href="javascript:void(0);" class="waves-effect link_target" data-target="<?php echo site_url("M_Kertaskerja_Kab_daerah") ?>">Kabupaten</a></li>
                                             <li><a href="javascript:void(0);" class="waves-effect link_target" data-target="<?php echo site_url("M_Kertaskerja_Kota_daerah") ?>">Kota</a></li>
                                             <!--                                                <li>

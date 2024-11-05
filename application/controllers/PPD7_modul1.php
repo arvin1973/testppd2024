@@ -15,6 +15,7 @@ class PPD7_modul1 extends CI_Controller
         parent::__construct();
         $this->load->model("M_Master", "m_ref");
         $this->load->library("Excel");
+        $this->load->library('zip');
     }
 
 
@@ -1788,598 +1789,6 @@ class PPD7_modul1 extends CI_Controller
             }
         } else die("Die!");
     }
-
-    /*
-     * simpan skor kategori item penilaian
-     * author : 
-     * date : 13 des 2020
-     */
-    // function save_score()
-    // {
-    //     if ($this->input->is_ajax_request()) {
-    //         try {
-    //             if (!$this->session->userdata(SESSION_LOGIN)) {
-    //                 throw new Exception("Session berakhir, silahkan login ulang", 2);
-    //             }
-    //             $session = $this->session->userdata(SESSION_LOGIN);
-    //             session_write_close();
-
-    //             $this->form_validation->set_rules('id', 'ID Comb', 'required|xss_clean');
-    //             if ($this->form_validation->run() == FALSE) {
-    //                 throw new Exception(validation_errors("", ""), 0);
-    //             }
-    //             date_default_timezone_set("Asia/Jakarta");
-    //             $current_date_time = date("Y-m-d H:i:s");
-
-
-
-
-    //             $idcomb = decrypt_base64($this->input->post("id"));
-    //             $tmp = explode('-', $idcomb);
-    //             if (count($tmp) != 3)
-    //                 throw new Exception("Invalid ID");
-    //             $kate_wlyh = $tmp[0];
-    //             $idmap = $tmp[1];
-    //             $iditemindi = $tmp[2];
-    //             $_arr = array("PROV", "KAB", "KOTA");
-    //             if (!in_array($kate_wlyh, $_arr))
-    //                 throw new Exception("Invalid ID Kategori Wilayah");
-    //             if (!is_numeric($idmap))
-    //                 throw new Exception("Invalid ID Map");
-    //             if (!is_numeric($iditemindi))
-    //                 throw new Exception("Invalid ID Indi");
-
-
-    //             //default properties
-    //             $val_ksmpln = $val_saran = "";
-
-    //             /* 
-    //              * =============================================
-    //              * PEMBAGIAN QUERY PER KATEGORI WILAYAH - START
-    //              * =============================================
-    //              */
-    //             /*
-    //              * -------------------------------------------
-    //              * pengisian skor wilayah PROVINSI - START
-    //              * -------------------------------------------
-    //              */
-    //             if ($kate_wlyh == "PROV") {
-
-    //                 /*
-    //                  * check map wilayah - START
-    //                  */
-    //                 $sql = "SELECT * FROM tbl_user_wilayah WHERE id=?";
-    //                 $bind = array($idmap);
-    //                 $list_data = $this->db->query($sql, $bind);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-    //                 if ($list_data->num_rows() == 0)
-    //                     throw new Exception("Data Map tidak ditemukan!", 0);
-    //                 /*
-    //                  * check map wilayah - END
-    //                  */
-    //                 /*
-    //                  * check kategori penilaian item - START
-    //                  */
-    //                 $sql = "SELECT MII.id,MII.skor,MII.itemid,MSI.indiid,I.`krtriaid`,K.`nama` nmkriteria,ASP.id aspekid,ASP.nama nmaspek "
-    //                     . " FROM r_mdl1_item_indi MII "
-    //                     . " JOIN `r_mdl1_item` MI ON MI.`id`=MII.`itemid`
-    //                             JOIN `r_mdl1_sub_indi` MSI ON MSI.`id`=MI.`subindiid` 
-    //                             JOIN `r_mdl1_indi` I ON I.`id`=MSI.`indiid` 
-    //                             JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`
-    //                             JOIN r_mdl1_aspek ASP ON ASP.id=K.aspekid "
-    //                     . " WHERE MII.id=?";
-    //                 $bind = array($iditemindi);
-    //                 $list_data = $this->db->query($sql, $bind);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-    //                 if ($list_data->num_rows() == 0)
-    //                     throw new Exception("Data Kategori Penilaian Item tidak ditemukan!", 0);
-
-    //                 $iditem     = $list_data->row()->itemid; //ID item
-    //                 $idindi     = $list_data->row()->indiid; // ID indikator
-    //                 $idkriteria = $list_data->row()->krtriaid; // ID Kriteria
-    //                 $nmkriteria = $list_data->row()->nmkriteria; // Nama Kriteria
-    //                 $idaspek    = $list_data->row()->aspekid; // ID Aspek
-    //                 $nmaspek    = $list_data->row()->nmaspek; // Nama Aspek
-    //                 /*
-    //                  * check kategori penilaian item - END
-    //                  */
-
-    //                 /*
-    //                  * +++++++++++++++++++++++++
-    //                  * catat penilaian - START
-    //                  * +++++++++++++++++++++++++
-    //                  */
-
-    //                 //1.pastikan skor item per wilayah 
-    //                 $sql = "DELETE A
-    //                         FROM `t_mdl1_skor_prov` A
-    //                         JOIN `r_mdl1_item_indi` B ON B.`id`=A.`itemindi`
-    //                         WHERE A.`mapid`=? AND B.`itemid`=?";
-    //                 $bind = array($idmap, $iditem);
-    //                 $stts = $this->db->query($sql, $bind);
-    //                 if (!$stts) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("SQL Error : Gagal Mencatat Penilaian!");
-    //                 }
-    //                 //2.simpan data
-    //                 $this->db->trans_begin();
-    //                 $this->m_ref->setTableName("t_mdl1_skor_prov");
-    //                 $data_baru = array(
-    //                     "mapid"     => $idmap,
-    //                     "itemindi"  => $iditemindi,
-    //                     "cr_by"     => $session->id,
-    //                 );
-    //                 $status_save = $this->m_ref->save($data_baru);
-    //                 if (!$status_save) {
-    //                     $this->db->trans_rollback();
-    //                     throw new Exception("SQL Error " . $this->db->error("code") . " : Gagal menyimpan skor!", 0);
-    //                 }
-
-
-    //                 /*
-    //                  * +++++++++++++++++++++++++
-    //                  * catat penilaian - END
-    //                  * +++++++++++++++++++++++++
-    //                  */
-
-    //                 /*
-    //                  * ++++++++++++++++++++++++++++
-    //                  * get last TOTAL SKOR - START
-    //                  * ++++++++++++++++++++++++++++
-    //                  */
-    //                 $sql = "SELECT MI.`id` idindi,SUM(II.`skor`) skor
-    //                                 FROM `tbl_user_wilayah` W
-    //                                 JOIN `t_mdl1_skor_prov` SKR ON SKR.`mapid`=W.`id`
-    //                                 JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
-    //                                 JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-    //                                 JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
-    //                                 JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $idindi . "
-    //                                 WHERE W.`id`=" . $idmap . " "
-    //                     . " GROUP BY MI.`id`";
-    //                 $list_data = $this->db->query($sql);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-    //                 $ttl_skor = 0;
-    //                 if ($list_data->num_rows() > 0)
-    //                     $ttl_skor = $list_data->row()->skor;
-    //                 /*
-    //                  * ++++++++++++++++++++++++++++
-    //                  * get last TOTAL SKOR - END
-    //                  * ++++++++++++++++++++++++++++
-    //                  */
-
-    //                 /*
-    //                  * ++++++++++++++++++++++++++++
-    //                  * get Nilai - START
-    //                  * ++++++++++++++++++++++++++++
-    //                  */
-    //                 $sql = "SELECT IT.id
-    //                         FROM `r_mdl1_item` IT
-    //                         JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid`
-    //                         WHERE SI.`indiid`=" . $idindi . " ";
-    //                 $list_data = $this->db->query($sql);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-    //                 $nilai = $ttl_skor / $list_data->num_rows() * 10;
-    //                 /*
-    //                  * ++++++++++++++++++++++++++++
-    //                  * get Nilai - END
-    //                  * ++++++++++++++++++++++++++++
-    //                  */
-
-
-    //                 /*
-    //                  * ++++++++++++++++++++++++++++++++++++++
-    //                  * Check semua item sudah dinilai - START
-    //                  * ++++++++++++++++++++++++++++++++++++++
-    //                  */
-    //                 $sql = "SELECT A.jml,LPR.jml jml_lpr
-    //                         FROM(
-    //                                 SELECT K.`aspekid`,COUNT(1) jml
-    //                                 FROM `r_mdl1_item` IT
-    //                                 JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid`
-    //                                 JOIN `r_mdl1_indi` I ON I.`id`=SI.`indiid`
-    //                                 JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`
-    //                                 WHERE K.`aspekid`=" . $idaspek . "
-    //                                 GROUP BY K.`aspekid`
-    //                         ) A
-    //                         LEFT JOIN(
-    //                                 SELECT K.`aspekid`,COUNT(1) jml
-    //                                 FROM `tbl_user_wilayah` W
-    //                                 JOIN `t_mdl1_skor_prov` SKR ON SKR.`mapid`=W.`id`
-    //                                 JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
-    //                                 JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-    //                                 JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid`
-    //                                 JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
-    //                                 JOIN `r_mdl1_krtria` K ON K.`id`=MI.`krtriaid`
-    //                                 WHERE W.`id`=" . $idmap . " AND K.`aspekid`=" . $idaspek . "
-    //                                 GROUP BY K.`aspekid`
-    //                         )LPR ON LPR.aspekid=A.aspekid";
-    //                 $list_data = $this->db->query($sql);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-
-    //                 $isdisplay_simpul = 'N';
-    //                 if ($list_data->num_rows() > 0) {
-    //                     if ($list_data->row()->jml == $list_data->row()->jml_lpr) {
-
-    //                         $isdisplay_simpul = 'Y';
-
-    //                         //tandai bahwa provinsi sudah harus isi form resume
-
-    //                         //check data simpul
-    //                         $sql = "SELECT A.`id`,A.`ksmplan`,A.`saran`
-    //                                 FROM `t_mdl1_resume_prov` A
-    //                                 WHERE A.`aspekid`=? AND A.`mapid`=?";
-    //                         $bind = array($idaspek, $idmap);
-    //                         $list_data = $this->db->query($sql, $bind);
-    //                         if (!$list_data) {
-    //                             $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                             log_message("error", $msg);
-    //                             throw new Exception("Invalid SQL!");
-    //                         }
-    //                         if ($list_data->num_rows() == 0) {
-    //                             $this->m_ref->setTableName("t_mdl1_resume_prov");
-    //                             $data_baru = array(
-    //                                 "mapid"     => $idmap,
-    //                                 "aspekid"  => $idaspek,
-    //                                 "stts"      => 'N',
-    //                                 "cr_by"     => $session->id,
-    //                             );
-    //                             $status_save = $this->m_ref->save($data_baru);
-    //                             if (!$status_save) {
-    //                                 $this->db->trans_rollback();
-    //                                 throw new Exception("SQL Error " . $this->db->error()["code"] . " : Gagal menyimpan skor!", 0);
-    //                             }
-    //                         }
-
-    //                         //get kesimpulan dan saran
-    //                         $sql = "SELECT A.`id`,A.`ksmplan`,A.`saran`
-    //                                 FROM `t_mdl1_resume_prov` A
-    //                                 WHERE A.`aspekid`=? AND A.`mapid`=?";
-    //                         $bind = array($idaspek, $idmap);
-    //                         $list_data = $this->db->query($sql, $bind);
-    //                         if (!$list_data) {
-    //                             $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                             log_message("error", $msg);
-    //                             throw new Exception("Invalid SQL!");
-    //                         }
-
-    //                         $val_ksmpln  = "";
-    //                         $val_saran   = "";
-    //                         if ($list_data->num_rows() > 0) {
-    //                             $val_ksmpln = $list_data->row()->ksmplan;
-    //                             $val_saran = $list_data->row()->saran;
-    //                         }
-    //                     }
-    //                 } else {
-    //                     $this->db->trans_rollback();
-    //                     throw new Exception("Data Master Item tidak ditemukan");
-    //                 }
-    //                 /*
-    //                  * ++++++++++++++++++++++++++++++++++++++
-    //                  * Check semua item sudah dinilai - END
-    //                  * ++++++++++++++++++++++++++++++++++++++
-    //                  */
-    //             }
-    //             /*
-    //              * -------------------------------------------
-    //              * pengisian skor wilayah PROVINSI - END
-    //              * -------------------------------------------
-    //              */
-    //             /*
-    //              * -------------------------------------------
-    //              * pengisian skor wilayah KAB/KOTA - START
-    //              * -------------------------------------------
-    //              */ elseif ($kate_wlyh == "KAB" || $kate_wlyh == "KOTA") {
-
-    //                 /*
-    //                  * check map wilayah - START
-    //                  */
-    //                 $sql = "SELECT * FROM tbl_user_kabkot WHERE id=?";
-    //                 $bind = array($idmap);
-    //                 $list_data = $this->db->query($sql, $bind);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-    //                 if ($list_data->num_rows() == 0)
-    //                     throw new Exception("Data Map tidak ditemukan!", 0);
-    //                 /*
-    //                  * check map wilayah - END
-    //                  */
-    //                 /*
-    //                  * check kategori penilaian item - START
-    //                  */
-    //                 $sql = "SELECT MII.id,MII.skor,MII.itemid,MSI.indiid,I.`krtriaid`,K.`nama` nmkriteria,ASP.id aspekid,ASP.nama nmaspek "
-    //                     . " FROM r_mdl1_item_indi MII "
-    //                     . " JOIN `r_mdl1_item` MI ON MI.`id`=MII.`itemid`
-    //                             JOIN `r_mdl1_sub_indi` MSI ON MSI.`id`=MI.`subindiid` AND MSI.isprov='N'
-    //                             JOIN `r_mdl1_indi` I ON I.`id`=MSI.`indiid` 
-    //                             JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`
-    //                             JOIN r_mdl1_aspek ASP ON ASP.id=K.aspekid "
-    //                     . " WHERE MII.id=?";
-    //                 $bind = array($iditemindi);
-    //                 $list_data = $this->db->query($sql, $bind);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-    //                 if ($list_data->num_rows() == 0)
-    //                     throw new Exception("Data Kategori Penilaian Item tidak ditemukan!", 0);
-
-    //                 $iditem     = $list_data->row()->itemid; //ID item
-    //                 $idindi     = $list_data->row()->indiid; // ID indikator
-    //                 $idkriteria = $list_data->row()->krtriaid; // ID Kriteria
-    //                 $nmkriteria = $list_data->row()->nmkriteria; // Nama Kriteria
-    //                 $idaspek    = $list_data->row()->aspekid; // ID Aspek
-    //                 $nmaspek    = $list_data->row()->nmaspek; // Nama Aspek
-    //                 /*
-    //                  * check kategori penilaian item - END
-    //                  */
-
-    //                 /*
-    //                  * +++++++++++++++++++++++++
-    //                  * catat penilaian - START
-    //                  * +++++++++++++++++++++++++
-    //                  */
-
-    //                 //1.pastikan skor item per wilayah 
-    //                 $sql = "DELETE A
-    //                         FROM `t_mdl1_skor_kabkota` A
-    //                         JOIN `r_mdl1_item_indi` B ON B.`id`=A.`itemindi`
-    //                         WHERE A.`mapid`=? AND B.`itemid`=?";
-    //                 $bind = array($idmap, $iditem);
-    //                 $stts = $this->db->query($sql, $bind);
-    //                 if (!$stts) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("SQL Error : Gagal Mencatat Penilaian!");
-    //                 }
-    //                 //2.simpan data
-    //                 $this->db->trans_begin();
-    //                 $this->m_ref->setTableName("t_mdl1_skor_kabkota");
-    //                 $data_baru = array(
-    //                     "mapid"     => $idmap,
-    //                     "itemindi"  => $iditemindi,
-    //                     "cr_by"     => $session->id,
-    //                 );
-    //                 $status_save = $this->m_ref->save($data_baru);
-    //                 if (!$status_save) {
-    //                     $this->db->trans_rollback();
-    //                     throw new Exception("SQL Error " . $this->db->error("code") . " : Gagal menyimpan skor!", 0);
-    //                 }
-
-
-    //                 /*
-    //                  * +++++++++++++++++++++++++
-    //                  * catat penilaian - END
-    //                  * +++++++++++++++++++++++++
-    //                  */
-
-    //                 /*
-    //                  * ++++++++++++++++++++++++++++
-    //                  * get last TOTAL SKOR - START
-    //                  * ++++++++++++++++++++++++++++
-    //                  */
-    //                 $sql = "SELECT MI.`id` idindi,SUM(II.`skor`) skor
-    //                                 FROM `tbl_user_kabkot` W
-    //                                 JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
-    //                                 JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
-    //                                 JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-    //                                 JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
-    //                                 JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.id=" . $idindi . "
-    //                                 WHERE W.`id`=" . $idmap . " "
-    //                     . " GROUP BY MI.`id`";
-    //                 $list_data = $this->db->query($sql);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-    //                 $ttl_skor = 0;
-    //                 if ($list_data->num_rows() > 0)
-    //                     $ttl_skor = $list_data->row()->skor;
-    //                 /*
-    //                  * ++++++++++++++++++++++++++++
-    //                  * get last TOTAL SKOR - END
-    //                  * ++++++++++++++++++++++++++++
-    //                  */
-
-    //                 /*
-    //                  * ++++++++++++++++++++++++++++
-    //                  * get Nilai - START
-    //                  * ++++++++++++++++++++++++++++
-    //                  */
-    //                 $sql = "SELECT IT.id
-    //                         FROM `r_mdl1_item` IT
-    //                         JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
-    //                         WHERE SI.`indiid`=" . $idindi . " ";
-    //                 $list_data = $this->db->query($sql);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-    //                 $nilai = $ttl_skor / $list_data->num_rows() * 10;
-    //                 /*
-    //                  * ++++++++++++++++++++++++++++
-    //                  * get Nilai - END
-    //                  * ++++++++++++++++++++++++++++
-    //                  */
-
-
-    //                 /*
-    //                  * ++++++++++++++++++++++++++++++++++++++
-    //                  * Check semua item sudah dinilai - START
-    //                  * ++++++++++++++++++++++++++++++++++++++
-    //                  */
-    //                 $sql = "SELECT A.jml,LPR.jml jml_lpr
-    //                         FROM(
-    //                                 SELECT K.`aspekid`,COUNT(1) jml
-    //                                 FROM `r_mdl1_item` IT
-    //                                 JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
-    //                                 JOIN `r_mdl1_indi` I ON I.`id`=SI.`indiid`
-    //                                 JOIN `r_mdl1_krtria` K ON K.`id`=I.`krtriaid`
-    //                                 WHERE K.`aspekid`=" . $idaspek . "
-    //                                 GROUP BY K.`aspekid`
-    //                         ) A
-    //                         LEFT JOIN(
-    //                                 SELECT K.`aspekid`,COUNT(1) jml
-    //                                 FROM `tbl_user_kabkot` W
-    //                                 JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
-    //                                 JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
-    //                                 JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-    //                                 JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov='N'
-    //                                 JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
-    //                                 JOIN `r_mdl1_krtria` K ON K.`id`=MI.`krtriaid`
-    //                                 WHERE W.`id`=" . $idmap . " AND K.`aspekid`=" . $idaspek . "
-    //                                 GROUP BY K.`aspekid`
-    //                         )LPR ON LPR.aspekid=A.aspekid";
-    //                 $list_data = $this->db->query($sql);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-
-    //                 $isdisplay_simpul = 'N';
-    //                 if ($list_data->num_rows() > 0) {
-    //                     if ($list_data->row()->jml == $list_data->row()->jml_lpr) {
-
-    //                         $isdisplay_simpul = 'Y';
-
-    //                         //tandai bahwa provinsi sudah harus isi form resume
-
-    //                         //check data simpul
-    //                         $sql = "SELECT A.`id`,A.`ksmplan`,A.`saran`
-    //                                 FROM `t_mdl1_resume_kabkota` A
-    //                                 WHERE A.`aspekid`=? AND A.`mapid`=?";
-    //                         $bind = array($idaspek, $idmap);
-    //                         $list_data = $this->db->query($sql, $bind);
-    //                         if (!$list_data) {
-    //                             $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                             log_message("error", $msg);
-    //                             throw new Exception("Invalid SQL!");
-    //                         }
-    //                         if ($list_data->num_rows() == 0) {
-    //                             $this->m_ref->setTableName("t_mdl1_resume_kabkota");
-    //                             $data_baru = array(
-    //                                 "mapid"     => $idmap,
-    //                                 "aspekid"   => $idaspek,
-    //                                 "stts"      => 'N',
-    //                                 "cr_by"     => $session->id,
-    //                             );
-    //                             $status_save = $this->m_ref->save($data_baru);
-    //                             if (!$status_save) {
-    //                                 $this->db->trans_rollback();
-    //                                 throw new Exception("SQL Error " . $this->db->error()["code"] . " : Gagal menyimpan skor!", 0);
-    //                             }
-    //                         }
-
-    //                         //get kesimpulan dan saran
-    //                         $sql = "SELECT A.`id`,A.`ksmplan`,A.`saran`
-    //                                 FROM `t_mdl1_resume_kabkota` A
-    //                                 WHERE A.`aspekid`=? AND A.`mapid`=?";
-    //                         $bind = array($idaspek, $idmap);
-    //                         $list_data = $this->db->query($sql, $bind);
-    //                         if (!$list_data) {
-    //                             $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                             log_message("error", $msg);
-    //                             throw new Exception("Invalid SQL!");
-    //                         }
-
-    //                         $val_ksmpln  = "";
-    //                         $val_saran   = "";
-    //                         if ($list_data->num_rows() > 0) {
-    //                             $val_ksmpln = $list_data->row()->ksmplan;
-    //                             $val_saran = $list_data->row()->saran;
-    //                         }
-    //                     }
-    //                 } else {
-    //                     $this->db->trans_rollback();
-    //                     throw new Exception("Data Master Item tidak ditemukan");
-    //                 }
-    //                 /*
-    //                  * ++++++++++++++++++++++++++++++++++++++
-    //                  * Check semua item sudah dinilai - END
-    //                  * ++++++++++++++++++++++++++++++++++++++
-    //                  */
-    //             }
-    //             /*
-    //              * -------------------------------------------
-    //              * pengisian skor wilayah KAB/KOTA - END
-    //              * -------------------------------------------
-    //              */
-    //             /* 
-    //              * =============================================
-    //              * PEMBAGIAN QUERY PER KATEGORI WILAYAH - END
-    //              * =============================================
-    //              */
-
-    //             $this->db->trans_commit();
-
-
-    //             /*
-    //              * +++++++++++++++++++++++++++++++++++++++++
-    //              * FORM RESUME dan SARAN properties - start
-    //              * +++++++++++++++++++++++++++++++++++++++++
-    //              */
-    //             $idcomb = $kate_wlyh . "-" . $idmap . "-" . $idaspek;
-    //             $enc_idrsme = base64_encode(openssl_encrypt($idcomb, "AES-128-ECB", ENCRYPT_PASS));
-    //             /*
-    //              * +++++++++++++++++++++++++++++++++++++++++
-    //              * FORM RESUME dan SARAN properties - end
-    //              * +++++++++++++++++++++++++++++++++++++++++
-    //              */
-    //             //sukses
-    //             $output = array(
-    //                 "status"                => 1,
-    //                 "csrf_hash"             => $this->security->get_csrf_hash(),
-    //                 "msg"                   => "Sukses menyimpan data",
-    //                 "ttl_skor"              => $ttl_skor,
-    //                 "nilai"                 => number_format($nilai, 1),
-    //                 "is_display_simpul"     => $isdisplay_simpul,
-    //                 "val_ksmpln"            => $val_ksmpln,
-    //                 "val_saran"             => $val_saran,
-    //                 "nmaspek"               => $nmaspek,
-    //                 "idrsme"                => $enc_idrsme,
-    //             );
-    //             exit(json_encode($output));
-    //         } catch (Exception $exc) {
-    //             log_message("error", $exc->getLine());
-    //             $this->db->trans_rollback();
-    //             $output = array(
-    //                 "status"    =>  $exc->getCode(),
-    //                 "msg"       =>  $exc->getMessage(),
-    //                 "csrf_hash" =>  $this->security->get_csrf_hash(),
-    //             );
-    //             exit(json_encode($output));
-    //         }
-    //     } else {
-    //         exit("Access Denied");
-    //     }
-    // }
     function save_score()
     {
         if ($this->input->is_ajax_request()) {
@@ -3200,189 +2609,6 @@ class PPD7_modul1 extends CI_Controller
             exit("Access Denied");
         }
     }
-
-
-
-    //save resume Aspek
-    // function resume_save()
-    // {
-    //     if ($this->input->is_ajax_request()) {
-    //         try {
-    //             if (!$this->session->userdata(SESSION_LOGIN)) {
-    //                 throw new Exception("Your session is ended, please relogin", 2);
-    //             }
-    //             $this->form_validation->set_rules('id', 'ID data', 'required|xss_clean');
-    //             $this->form_validation->set_rules('simpul', 'Catatan', 'required|xss_clean');
-    //             $this->form_validation->set_rules('saran', 'Masukan & Saran', 'required|xss_clean');
-
-    //             if ($this->form_validation->run() == FALSE) {
-    //                 throw new Exception(validation_errors("", ""), 0);
-    //             }
-    //             $session = $this->session->userdata(SESSION_LOGIN);
-    //             session_write_close();
-
-    //             $idcomb = decrypt_base64($this->input->post("id"));
-    //             $tmp = explode('-', $idcomb);
-    //             if (count($tmp) != 3)
-    //                 throw new Exception("Invalid ID");
-    //             $kate_wlyh  = $tmp[0];
-    //             $idmap      = $tmp[1];
-    //             $idaspek    = $tmp[2];
-    //             $_arr = array("PROV", "KAB", "KOTA");
-    //             if (!in_array($kate_wlyh, $_arr))
-    //                 throw new Exception("InvaliD Kategori Wilayah");
-    //             if (!is_numeric($idmap))
-    //                 throw new Exception("Invalid ID Map");
-    //             if (!is_numeric($idaspek))
-    //                 throw new Exception("Invalid ID Aspek");
-
-    //             $inp_simpul = $this->input->post("simpul");
-    //             $inp_saran  = $this->input->post("saran");
-
-    //             date_default_timezone_set("Asia/Jakarta");
-    //             $current_date_time = date("Y-m-d H:i:s");
-
-    //             $this->db->trans_begin();
-
-    //             /* 
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              * PEMBAGIAN QUERY PER KATEGORI WILAYAH - START
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              */
-    //             if ($kate_wlyh == "PROV") {
-    //                 //cek data 
-    //                 $this->m_ref->setTableName("t_mdl1_resume_prov");
-    //                 $select = array();
-    //                 $cond = array(
-    //                     "mapid"  => $idmap,
-    //                     "aspekid" => $idaspek,
-    //                 );
-    //                 $list_data = $this->m_ref->get_by_condition($select, $cond);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL");
-    //                 }
-    //                 if ($list_data->num_rows() > 0) {
-    //                     $this->m_ref->setTableName("t_mdl1_resume_prov");
-    //                     $data_baru = array(
-    //                         "ksmplan"   => $inp_simpul,
-    //                         "saran"     => $inp_saran,
-    //                         "stts"      => 'Y',
-    //                         "up_dt"     => $current_date_time,
-    //                         "up_by"     => $session->userid,
-    //                     );
-    //                     $cond = array(
-    //                         "mapid"  => $idmap,
-    //                         "aspekid" => $idaspek,
-    //                     );
-    //                     $status_save = $this->m_ref->update($cond, $data_baru);
-    //                     if (!$status_save) {
-    //                         $this->db->trans_rollback();
-    //                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                         log_message("error", $msg);
-    //                         throw new Exception($this->db->error()["code"] . " : Failed save data", 0);
-    //                     }
-    //                 } else {
-    //                     $this->m_ref->setTableName("t_mdl1_resume_prov");
-    //                     $data_baru = array(
-    //                         "mapid"     => $idmap,
-    //                         "aspekid"  => $idaspek,
-    //                         "ksmplan"   => $inp_simpul,
-    //                         "saran"     => $inp_saran,
-    //                         "stts"      => 'Y',
-    //                         "cr_by"     => $session->userid,
-    //                     );
-    //                     $status_save = $this->m_ref->save($data_baru);
-    //                     if (!$status_save) {
-    //                         $this->db->trans_rollback();
-    //                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                         log_message("error", $msg);
-    //                         throw new Exception($this->db->error("code") . " : Failed save data", 0);
-    //                     }
-    //                 }
-    //             } elseif ($kate_wlyh == "KAB" || $kate_wlyh == "KOTA") {
-    //                 //cek data 
-    //                 $this->m_ref->setTableName("t_mdl1_resume_kabkota");
-    //                 $select = array();
-    //                 $cond = array(
-    //                     "mapid"  => $idmap,
-    //                     "aspekid" => $idaspek,
-    //                 );
-    //                 $list_data = $this->m_ref->get_by_condition($select, $cond);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL");
-    //                 }
-    //                 if ($list_data->num_rows() > 0) {
-    //                     $this->m_ref->setTableName("t_mdl1_resume_kabkota");
-    //                     $data_baru = array(
-    //                         "ksmplan"   => $inp_simpul,
-    //                         "saran"     => $inp_saran,
-    //                         "stts"      => 'Y',
-    //                         "up_dt"     => $current_date_time,
-    //                         "up_by"     => $session->userid,
-    //                     );
-    //                     $cond = array(
-    //                         "mapid"  => $idmap,
-    //                         "aspekid" => $idaspek,
-    //                     );
-    //                     $status_save = $this->m_ref->update($cond, $data_baru);
-    //                     if (!$status_save) {
-    //                         $this->db->trans_rollback();
-    //                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                         log_message("error", $msg);
-    //                         throw new Exception($this->db->error()["code"] . " : Failed save data", 0);
-    //                     }
-    //                 } else {
-    //                     $this->m_ref->setTableName("t_mdl1_resume_kabkota");
-    //                     $data_baru = array(
-    //                         "mapid"     => $idmap,
-    //                         "aspekid"   => $idaspek,
-    //                         "ksmplan"   => $inp_simpul,
-    //                         "saran"     => $inp_saran,
-    //                         "stts"      => 'Y',
-    //                         "cr_by"     => $session->userid,
-    //                     );
-    //                     $status_save = $this->m_ref->save($data_baru);
-    //                     if (!$status_save) {
-    //                         $this->db->trans_rollback();
-    //                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                         log_message("error", $msg);
-    //                         throw new Exception($this->db->error("code") . " : Failed save data", 0);
-    //                     }
-    //                 }
-    //             }
-
-    //             /* 
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              * PEMBAGIAN QUERY PER KATEGORI WILAYAH - END
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              */
-    //             $this->db->trans_commit();
-
-
-    //             //sukses
-    //             $output = array(
-    //                 "status"    =>  1,
-    //                 "csrf_hash"     =>  $this->security->get_csrf_hash(),
-    //                 "msg"       =>  "Resume Aspek berhasil disimpan"
-    //             );
-    //             exit(json_encode($output));
-    //         } catch (Exception $exc) {
-    //             $this->db->trans_rollback();
-    //             $output = array(
-    //                 "status"    =>  $exc->getCode(),
-    //                 "csrf_hash"     =>  $this->security->get_csrf_hash(),
-    //                 "msg"    =>  $exc->getMessage(),
-    //             );
-    //             exit(json_encode($output));
-    //         }
-    //     } else {
-    //         exit("Access Denied");
-    //     }
-    // }
     function resume_save()
     {
         if ($this->input->is_ajax_request()) {
@@ -3563,131 +2789,6 @@ class PPD7_modul1 extends CI_Controller
         }
     }
 
-
-    /*
-     * get detail data resume aspek
-     * author :  
-     * date : 23 des 2020
-     */
-    // function g_det_resume()
-    // {
-    //     if ($this->input->is_ajax_request()) {
-    //         try {
-    //             if (!$this->session->userdata(SESSION_LOGIN)) {
-    //                 throw new Exception("Session berakhir, silahkan login ulang", 2);
-    //             }
-    //             $this->form_validation->set_rules('id', 'ID Data', 'required');
-    //             if ($this->form_validation->run() == FALSE) {
-    //                 throw new Exception(validation_errors("", ""), 0);
-    //             }
-
-    //             $idcomb = decrypt_base64($this->input->post("id"));
-
-    //             $tmp = explode('-', $idcomb);
-    //             if (count($tmp) != 3)
-    //                 throw new Exception("Invalid ID");
-    //             $kate_wlyh  = $tmp[0];
-    //             $idmap      = $tmp[1];
-    //             $idaspek    = $tmp[2];
-    //             $_arr = array("PROV", "KAB", "KOTA");
-    //             if (!in_array($kate_wlyh, $_arr))
-    //                 throw new Exception("InvaliD Kategori Wilayah");
-    //             if (!is_numeric($idmap))
-    //                 throw new Exception("Invalid ID Map");
-    //             if (!is_numeric($idaspek))
-    //                 throw new Exception("Invalid ID Aspek");
-
-    //             /* 
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              * PEMBAGIAN QUERY Nama Aspek
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              */
-    //             $this->m_ref->setTableName("r_mdl1_aspek");
-    //             $select_a = array("id", "nama");
-    //             $cond_a = array(
-    //                 "id"     => $idaspek,
-    //             );
-    //             $list_data_a = $this->m_ref->get_by_condition($select_a, $cond_a);
-    //             if (!$list_data_a) {
-    //                 $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                 log_message("error", $msg);
-    //                 throw new Exception("Invalid SQL!");
-    //             }
-    //             if ($list_data_a->num_rows() == 0) {
-    //                 throw new Exception("Data not found, please reload this page!", 0);
-    //             }
-
-    //             /* 
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              * PEMBAGIAN QUERY PER KATEGORI WILAYAH - START
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              */
-    //             if ($kate_wlyh == 'PROV') {
-    //                 $this->m_ref->setTableName("t_mdl1_resume_prov");
-    //                 $select = array("ksmplan", "saran");
-    //                 $cond = array(
-    //                     "mapid"     => $idmap,
-    //                     "aspekid"   => $idaspek,
-    //                 );
-    //                 $list_data = $this->m_ref->get_by_condition($select, $cond);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-    //                 if ($list_data->num_rows() == 0) {
-    //                     throw new Exception("Data not found, please reload this page!", 0);
-    //                 }
-    //             } elseif ($kate_wlyh == 'KAB' || $kate_wlyh == 'KOTA') {
-    //                 $this->m_ref->setTableName("t_mdl1_resume_kabkota");
-    //                 $select = array("ksmplan", "saran");
-    //                 $cond = array(
-    //                     "mapid"     => $idmap,
-    //                     "aspekid"   => $idaspek,
-    //                 );
-    //                 $list_data = $this->m_ref->get_by_condition($select, $cond);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-    //                 if ($list_data->num_rows() == 0) {
-    //                     throw new Exception("Data not found, please reload this page!", 0);
-    //                 }
-    //             }
-
-
-    //             /* 
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              * PEMBAGIAN QUERY PER KATEGORI WILAYAH - END
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              */
-    //             $nmaspek    = $list_data_a->row()->nama;
-    //             $val_simpul = $list_data->row()->ksmplan;
-    //             $val_saran  = $list_data->row()->saran;
-    //             //sukses
-    //             $output = array(
-    //                 "status"            =>  1,
-    //                 "csrf_hash"         =>  $this->security->get_csrf_hash(),
-    //                 "msg"               =>  "success get data",
-    //                 "simpul"               =>  $val_simpul,
-    //                 "saran"               =>  $val_saran,
-    //                 "nmaspek"               =>  $nmaspek,
-    //             );
-    //             exit(json_encode($output));
-    //         } catch (Exception $exc) {
-    //             $this->db->trans_rollback();
-    //             $output = array(
-    //                 "status"    =>  $exc->getCode(),
-    //                 "msg"       =>  $exc->getMessage(),
-    //                 "csrf_hash" =>  $this->security->get_csrf_hash(),
-    //             );
-    //             exit(json_encode($output));
-    //         }
-    //     } else {
-    //         exit("Access Denied");
-    //     }
-    // }
     function g_det_resume()
     {
         if ($this->input->is_ajax_request()) {
@@ -3808,99 +2909,6 @@ class PPD7_modul1 extends CI_Controller
         }
     }
 
-    /*
-     * get detail data lembar pernyataan
-     * author :  
-     * date : 1 jan 2021
-     */
-    // function g_det_sttmnt()
-    // {
-    //     if ($this->input->is_ajax_request()) {
-    //         try {
-    //             if (!$this->session->userdata(SESSION_LOGIN)) {
-    //                 throw new Exception("Session berakhir, silahkan login ulang", 2);
-    //             }
-    //             $this->form_validation->set_rules('id', 'ID Data', 'required');
-    //             if ($this->form_validation->run() == FALSE) {
-    //                 throw new Exception(validation_errors("", ""), 0);
-    //             }
-
-    //             $idcomb = decrypt_base64($this->input->post("id"));
-    //             $tmp = explode('-', $idcomb);
-    //             if (count($tmp) != 2)
-    //                 throw new Exception("Invalid ID");
-    //             $kate_wlyh  = $tmp[0];
-    //             $idmap      = $tmp[1];
-    //             $_arr = array("PROV", "KAB", "KOTA");
-    //             if (!in_array($kate_wlyh, $_arr))
-    //                 throw new Exception("InvaliD Kategori Wilayah");
-    //             if (!is_numeric($idmap))
-    //                 throw new Exception("Invalid ID Map");
-
-    //             /* 
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              * PEMBAGIAN QUERY PER KATEGORI WILAYAH - START
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              */
-    //             if ($kate_wlyh == "PROV") {
-    //                 $this->m_ref->setTableName("t_mdl1_sttment_prov");
-    //                 $select = array("attachments");
-    //                 $cond = array(
-    //                     "mapid"     => $idmap,
-    //                 );
-    //                 $list_data = $this->m_ref->get_by_condition($select, $cond);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-    //                 $val_link = NULL;
-    //                 if ($list_data->num_rows() > 0) {
-    //                     $val_link = base_url("attachments/kertaskerja/" . $list_data->row()->attachments);
-    //                 }
-    //             } elseif ($kate_wlyh == "KAB" || $kate_wlyh == "KOTA") {
-    //                 $this->m_ref->setTableName("t_mdl1_sttment_kabkota");
-    //                 $select = array("attachments");
-    //                 $cond = array(
-    //                     "mapid"     => $idmap,
-    //                 );
-    //                 $list_data = $this->m_ref->get_by_condition($select, $cond);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL!");
-    //                 }
-    //                 $val_link = NULL;
-    //                 if ($list_data->num_rows() > 0) {
-    //                     $val_link = base_url("attachments/kertaskerja/" . $list_data->row()->attachments);
-    //                 }
-    //             }
-    //             /* 
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              * PEMBAGIAN QUERY PER KATEGORI WILAYAH - END
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              */
-    //             //sukses
-    //             $output = array(
-    //                 "status"            =>  1,
-    //                 "csrf_hash"         =>  $this->security->get_csrf_hash(),
-    //                 "msg"               =>  "success get data",
-    //                 "link"               =>  $val_link,
-    //             );
-    //             exit(json_encode($output));
-    //         } catch (Exception $exc) {
-    //             $this->db->trans_rollback();
-    //             $output = array(
-    //                 "status"    =>  $exc->getCode(),
-    //                 "msg"       =>  $exc->getMessage(),
-    //                 "csrf_hash" =>  $this->security->get_csrf_hash(),
-    //             );
-    //             exit(json_encode($output));
-    //         }
-    //     } else {
-    //         exit("Access Denied");
-    //     }
-    // }
     function g_det_sttmnt()
     {
         if ($this->input->is_ajax_request()) {
@@ -3990,184 +2998,6 @@ class PPD7_modul1 extends CI_Controller
         }
     }
 
-
-    /*
-     * save Lembar Pernyataan
-     * author :  
-     * date : 1 Jan 2021
-     */
-    // function sttmnt_save()
-    // {
-    //     if ($this->input->is_ajax_request()) {
-    //         try {
-    //             if (!$this->session->userdata(SESSION_LOGIN)) {
-    //                 throw new Exception("Your session is ended, please relogin", 2);
-    //             }
-    //             $this->form_validation->set_rules('id', 'ID data', 'required|xss_clean');
-
-
-    //             if ($this->form_validation->run() == FALSE) {
-    //                 throw new Exception(validation_errors("", ""), 0);
-    //             }
-    //             $session = $this->session->userdata(SESSION_LOGIN);
-    //             session_write_close();
-
-    //             $idcomb = decrypt_base64($this->input->post("id"));
-    //             $tmp = explode('-', $idcomb);
-    //             if (count($tmp) != 2)
-    //                 throw new Exception("Invalid ID");
-    //             $kate_wlyh  = $tmp[0];
-    //             $idmap      = $tmp[1];
-    //             $_arr = array("PROV", "KAB", "KOTA");
-    //             if (!in_array($kate_wlyh, $_arr))
-    //                 throw new Exception("InvaliD Kategori Wilayah");
-    //             if (!is_numeric($idmap))
-    //                 throw new Exception("Invalid ID Map");
-
-    //             //UPLOAD documents
-    //             $config['upload_path']      = './attachments/kertaskerja/';
-    //             $config['allowed_types']    = "pdf|xls|xlsx";
-    //             $config['max_size']         = '10000'; //10 Mb
-    //             $config['encrypt_name']     = TRUE;
-    //             $this->load->library('upload');
-    //             $this->upload->initialize($config);
-    //             if (!$this->upload->do_upload("dokumen")) {
-    //                 throw new Exception($this->upload->display_errors("", ""), 0);
-    //             }
-    //             //uploaded data
-    //             $upload_file = $this->upload->data();
-    //             $filename = $upload_file['file_name'];
-
-    //             date_default_timezone_set("Asia/Jakarta");
-    //             $current_date_time = date("Y-m-d H:i:s");
-
-    //             $this->db->trans_begin();
-
-    //             /* 
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              * PEMBAGIAN QUERY PER KATEGORI WILAYAH - START
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              */
-    //             if ($kate_wlyh == "PROV") {
-    //                 //cek data 
-    //                 $this->m_ref->setTableName("t_mdl1_sttment_prov");
-    //                 $select = array();
-    //                 $cond = array(
-    //                     "mapid"  => $idmap,
-    //                 );
-    //                 $list_data = $this->m_ref->get_by_condition($select, $cond);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL");
-    //                 }
-    //                 if ($list_data->num_rows() > 0) {
-    //                     $this->m_ref->setTableName("t_mdl1_sttment_prov");
-    //                     $data_baru = array(
-    //                         "attachments"   => $filename,
-    //                         "up_dt"     => $current_date_time,
-    //                         "up_by"     => $session->userid,
-    //                     );
-    //                     $cond = array(
-    //                         "mapid"  => $idmap,
-    //                     );
-    //                     $status_save = $this->m_ref->update($cond, $data_baru);
-    //                     if (!$status_save) {
-    //                         $this->db->trans_rollback();
-    //                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                         log_message("error", $msg);
-    //                         throw new Exception($this->db->error()["code"] . " : Failed save data", 0);
-    //                     }
-    //                 } else {
-    //                     $this->m_ref->setTableName("t_mdl1_sttment_prov");
-    //                     $data_baru = array(
-    //                         "mapid"     => $idmap,
-    //                         "attachments"   => $filename,
-    //                         "cr_by"     => $session->userid,
-    //                     );
-    //                     $status_save = $this->m_ref->save($data_baru);
-    //                     if (!$status_save) {
-    //                         $this->db->trans_rollback();
-    //                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                         log_message("error", $msg);
-    //                         throw new Exception($this->db->error()["code"] . " : Failed save data", 0);
-    //                     }
-    //                 }
-    //             } elseif ($kate_wlyh == "KAB" || $kate_wlyh == "KOTA") {
-    //                 //cek data 
-    //                 $this->m_ref->setTableName("t_mdl1_sttment_kabkota");
-    //                 $select = array();
-    //                 $cond = array(
-    //                     "mapid"  => $idmap,
-    //                 );
-    //                 $list_data = $this->m_ref->get_by_condition($select, $cond);
-    //                 if (!$list_data) {
-    //                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                     log_message("error", $msg);
-    //                     throw new Exception("Invalid SQL");
-    //                 }
-    //                 if ($list_data->num_rows() > 0) {
-    //                     $this->m_ref->setTableName("t_mdl1_sttment_kabkota");
-    //                     $data_baru = array(
-    //                         "attachments"   => $filename,
-    //                         "up_dt"     => $current_date_time,
-    //                         "up_by"     => $session->userid,
-    //                     );
-    //                     $cond = array(
-    //                         "mapid"  => $idmap,
-    //                     );
-    //                     $status_save = $this->m_ref->update($cond, $data_baru);
-    //                     if (!$status_save) {
-    //                         $this->db->trans_rollback();
-    //                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                         log_message("error", $msg);
-    //                         throw new Exception($this->db->error()["code"] . " : Failed save data", 0);
-    //                     }
-    //                 } else {
-    //                     $this->m_ref->setTableName("t_mdl1_sttment_kabkota");
-    //                     $data_baru = array(
-    //                         "mapid"     => $idmap,
-    //                         "attachments"   => $filename,
-    //                         "cr_by"     => $session->userid,
-    //                     );
-    //                     $status_save = $this->m_ref->save($data_baru);
-    //                     if (!$status_save) {
-    //                         $this->db->trans_rollback();
-    //                         $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-    //                         log_message("error", $msg);
-    //                         throw new Exception($this->db->error()["code"] . " : Failed save data", 0);
-    //                     }
-    //                 }
-    //             }
-
-    //             /* 
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              * PEMBAGIAN QUERY PER KATEGORI WILAYAH - END
-    //              * +++++++++++++++++++++++++++++++++++++++++++++
-    //              */
-    //             $this->db->trans_commit();
-
-
-    //             //sukses
-    //             $output = array(
-    //                 "status"    =>  1,
-    //                 "csrf_hash"     =>  $this->security->get_csrf_hash(),
-    //                 "msg"       =>  "Pernyataan berhasil disimpan"
-    //             );
-    //             exit(json_encode($output));
-    //         } catch (Exception $exc) {
-    //             $this->db->trans_rollback();
-    //             $output = array(
-    //                 "status"    =>  $exc->getCode(),
-    //                 "csrf_hash"     =>  $this->security->get_csrf_hash(),
-    //                 "msg"    =>  $exc->getMessage(),
-    //             );
-    //             exit(json_encode($output));
-    //         }
-    //     } else {
-    //         exit("Access Denied");
-    //     }
-    // }
     function sttmnt_save()
     {
         if ($this->input->is_ajax_request()) {
@@ -4339,5 +3169,177 @@ class PPD7_modul1 extends CI_Controller
         } else {
             exit("Access Denied");
         }
+    }
+    function d_bahan()
+    {
+        if (!$this->session->userdata(SESSION_LOGIN)) {
+            throw new Exception("Session expired, please login", 2);
+        }
+        $idcomb = decrypt_base64($_GET['token']);
+
+        $group = $this->session->userdata(SESSION_LOGIN)->group;
+        $tmp = explode('-', $idcomb);
+        if (count($tmp) != 2) {
+            echo 'Invalid Token';
+            exit();
+        }
+
+        $kate_wlyh  = $tmp[0];
+        $idwlyh     = $tmp[1];
+
+
+        $_arr = array("PROV", "KAB", "KOTA");
+        if (!in_array($kate_wlyh, $_arr)) {
+            echo 'InvaliD Kategori Wilayah';
+            exit();
+        }
+        if (!is_numeric($idwlyh)) {
+            echo 'InvaliD Wilayah Penilaian';
+            exit();
+        }
+
+
+        $user = $this->session->userdata(SESSION_LOGIN)->id;
+        $userid = $this->session->userdata(SESSION_LOGIN)->userid;
+        $nama = $this->session->userdata(SESSION_LOGIN)->name;
+        $usergroupid = $this->session->userdata(SESSION_LOGIN)->group;
+        date_default_timezone_set("Asia/Jakarta");
+        $current_date_time = date("Y_m_d_H_i_s");
+
+        /* 
+                 * +++++++++++++++++++++++++++++++++++++++++++++
+                 * PEMBAGIAN QUERY PER KATEGORI WILAYAH - START
+                 * +++++++++++++++++++++++++++++++++++++++++++++
+                 */
+        if ($kate_wlyh == "PROV") {
+
+            /*
+                     * check data PROV - start
+                     */
+            $sql = "SELECT A.`id`,A.nama_provinsi
+                            FROM `provinsi` A
+                            WHERE A.`id`=?";
+            $bind = array($idwlyh);
+            $list_data = $this->db->query($sql, $bind);
+            if (!$list_data) {
+                echo 'Invalid SQL!';
+                exit();
+            }
+            if ($list_data->num_rows() == 0) {
+                echo 'Data Provinsi tidak ditemukan!';
+                exit();
+            }
+            $nmwil     = $list_data->row()->nama_provinsi;
+            /*
+                     * check data PROV - end
+                     */
+
+            //get LIST tautan doc
+            $sql = "SELECT A.`id`,A.`judul`,A.`tautan`, 'umum' kate
+                            FROM `t_doc` A
+                            JOIN `t_doc_groupuser` B ON B.`docid`=A.`id` AND B.`groupid`=?
+                            WHERE A.`isactive`='Y'
+                            UNION
+                            SELECT A.`id`,A.`judul`,A.`tautan`, 'provinsi' kate
+                            FROM `t_doc_prov` A
+                            JOIN `t_doc_prov_groupuser` B ON B.`docid`=A.`id` AND B.`groupid`=?
+                            WHERE A.`isactive`='Y' AND A.provid=?";
+            $bind = array($usergroupid, $usergroupid, $idwlyh);
+            $list_data = $this->db->query($sql, $bind);
+        } elseif ($kate_wlyh == "KAB" || $kate_wlyh == "KOTA") {
+            /*
+                     * check data KAB / KOTA - start
+                     */
+            $sql = "SELECT A.`id`,A.nama_kabupaten
+                            FROM `kabupaten` A
+                            WHERE A.`id`=?";
+            $bind = array($idwlyh);
+            $list_data = $this->db->query($sql, $bind);
+            if (!$list_data) {
+                echo 'Invalid SQL!';
+                exit();
+            }
+            if ($list_data->num_rows() == 0) {
+                echo 'Data Kabupaten / Kota tidak ditemukan!';
+                exit();
+            }
+            $nmwil     = $list_data->row()->nama_kabupaten;
+            /*
+                     * check data KAB / KOTA - end
+                     */
+
+            //get LIST tautan doc
+            $sql = "SELECT A.`id`,A.`judul`,A.`tautan`, 'umum' kate
+                            FROM `t_doc` A
+                            JOIN `t_doc_groupuser` B ON B.`docid`=A.`id` AND B.`groupid`=?
+                            WHERE A.`isactive`='Y'
+                            UNION
+                            SELECT A.`id`,A.`judul`,A.`tautan`, 'daerah' kate
+                            FROM `t_doc_kab` A
+                            JOIN `t_doc_kab_groupuser` B ON B.`docid`=A.`id` AND B.`groupid`=?
+                            WHERE A.`isactive`='Y' AND A.kabid=?";
+
+            $bind = array($usergroupid, $usergroupid, $idwlyh);
+            $list_data = $this->db->query($sql, $bind);
+        }
+        if (!$list_data) {
+            echo 'Invalid SQL!';
+            exit();
+        }
+
+        if ($list_data->num_rows() == 0) {
+            echo 'Bahan Dukung tidak ada';
+            exit();
+        }
+        $filename = "Dokumen_Pendukung_" . $nmwil . ".zip";
+        foreach ($list_data->result() as $v) {
+            //$no = $v->no;
+            $file       = $v->tautan;
+            if ($v->kate == 'umum') {
+                //$link =base_url()."attachments/bahandukung/".$v->tautan;
+                $filepath1 = FCPATH . 'attachments/bahandukung/' . $file;
+            } else if ($v->kate == 'provinsi') {
+                $filepath1 = FCPATH . 'attachments/provinsi/' . $file;
+            } else if ($v->kate == 'daerah') {
+                $filepath1 = FCPATH . 'attachments/kabkota/' . $file;
+            }
+
+            if (substr($v->tautan, -3) == 'rar') {
+                $rename = $v->judul . ".rar";
+            } elseif (substr($v->tautan, -3) == 'zip') {
+                $rename = $v->judul . ".zip";
+            } elseif (substr($v->tautan, -3) == 'pdf') {
+                $rename = $v->judul . ".pdf";
+            } elseif (substr($v->tautan, -3) == 'xls') {
+                $rename = $v->judul . ".xls";
+            } elseif (substr($v->tautan, -4) == 'xlsx') {
+                $rename = $v->judul . ".xlsx";
+            } elseif (substr($v->tautan, -3) == 'doc') {
+                $rename = $v->judul . ".doc";
+            } elseif (substr($v->tautan, -4) == 'docx') {
+                $rename = $v->judul . ".docx";
+            } elseif (substr($v->tautan, -3) == 'png') {
+                $rename = $v->judul . ".png";
+            } elseif (substr($v->tautan, -3) == 'PNG') {
+                $rename = $v->judul . ".png";
+            } elseif (substr($v->tautan, -3) == 'jpg') {
+                $rename = $v->judul . ".jpg";
+            } elseif (substr($v->tautan, -3) == 'JPG') {
+                $rename = $v->judul . ".jpg";
+            } elseif (substr($v->tautan, -4) == 'jpeg') {
+                $rename = $v->judul . ".jpeg";
+            } elseif (substr($v->tautan, -4) == 'jfif') {
+                $rename = $v->judul . ".jpg";
+            } elseif (substr($v->tautan, -4) == 'pptx') {
+                $rename = $v->judul . ".pptx";
+            } else {
+                $rename = $v->judul;
+            }
+
+            $this->zip->read_file($filepath1, $rename);
+            $filepath = $v->tautan;
+            $filedata[] = $filepath;
+        }
+        $this->zip->download($filename);
     }
 }

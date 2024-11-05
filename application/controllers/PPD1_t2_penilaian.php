@@ -426,16 +426,16 @@ class PPD1_t2_penilaian extends CI_Controller
         }
 
         $link = base_url() . "attachments/penilaian_tpitpu/";
-        $sql = "SELECT A.*, B.userid, B.name,C.judul, C.tautan
-                    FROM `tbl_user_t2_prov` A 
-                    LEFT JOIN `tbl_user` B ON A.iduser=B.id AND B.group=3 
-                    LEFT JOIN `t_doc_tahap_penilaian_prov` C ON A.id = C.mapid AND C.isactive='Y'
-                    WHERE A.idwilayah=? ";
+        $sql = "SELECT A.*, B.userid, B.name, C.judul, C.tautan
+                FROM `tbl_user_t2_prov` A 
+                LEFT JOIN `tbl_user` B ON A.iduser = B.id AND B.group = 3 
+                LEFT JOIN `t_doc_tahap_penilaian_prov` C ON A.id = C.mapid AND C.isactive = 'Y'
+                WHERE A.idwilayah = ? AND C.tautan IS NOT NULL";
 
         $bind = array($idwlyh);
         $list_data = $this->db->query($sql, $bind);
         if ($list_data->num_rows() == 0) {
-            echo 'Data tidak ada';
+            echo 'Tidak ada data upload penilaian';
             exit();
         }
 

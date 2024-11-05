@@ -1456,42 +1456,58 @@ class PPD1_M_Dokumen_Kab extends CI_Controller
         echo json_encode($dokumen);
     }
 
-    function unduhspesifik()
-    {
-        $this->load->helper('text');
-
+    function unduhspesifik() {
         if (!$this->session->userdata(SESSION_LOGIN)) {
             session_write_close();
             throw new Exception("Session expired, please login", 2);
-        };
-        $file = $this->input->post('id');
-        $sql = "SELECT tbl_jenis_doc.nama, t_doc_kab.judul, t_doc_kab.tautan FROM t_doc_kab JOIN tbl_jenis_doc ON t_doc_kab.jenisid=tbl_jenis_doc.id WHERE t_doc_kab.isactive = 'Y' AND t_doc_kab.judul LIKE '%kabupaten%' AND t_doc_kab.jenisid=$file";
-        $data = $this->db->query($sql)->result_array();
-
-        $namafile = $data[0]['nama'] . '_kabupaten.zip';
-
-        // $limit_nama = character_limiter($data[0]['nama'], 190);
-        // $namafile = $limit_nama . '_kabupaten.zip';
-        foreach ($data as $item) {
-            $path = FCPATH . 'attachments/kabkota/' . $item['tautan'];
-            $extensi = pathinfo($item['tautan'], PATHINFO_EXTENSION);
-
-            $this->zip->read_file($path, $item['judul'] . '.' . $extensi);
         }
-        $this->zip->download($namafile);
-
-        // $data_chunk = array_chunk($data, 10);
-
-        // for ($i = 5; $i < count($data_chunk); $i++) {
-        //     $namafile = $data[0]['nama'] . '_' . $i . '_kabupaten.zip';
-        //     foreach ($data_chunk as $chuck) {
-        //         $path = FCPATH . 'attachments/kabkota/' . $chuck[$i]['tautan'];
-        //         $extensi = pathinfo($chuck[$i]['tautan'], PATHINFO_EXTENSION);
-
-        //         $this->zip->read_file($path, $chuck[$i]['judul'] . '.' . $extensi);
-        //     }
-        //     $this->zip->download($namafile);
-        // }
+    
+        $file = $this->input->post('id');
+        $part = (int)$this->input->post('part'); // Get the part number
+        $limit = 25; // Number of documents per part
+        $offset = ($part - 1) * $limit; // Calculate offset
+    
+        $sql = "SELECT tbl_jenis_doc.nama, t_doc_kab.judul, t_doc_kab.tautan 
+                FROM t_doc_kab 
+                JOIN tbl_jenis_doc ON t_doc_kab.jenisid=tbl_jenis_doc.id 
+                WHERE t_doc_kab.isactive = 'Y' 
+                AND t_doc_kab.judul LIKE '%kabupaten%' 
+                AND t_doc_kab.jenisid=$file 
+                LIMIT $limit OFFSET $offset"; // Limit and offset for pagination
+    
+        $data = $this->db->query($sql)->result_array();
+    
+        if (empty($data)) {
+            throw new Exception("No documents found for this part", 5);
+        }
+    
+        $namafile = $data[0]['nama'] . '_kabupaten_part' . $part . '.zip'; // Change filename to include part number
+        $zipFilePath = FCPATH . 'attachments/kabkota/' . $namafile;
+        $zip = new ZipArchive();
+        
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE) {
+            throw new Exception("Cannot open ZIP file", 3);
+        }
+    
+        foreach ($data as $item) {
+            $filePath = FCPATH . 'attachments/kabkota/' . $item['tautan'];
+            if (file_exists($filePath)) {
+                $extensi = pathinfo($item['tautan'], PATHINFO_EXTENSION);
+                $judul = $item['judul'] . '.' . $extensi;
+                $zip->addFile($filePath, $judul);
+            }
+        }
+    
+        $zip->close();
+    
+        if (file_exists($zipFilePath)) {
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $namafile . '"');
+            readfile($zipFilePath);
+            unlink($zipFilePath); // Remove the zip file after download
+        } else {
+            throw new Exception("Failed to create ZIP file", 4);
+        }
     }
 
     function d_bahaninovasi()

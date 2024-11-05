@@ -1,10 +1,10 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-class PPD1_status_penilaian_kota extends CI_Controller
+class PPD1_status_penilaian_daerah extends CI_Controller
 {
-    var $view_dir   = "ppd1/statuspenilaian/";
+    var $view_dir   = "ppd1/statuspenilaian_daerah/";
     var $js_init    = "main";
-    var $js_path    = "assets/js/ppd1/statuspenilaian/statuspenilaian.js";
+    var $js_path    = "assets/js/ppd1/statuspenilaian_daerah/statuspenilaian_daerah.js";
     var $allowed    = array("PPD1");
     function __construct()
     {
@@ -28,10 +28,10 @@ class PPD1_status_penilaian_kota extends CI_Controller
 
                 //common properties
                 $this->js_init    = "main";
-                $this->js_path    = "assets/js/ppd1/statuspenilaian/statuspenilaian_kota.js?v=" . now("Asia/Jakarta");
+                $this->js_path    = "assets/js/ppd1/statuspenilaian_daerah/statuspenilaian_daerah.js?v=" . now("Asia/Jakarta");
 
                 $data_page = array();
-                $str = $this->load->view($this->view_dir . "index_kota", $data_page, TRUE);
+                $str = $this->load->view($this->view_dir . "index_daerah", $data_page, TRUE);
 
                 $output = array(
                     "status"        =>  1,
@@ -55,6 +55,72 @@ class PPD1_status_penilaian_kota extends CI_Controller
         }
     }
 
+    function get_datatable_prov()
+    {
+        if ($this->input->is_ajax_request()) {
+            try {
+                $requestData = $_REQUEST;
+                $satkercode = $this->session->userdata(SESSION_LOGIN)->satker;
+                $userid = $this->session->userdata(SESSION_LOGIN)->id;
+                $idx = 0;
+                $columns = array(
+                    $idx++   => 'K.`id_kode`',
+                    $idx++   => 'K.`id`',
+                    $idx++   => 'K.`nama_provinsi`',
+                );
+
+                $sql = "SELECT K.id mapid,K.id_kode, K.nama_provinsi
+                        FROM `provinsi` K 
+                        WHERE K.id !='-1'";
+
+                $totalData = $this->db->query($sql)->num_rows();
+                $totalFiltered = $totalData;
+
+                if (!empty($requestData['search']['value'])) {   // if there is a search parameter, $requestData['search']['value'] contains search parameter
+                    $sql .= " AND ( "
+                        . " K.`nama_provinsi` LIKE '%" . $requestData['search']['value'] . "%' "
+                        . " OR K.`id_kode` LIKE '%" . $requestData['search']['value'] . "%' "
+                        . ")";
+                }
+                $list_data = $this->db->query($sql);
+                $totalFiltered = $list_data->num_rows();
+                $sql .= " ORDER BY "
+                    . $columns[$requestData['order'][0]['column']] . "   "
+                    . $requestData['order'][0]['dir'] . "  "
+                    . "LIMIT " . $requestData['start'] . " ," . $requestData['length'] . "   ";
+                $list_data = $this->db->query($sql);
+                $data = array();
+                $i = 1;
+                foreach ($list_data->result() as $row) {
+                    $nestedData = array();
+                    $id      = $row->mapid;
+                    $idkab = "prov_" . $row->mapid;
+
+                    $encrypted_id = base64_encode(openssl_encrypt($idkab, "AES-128-ECB", ENCRYPT_PASS));
+                    $tmp = "class='getkabkot' data-id='" . $encrypted_id . "'";
+                    $tmp .= " data-nmkk='" . $row->nama_provinsi . "'";
+                    $id_kode = $row->id_kode;
+                    if ($row->id_kode == '-1')
+                        $id_kode = '';
+
+                    $nestedData[] = $id_kode;
+                    $nestedData[] = "<a href='javascript:void(0)' " . $tmp . ">" . $row->nama_provinsi . "</a>";
+                    $data[] = $nestedData;
+                }
+                $json_data = array(
+                    "draw"            => intval($requestData['draw']),   // for every request/draw by clientside , they send a number as a parameter, when they recieve a response/data they first check the draw number, so we are sending same number in draw. 
+                    "recordsTotal"    => intval($totalData),  // total number of records
+                    "recordsFiltered" => intval($totalFiltered), // total number of records after searching, if there is no searching then totalFiltered = totalData
+                    "data"            => $data   // total data array
+                );
+                exit(json_encode($json_data));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        } else
+            die;
+    }
+
     function g_nilai_berdasarkan_penilai()
     {
         if ($this->input->is_ajax_request()) {
@@ -65,9 +131,17 @@ class PPD1_status_penilaian_kota extends CI_Controller
                 }
                 $session = $this->session->userdata(SESSION_LOGIN);
                 session_write_close();
+                $idcomb = decrypt_base64($this->input->get("id"));
+
+
+                $tmp = explode('_', $idcomb);
+                if (count($tmp) != 2)
+                    throw new Exception("Invalid ID");
+                $kate_wlyh = $tmp[0];
+                $idmap = $tmp[1];
 
                 //---------------isi disini--------------------
-                $sql = "SELECT t1.*, ROUND((COUNT(skor.id) / (SELECT COUNT(I.`id`) FROM r_mdl1_item I JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y'  AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT') JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y') * 100), 2) AS persentase_penilaian,
+                $sql = "SELECT t1.*, ROUND((COUNT(skor.id) / (SELECT COUNT(I.`id`) FROM r_mdl1_item I JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB') JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y') * 100), 2) AS persentase_penilaian,
                         CASE
                             WHEN sttment.id != 'null' THEN 'Sudah upload'
                             ELSE 'Belum upload'
@@ -79,10 +153,11 @@ class PPD1_status_penilaian_kota extends CI_Controller
                             JOIN tbl_user us ON kabkot.iduser = us.id
                             JOIN kabupaten kab ON kabkot.idkabkot = kab.id
                             JOIN provinsi prov ON kab.prov_id = prov.id_kode
+                            WHERE prov.id=$idmap
                         ) t1
                         LEFT JOIN t_mdl1_skor_kabkota skor ON t1.id = skor.mapid
                         LEFT JOIN t_mdl1_sttment_kabkota sttment ON t1.id = sttment.mapid
-                        WHERE t1.userid NOT IN ('tpt', 'teamtpt', 'peppd01', 'novi', 'dit.peppd', 'testtpt') AND t1.nama_kabupaten LIKE 'Kota %' AND t1.group=2
+                        WHERE t1.userid NOT IN ('tpt', 'teamtpt', 'peppd01', 'novi', 'dit.peppd', 'testtpt') AND t1.group=7
                         GROUP BY t1.id
                         ORDER BY t1.userid, t1.nama_provinsi";
 
@@ -134,17 +209,94 @@ class PPD1_status_penilaian_kota extends CI_Controller
         } else die("Die!");
     }
 
-    /*
-     * =========================================================================
-     *  Provinsi                                                   - START
-     * =========================================================================
-     */
-    /*
-     * list data Provinsi
-     * author : FSM 
-     * date : 17 des 2020
-     */
     function get_datatable()
+    {
+        if ($this->input->is_ajax_request()) {
+            try {
+                if (!$this->session->userdata(SESSION_LOGIN)) {
+                    session_write_close();
+                    throw new Exception("Session expired, please login", 2);
+                }
+                $session = $this->session->userdata(SESSION_LOGIN);
+                session_write_close();
+
+                $this->form_validation->set_rules('id', 'ID Data Indikator', 'required');
+                if ($this->form_validation->run() == FALSE) {
+                    throw new Exception(validation_errors("", ""), 0);
+                }
+
+                $idcomb = decrypt_base64($this->input->post("id"));
+
+                $tmp = explode('_', $idcomb);
+                if (count($tmp) != 2)
+                    throw new Exception("Invalid ID");
+                $kate_wlyh = $tmp[0];
+                $idmap = $tmp[1];
+
+
+                $satkercode = $this->session->userdata(SESSION_LOGIN)->satker;
+                $userid = $this->session->userdata(SESSION_LOGIN)->id;
+                $idx = 0;
+                $columns = array(
+                    // datatable column index  => database column name
+                    $idx++   => 'C.`id_kab`',
+                    $idx++   => 'C.`id`',
+                    $idx++   => 'C.`nama_kabupaten`',
+                );
+
+                $sql = "SELECT A.*, B.userid, B.name,C.id 'mapid',C.`id_kab`,C.nama_kabupaten
+                    FROM `tbl_user_kabkot` A 
+                    LEFT JOIN `tbl_user` B ON A.iduser=B.id 
+                    LEFT JOIN `kabupaten` C ON A.idkabkot = C.id
+                    JOIN `provinsi` P ON P.id_kode= C.prov_id
+                    WHERE B.group=7 AND B.active_flag ='Y' AND P.id=?
+                    GROUP BY C.id ";
+
+                    $bind = array($idmap);
+                    $list_data = $this->db->query($sql, $bind);
+
+                if (!$list_data) {
+                    $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+                    log_message("error", $msg);
+                    throw new Exception("Invalid SQL!");
+                }
+                $str = "";
+                if ($list_data->num_rows() == 0)
+                    $str = "<tr><td colspan='8'>Data tidak ditemukan</td></tr>";
+                               
+                $i = 1;
+                foreach ($list_data->result() as $row) {
+                    $id      = $row->mapid;
+                    $idkab = "kab_" . $row->mapid;
+
+                    $encrypted_id = base64_encode(openssl_encrypt($idkab, "AES-128-ECB", ENCRYPT_PASS));
+                    $tmp = "class='getDetail' data-id='" . $encrypted_id . "'";
+                    $tmp .= " data-nmkk='" . $row->nama_kabupaten . "'";
+
+                    $str.="<tr title='Dokumen'>";
+                    $str .= "<td>".$row->id_kab."</td>";
+                    $str .= "<td><a href='javascript:void(0)' " . $tmp . ">" . $row->nama_kabupaten . "</a></td>";
+                    $str.="</tr'>";
+                }
+
+                $response = array(
+                    "status"    => 1,
+                    "csrf_hash" => $this->security->get_csrf_hash(),
+                    "str"       => $str,
+                );
+                $this->output
+                    ->set_status_header(200)
+                    ->set_content_type('application/json', 'utf-8')
+                    ->set_output(json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))
+                    ->_display();
+                exit;
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        } else
+            die;
+    }
+    function get_datatable1()
     {
         if ($this->input->is_ajax_request()) {
             try {
@@ -163,7 +315,7 @@ class PPD1_status_penilaian_kota extends CI_Controller
                     FROM `tbl_user_kabkot` A 
                     LEFT JOIN `tbl_user` B ON A.iduser=B.id 
                     LEFT JOIN `kabupaten` C ON A.idkabkot = C.id
-                    WHERE B.group=2 AND B.active_flag ='Y' AND C.urutan='1'
+                    WHERE B.group=7 AND B.active_flag ='Y' AND C.urutan='0'
                     GROUP BY C.id ";
 
                 $totalData = $this->db->query($sql)->num_rows();
@@ -187,7 +339,7 @@ class PPD1_status_penilaian_kota extends CI_Controller
                 foreach ($list_data->result() as $row) {
                     $nestedData = array();
                     $id      = $row->mapid;
-                    $idkab = "kot_" . $row->mapid;
+                    $idkab = "kab_" . $row->mapid;
 
                     $encrypted_id = base64_encode(openssl_encrypt($idkab, "AES-128-ECB", ENCRYPT_PASS));
                     $tmp = "class='getDetail' data-id='" . $encrypted_id . "'";
@@ -246,7 +398,9 @@ class PPD1_status_penilaian_kota extends CI_Controller
                     throw new Exception("Invalid ID Map");
 
                 //get jml aspek
-                $sql = "SELECT A.`id` FROM r_mdl1_aspek A WHERE A.`isactive`='Y'";
+                $sql = "SELECT A.`id`
+                        FROM r_mdl1_aspek A 
+                        WHERE A.`isactive`='Y'";
                 $list_data = $this->db->query($sql);
                 if (!$list_data) {
                     $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
@@ -257,11 +411,11 @@ class PPD1_status_penilaian_kota extends CI_Controller
 
                 $str = "";
 
-                if ($kate_wlyh == "kot") {
+                if ($kate_wlyh == "kab") {
                     //get jml item
                     $sql = "SELECT I.`id`
                             FROM r_mdl1_item I 
-                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
+                            JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                             JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y'";
                     $list_data = $this->db->query($sql);
                     if (!$list_data) {
@@ -273,29 +427,28 @@ class PPD1_status_penilaian_kota extends CI_Controller
 
                     $sql = "SELECT A.iduser,C.name, A.id idkab,B.nama_kabupaten, JML.jml,IFNULL(RS.jml,0) jml_rsm, ST.id stts, ST.attachments
                             FROM tbl_user_kabkot A
-                            JOIN `kabupaten` B ON B.`id`=A.`idkabkot` 
-                            JOIN `tbl_user` C ON C.id = A.iduser AND C.group=2
-                               LEFT JOIN(
-                                        SELECT W.`idkabkot` idkab,COUNT(1) jml,W.iduser
-                                        FROM `tbl_user_kabkot` W
-                                        JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
-                                        JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
-                                        JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
-                                        JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
-                                        WHERE 1=1
-                                        GROUP BY W.`idkabkot`,W.iduser
-                                    ) JML ON JML.idkab=A.`idkabkot` AND JML.`iduser` = A.iduser
-                                LEFT JOIN(
+                            JOIN `kabupaten` B ON B.`id`=A.`idkabkot`
+                            JOIN `tbl_user` C ON C.id = A.iduser AND C.group=7
+                            LEFT JOIN(
                                     SELECT W.`idkabkot` idkab,COUNT(1) jml,W.iduser
                                     FROM `tbl_user_kabkot` W
-                                    JOIN `t_mdl1_resume_kabkota` RS ON RS.`mapid`=W.`id` AND RS.stts='Y'
+                                    JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
+                                    JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
+                                    JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
+                                    JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB','KOTA')
+                                    JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
                                     WHERE 1=1
-                                    GROUP BY W.`idkabkot`,W.`iduser`
-                                ) RS ON RS.idkab=A.`idkabkot` AND RS.`iduser`=A.iduser      
-                              LEFT JOIN t_mdl1_sttment_kabkota ST ON ST.mapid=A.id                          
-                            WHERE A.`idkabkot`=? AND B.`urutan`=1";
-
+                                    GROUP BY W.`idkabkot`,W.iduser
+                                ) JML ON JML.idkab=A.`idkabkot` AND JML.`iduser` = A.iduser
+                                LEFT JOIN(
+                                        SELECT W.`idkabkot` idkab,COUNT(1) jml,W.iduser
+                                        FROM `tbl_user_kabkot` W
+                                        JOIN `t_mdl1_resume_kabkota` RS ON RS.`mapid`=W.`id` AND RS.stts='Y'
+                                        WHERE 1=1
+                                        GROUP BY W.`idkabkot`,W.`iduser`
+                                        ) RS ON RS.idkab=A.`idkabkot` AND RS.`iduser`=A.iduser      
+                                LEFT JOIN t_mdl1_sttment_kabkota ST ON ST.mapid=A.id
+								WHERE A.`idkabkot`=?";
                     $bind = array($idmap);
                     $list_data = $this->db->query($sql, $bind);
                     if (!$list_data) {
@@ -303,7 +456,7 @@ class PPD1_status_penilaian_kota extends CI_Controller
                         log_message("error", $msg);
                         throw new Exception("Invalid SQL!");
                     }
-
+                    
                     $kab_id = base64_encode(openssl_encrypt($idmap, "AES-128-ECB", ENCRYPT_PASS));
                     
                     $btn = "<a href='#' data-pr='$kab_id' id='downAll' class='btn btn-primary waves-effect waves-light' style='border-radius: 0px; padding-left: 10px; padding-right: 10px;margin-right: 5px; margin-bottom: 10px; float: right;'>Unduh Semua<i class='fas fa-download' style='padding-left: 5px;'></i></a>";
@@ -368,6 +521,8 @@ class PPD1_status_penilaian_kota extends CI_Controller
                         $str .= "</tr>";
                     }
                 }
+
+
 
                 $response = array(
                     "status"    => 1,
@@ -437,9 +592,10 @@ class PPD1_status_penilaian_kota extends CI_Controller
             $user_d = $d->userid;
             $namakab = $d->nama_kabupaten;
         }
+        
         $status_sql = "SELECT IT.`nourut` nr,IND.nourut,K.id nokr,K.`nama` nmkriteria,IND.nourut noindi,IND.`nama` nmindi,SI.`nama` nmsubindi,IT.`nama` nmitem,SKOR.skor,IND.bobot,RES.ksmplan, RES.saran
         FROM `r_mdl1_item` IT
-        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
+        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
         JOIN `r_mdl1_indi` IND ON IND.`id`=SI.`indiid`
         JOIN  `r_mdl1_krtria` K ON K.`id`=IND.`krtriaid`
         JOIN `r_mdl1_aspek` A ON A.id = K.aspekid
@@ -673,13 +829,13 @@ class PPD1_status_penilaian_kota extends CI_Controller
         
         //$user
         $select = "SELECT W.id,W.iduser,W.idkabkot, P.nama_kabupaten, U.userid,U.name "
-            . "FROM `tbl_user_kabkot` W "
-            . "JOIN `kabupaten` P ON W.idkabkot = P.id "
-            . "JOIN `tbl_user` U ON W.iduser = U.id "
-            . "WHERE W.idkabkot='$idwil' AND U.id!=674 AND U.group=2";
+        . "FROM `tbl_user_kabkot` W "
+        . "JOIN `kabupaten` P ON W.idkabkot = P.id "
+        . "JOIN `tbl_user` U ON W.iduser = U.id "
+        . "WHERE W.idkabkot='$idwil' AND U.id!=674";
 
         $list_data  = $this->db->query($select);
-
+        
         $this->load->library("Excel");
         $this->excel->setActiveSheetIndex(0);
         foreach ($list_data->result() as $index => $d) {
@@ -690,7 +846,7 @@ class PPD1_status_penilaian_kota extends CI_Controller
 
             $status_sql = "SELECT IT.`nourut` nr,IND.nourut,K.id nokr,K.`nama` nmkriteria,IND.nourut noindi,IND.`nama` nmindi,SI.`nama` nmsubindi,IT.`nama` nmitem,SKOR.skor,IND.bobot,RES.ksmplan, RES.saran
                         FROM `r_mdl1_item` IT
-                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
+                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB')
                         JOIN `r_mdl1_indi` IND ON IND.`id`=SI.`indiid`
                         JOIN  `r_mdl1_krtria` K ON K.`id`=IND.`krtriaid`
                         JOIN `r_mdl1_aspek` A ON A.id = K.aspekid
@@ -1058,7 +1214,7 @@ class PPD1_status_penilaian_kota extends CI_Controller
         
         $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowTotal, "=sum({$firstElement}:{$lastElement})");
         $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowRange, "=max({$firstRange}:{$lastRange})-min({$firstRange}:{$lastRange})");
-        $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowCoeff, "=stdev({$firstCoeff}:{$lastCoeff})/(".$averageColumn.$rowTotal.") * 100");             
+        $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowCoeff, "=stdev.s({$firstCoeff}:{$lastCoeff})/(".$averageColumn.$rowTotal.") * 100");             
         // $this->excel->getActiveSheet()->setCellValue($averageColumn.$rowCoeff, "=STDEV.S({$firstCoeff}:{$lastCoeff})/(".$averageColumn.$rowRange.") * 100");  
         
         
@@ -1082,437 +1238,365 @@ class PPD1_status_penilaian_kota extends CI_Controller
         $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
         $objWriter->save("php://output");
     }
-    // function Download_nilai()
-    // {
-    //     if (!$this->session->userdata(SESSION_LOGIN)) {
-    //         echo "Session expired, silakan login";
-    //     }
-    //     $user = $this->session->userdata(SESSION_LOGIN)->id;
 
-    //     $idcomb = decrypt_base64($_GET['timid']);
-    //     $tmp = explode('-', $idcomb);
-    //     if (count($tmp) != 2)
-    //         throw new Exception("Invalid ID");
-    //     $kate_wlyh = $tmp[0];
-    //     $user = $tmp[1];
+    function allrekap()
+    {
+        if (!$this->session->userdata(SESSION_LOGIN)) {
+            throw new Exception("Session expired, please login", 2);
+        }
 
-    //     $provcomb = decrypt_base64($_GET['provid']);
-    //     $tmp2 = explode('_', $provcomb);
-    //     if (count($tmp2) != 2)
-    //         throw new Exception("Invalid ID");
-    //     $kate_wlyh = $tmp2[0];
-    //     $idwil = $tmp2[1];
+        // $idwil    = decrypt_base64($_GET['kabid']);
+        $idwil    = ($_GET['provid']);
+        $idcomb = decrypt_base64($idwil);
+        $tmp = explode('_', $idcomb);
+        if (count($tmp) != 2)
+            throw new Exception("Invalid ID");
+        $kate_wlyh = $tmp[0];
+        $idmap = $tmp[1];
+        
+        $kabkota = $this->db->query("SELECT K.id FROM `kabupaten` K 
+                    JOIN `provinsi` P ON K.prov_id=P.id_kode 
+                    WHERE P.id='$idmap'")->result_array();
 
-    //     //select tim penilai
-    //     $select_u = "SELECT W.* FROM `tbl_user` W WHERE W.id='$user' ";
-    //     $list_u  = $this->db->query($select_u);
-    //     foreach ($list_u->result() as $u) {
-    //         $nama = $u->name;
-    //     }
+        $kabkota_ids_string = implode(",", array_column($kabkota, 'id'));
+        
+        
+        $select = "SELECT W.id,W.iduser,W.idkabkot, P.nama_kabupaten, U.userid,U.name 
+        FROM `tbl_user_kabkot` W 
+        JOIN `kabupaten` P ON W.idkabkot = P.id 
+        JOIN `tbl_user` U ON W.iduser = U.id 
+        WHERE W.idkabkot in ($kabkota_ids_string) AND U.id!=674 AND U.group=7";
+        $list_data  = $this->db->query($select)->result_array();
+        
+        $grouped_data = [];
 
-    //     //$user
-    //     $select = "SELECT W.id,W.iduser,W.idkabkot, P.nama_kabupaten, U.userid "
-    //         . "FROM `tbl_user_kabkot` W "
-    //         . "JOIN `kabupaten` P ON W.idkabkot = P.id "
-    //         . "JOIN `tbl_user` U ON W.iduser = U.id "
-    //         . "WHERE W.iduser='$user' AND W.idkabkot='$idwil'";
-    //     $list_data  = $this->db->query($select);
-    //     foreach ($list_data->result() as $d) {
-    //         $nilai = $d->id;
-    //         $user_d = $d->userid;
-    //         $namakab = $d->nama_kabupaten;
-    //     }
-    //     //list indikator skor
-    //     $this->load->library("Excel");
-    //     $sharedStyleTitles = new PHPExcel_Style();
-    //     $this->excel->getActiveSheet()->getSheetView()->setZoomScale(50);
-    //     $this->excel->getSheet(0)->setTitle('Rekap Nilai ');
+        foreach ($list_data as $entry) {
+            $idkabkot = $entry['idkabkot'];
+            
+            if (!isset($grouped_data[$idkabkot])) {
+                $grouped_data[$idkabkot] = [];
+            }
+            
+            $grouped_data[$idkabkot][] = $entry; 
+        }
 
-    //     $this->excel->getActiveSheet()->getStyle('B115')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_TOP);
-    //     $this->excel->getActiveSheet()->getStyle('B120')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $key_kolom = '';
+        $kolom_nama = '';
+        $kolom = '';
+        $query_skor = '';
 
-    //     //garis
-    //     $sharedStyleTitles->applyFromArray(
-    //         array(
-    //             'borders' =>
-    //             array(
-    //                 'bottom' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-    //                 'top'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-    //                 'left'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-    //                 'right'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-    //             )
-    //         )
-    //     );
+        
+        $this->load->library("Excel");
+        $this->excel->setActiveSheetIndex(0);
+        $sharedStyleTitles = new PHPExcel_Style();
+        $this->excel->getActiveSheet()->setTitle("Hasil Penilaian");
 
-    //     $this->excel->getActiveSheet()->setCellValue('A1', "Penghargaan Pembangunan Daerah  2024");
-    //     $this->excel->getActiveSheet()->mergeCells('A1:K1');
-    //     $this->excel->getActiveSheet()->getStyle('A1:A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-    //     $this->excel->getActiveSheet()->setCellValue('A2', "Kriteria dan Indikator Penilaian Dokumen RKPD");
-    //     $this->excel->getActiveSheet()->mergeCells('A2:K2');
+        $this->excel->getActiveSheet()->getSheetView()->setZoomScale(50);
 
-    //     $this->excel->getActiveSheet()->setSharedStyle($sharedStyleTitles, 'A10:L177');
+        $sharedStyleTitles->applyFromArray(
+            array(
+                'borders' =>
+                array(
+                    'bottom' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                    'top'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                    'left'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                    'right'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                )
+            )
+        );
 
-    //     $this->excel->getActiveSheet()->setCellValue('A4', "Nama");
-    //     $this->excel->getActiveSheet()->mergeCells('A4:B4');
-    //     $this->excel->getActiveSheet()->setCellValue('C4', ":");
-    //     $this->excel->getActiveSheet()->setCellValue('A5', "Daerah Yang Dinilai ");
-    //     $this->excel->getActiveSheet()->mergeCells('A5:B5');
-    //     $this->excel->getActiveSheet()->setCellValue('C5', ":");
-    //     $this->excel->getActiveSheet()->setCellValue('D4', "$nama");
-    //     $this->excel->getActiveSheet()->setCellValue('D5', "$namakab");
-    //     $this->excel->getActiveSheet()->getStyle('A2:C3')->getFont()->setBold(true);
-    //     $this->excel->getActiveSheet()->mergeCells('A2:B2');
-    //     $this->excel->getActiveSheet()->mergeCells('A3:B3');
+        $this->excel->getActiveSheet()->setCellValue('A1', "Penghargaan Pembangunan Daerah  2024");
 
-    //     //                
-    //     $this->excel->getActiveSheet()->setCellValue("A10", "NO");
-    //     $this->excel->getActiveSheet()->mergeCells('A10:A11');
-    //     $this->excel->getActiveSheet()->setCellValue("B10", "KRITERIA");
-    //     $this->excel->getActiveSheet()->mergeCells('B10:B11');
+        $excelColumn = [];
 
-    //     $this->excel->getActiveSheet()->setCellValue("C10", "INDIKATOR");
-    //     $this->excel->getActiveSheet()->mergeCells('C10:D11');
-    //     $this->excel->getActiveSheet()->setCellValue("E10", "ITEM");
-    //     $this->excel->getActiveSheet()->mergeCells('E10:F11');
-    //     $this->excel->getActiveSheet()->setCellValue("G10", "NILAI");
-    //     $this->excel->getActiveSheet()->mergeCells('G10:G11');
-    //     $this->excel->getActiveSheet()->setCellValue("H10", "KEUNGGULAN DAERAH");
-    //     $this->excel->getActiveSheet()->mergeCells('H10:H11');
-    //     $this->excel->getActiveSheet()->setCellValue("I10", "REKOMENDASI");
-    //     $this->excel->getActiveSheet()->mergeCells('I10:I11');
-    //     $this->excel->getActiveSheet()->setCellValue("J10", "SKOR");
-    //     $this->excel->getActiveSheet()->mergeCells('J10:J11');
-    //     $this->excel->getActiveSheet()->setCellValue("K10", "BOBOT");
-    //     $this->excel->getActiveSheet()->mergeCells('K10:K11');
-    //     $this->excel->getActiveSheet()->setCellValue("L10", "NILAI TERBOBOT");
-    //     $this->excel->getActiveSheet()->mergeCells('L10:L11');
-    //     $this->excel->getActiveSheet()->setCellValue("A177", "TOTAL");
+        // Generate Excel column names from A to ZZ
+        for ($i = 0; $i < 702; $i++) { // 702 corresponds to 'ZZ'
+            if ($i < 26) {
+                $excelColumn[] = chr($i + 65); // A-Z
+            } else {
+                $firstLetter = chr(floor(($i - 26) / 26) + 65); // A-Z for the first character
+                $secondLetter = chr(($i - 26) % 26 + 65); // A-Z for the second character
+                $excelColumn[] = $firstLetter . $secondLetter; // Combine letters for AA-ZZ
+            }
+        }
 
-    //     $this->excel->getActiveSheet()->getStyle('A177:L177')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-    //     $this->excel->getActiveSheet()->getStyle('A10:L11')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $rowKab = 3;
+        $rowJudul = 4;
+        $row = 5;
+        $rowawal = 5;
+        
+        $list_kab = array();
+        $penilai = array();
+        $nm_penilai = array();
+        
+        $cell_sum = array();
+        $cell_range = array();
+        $cell_coeff = array();
 
-    //     $this->excel->getActiveSheet()->mergeCells('A12:A63');
-    //     $this->excel->getActiveSheet()->mergeCells('A64:A102');
-    //     $this->excel->getActiveSheet()->mergeCells('A103:A119');
-    //     $this->excel->getActiveSheet()->mergeCells('A120:A149');
-    //     $this->excel->getActiveSheet()->mergeCells('A150:A176');
+        $rekap = array();
+        foreach ($grouped_data as $group){
+            $nm_penilai = '';
+            foreach ($group as $d){
+                $namakab = $d['nama_kabupaten'];
+                $key_kab = 'C'.$rowKab;
+                $list_kab[$key_kab] = $namakab;
 
-    //     $this->excel->getActiveSheet()->mergeCells('B12:B63');
-    //     $this->excel->getActiveSheet()->mergeCells('B64:B102');
-    //     $this->excel->getActiveSheet()->mergeCells('B103:B119');
-    //     $this->excel->getActiveSheet()->mergeCells('B120:B149');
-    //     $this->excel->getActiveSheet()->mergeCells('B150:B176');
+                $key_kolom .= $d['userid'];
+                $dnama = $d['name'];
+                $kolom .= $key_kolom.'.skor '. $key_kolom.', ';
+                $nilai = $d['id'];
+                $penilai[] = $key_kolom;
+                $nm_penilai[] = $dnama;
+                $query_skor .=  "LEFT JOIN(
+                    SELECT I.`id` iditem,II.`skor`
+                    FROM `t_mdl1_skor_kabkota` SK
+                    JOIN `r_mdl1_item_indi` II ON II.`id`=SK.`itemindi`
+                    JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
+                    WHERE SK.`mapid`='$nilai'
+                    ) $key_kolom ON $key_kolom.iditem=IT.`id`";
+                    $key_kolom='';
+                    $kolom_nama='';
+            }
+            $kolom = rtrim($kolom, ', ');
+            $sql = "SELECT K.id NOKRITERIA,K.`nama` KRITERIA,IND.nourut NOINDI,IND.`nama` INDIKATOR,IT.`nourut` NOITEM,IT.`nama` ITEM, IND.bobot BOBOT, $kolom
+                        FROM `r_mdl1_item` IT
+                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
+                        JOIN `r_mdl1_indi` IND ON IND.`id`=SI.`indiid`
+                        JOIN  `r_mdl1_krtria` K ON K.`id`=IND.`krtriaid`
+                        JOIN `r_mdl1_aspek` A ON A.id = K.aspekid
+                        $query_skor
+                        ORDER BY IND.`nourut`,SI.nourut, IT.`nourut` ASC";
+            $query_skor='';
+            $kolom='';
+            
+            $query_results  = $this->db->query($sql)->result_array(); 
 
-    //     $this->excel->getActiveSheet()->mergeCells('C12:C20');
-    //     $this->excel->getActiveSheet()->mergeCells('C21:C24');
-    //     $this->excel->getActiveSheet()->mergeCells('C25:C30');
-    //     $this->excel->getActiveSheet()->mergeCells('C31:C42');
-    //     $this->excel->getActiveSheet()->mergeCells('C43:C46');
-    //     $this->excel->getActiveSheet()->mergeCells('C47:C54');
-    //     $this->excel->getActiveSheet()->mergeCells('C55:C63');
-    //     $this->excel->getActiveSheet()->mergeCells('C64:C73');
-    //     $this->excel->getActiveSheet()->mergeCells('C74:C76');
-    //     $this->excel->getActiveSheet()->mergeCells('C77:C80');
-    //     $this->excel->getActiveSheet()->mergeCells('C81:C87');
-    //     $this->excel->getActiveSheet()->mergeCells('C88:C92');
-    //     $this->excel->getActiveSheet()->mergeCells('C93:C96');
-    //     $this->excel->getActiveSheet()->mergeCells('C97:C102');
-    //     $this->excel->getActiveSheet()->mergeCells('C103:C107');
-    //     $this->excel->getActiveSheet()->mergeCells('C108:C110');
-    //     $this->excel->getActiveSheet()->mergeCells('C111:C115');
-    //     $this->excel->getActiveSheet()->mergeCells('C116:C119');
-    //     $this->excel->getActiveSheet()->mergeCells('C120:C124');
-    //     $this->excel->getActiveSheet()->mergeCells('C125:C136');
-    //     $this->excel->getActiveSheet()->mergeCells('C137:C144');
-    //     $this->excel->getActiveSheet()->mergeCells('C145:C149');
-    //     $this->excel->getActiveSheet()->mergeCells('C150:C162');
-    //     $this->excel->getActiveSheet()->mergeCells('C163:C176');
+            $countKriteria = array();
+            $countIndikator = array();
 
-    //     $this->excel->getActiveSheet()->mergeCells('D12:D20');
-    //     $this->excel->getActiveSheet()->mergeCells('D21:D24');
-    //     $this->excel->getActiveSheet()->mergeCells('D25:D30');
-    //     $this->excel->getActiveSheet()->mergeCells('D31:D42');
-    //     $this->excel->getActiveSheet()->mergeCells('D43:D46');
-    //     $this->excel->getActiveSheet()->mergeCells('D47:D54');
-    //     $this->excel->getActiveSheet()->mergeCells('D55:D63');
-    //     $this->excel->getActiveSheet()->mergeCells('D64:D73');
-    //     $this->excel->getActiveSheet()->mergeCells('D74:D76');
-    //     $this->excel->getActiveSheet()->mergeCells('D77:D80');
-    //     $this->excel->getActiveSheet()->mergeCells('D81:D87');
-    //     $this->excel->getActiveSheet()->mergeCells('D88:D92');
-    //     $this->excel->getActiveSheet()->mergeCells('D93:D96');
-    //     $this->excel->getActiveSheet()->mergeCells('D97:D102');
-    //     $this->excel->getActiveSheet()->mergeCells('D103:D107');
-    //     $this->excel->getActiveSheet()->mergeCells('D108:D110');
-    //     $this->excel->getActiveSheet()->mergeCells('D111:D115');
-    //     $this->excel->getActiveSheet()->mergeCells('D116:D119');
-    //     $this->excel->getActiveSheet()->mergeCells('D120:D124');
-    //     $this->excel->getActiveSheet()->mergeCells('D125:D136');
-    //     $this->excel->getActiveSheet()->mergeCells('D137:D144');
-    //     $this->excel->getActiveSheet()->mergeCells('D145:D149');
-    //     $this->excel->getActiveSheet()->mergeCells('D150:D162');
-    //     $this->excel->getActiveSheet()->mergeCells('D163:D176');
+            foreach ($query_results as $data) {
+                if (isset($countKriteria[$data['KRITERIA']])) {
+                    $countKriteria[$data['KRITERIA']]++;
+                } else {
+                    $countKriteria[$data['KRITERIA']] = 1;
+                }
+                if (isset($countIndikator[$data['INDIKATOR']])) {
+                    $countIndikator[$data['INDIKATOR']]++;
+                } else {
+                    $countIndikator[$data['INDIKATOR']] = 1;
+                }
+            }
+            
+            $this->excel->getActiveSheet()->setCellValue('A'.$rowKab, "Nama Kota");
+            $this->excel->getActiveSheet()->setCellValue('B'.$rowKab, ":");
+            $this->excel->getActiveSheet()->setCellValue('C'.$rowKab, $namakab);
 
+            $list_kab[$key_kab] = $namakab; // Store each namakab in an array at the key
 
-    //     $this->excel->getActiveSheet()->mergeCells('H12:H63');
-    //     $this->excel->getActiveSheet()->mergeCells('H64:H102');
-    //     $this->excel->getActiveSheet()->mergeCells('H103:H119');
-    //     $this->excel->getActiveSheet()->mergeCells('H120:H149');
-    //     $this->excel->getActiveSheet()->mergeCells('H150:H176');
+            $cell_skor = array();
+            $cell_bobot = array();
+            $nm_skor = array();
+            $nm_nilai_terbobot = array();
+            $nm_skor = '';
+            $nm_nilai_terbobot = '';
+            $judul= array('No Kriteria','Kriteria','No Indi','Indikator','No Item','Item','Bobot');
+            foreach($nm_penilai as $nm){
+                $nm_skor[] = 'Skor '.$nm;
+                $nm_nilai_terbobot[] = 'Nilai Terbobot '.$nm;
+            }
+            $merge_judul = array_merge($judul,$nm_penilai,$nm_skor,$nm_nilai_terbobot,array('Rata-Rata'));
 
-    //     $this->excel->getActiveSheet()->mergeCells('I12:I63');
-    //     $this->excel->getActiveSheet()->mergeCells('I64:I102');
-    //     $this->excel->getActiveSheet()->mergeCells('I103:I119');
-    //     $this->excel->getActiveSheet()->mergeCells('I120:I149');
-    //     $this->excel->getActiveSheet()->mergeCells('I150:I176');
+            if (!empty($query_results)) {
+                // $columnNames = array_keys($query_results[0]);
+                $columnNames = $merge_judul;
+                $jmlh_penilai =count($nm_penilai);
+                $iterasi = 1;
+                foreach ($columnNames as $index => $columnName) {
+                    $this->excel->getActiveSheet()->setCellValue($excelColumn[$index] . $rowJudul, $columnName);
+                    if($index>=7 && $iterasi <= $jmlh_penilai){
+                        $cell_nilai[] = $index; 
+                        $cell_skor[] = $index+$jmlh_penilai; 
+                        $cell_bobot[] = $index+$jmlh_penilai*2; 
+                        $iterasi++;
+                    }
+                } 
+            }
+            
+            foreach ($countKriteria as $criteria => $count) {
+                $endRow = $row + $count - 1;
+                $this->excel->getActiveSheet()->mergeCells("A{$row}:A{$endRow}"); 
+                $this->excel->getActiveSheet()->mergeCells("B{$row}:B{$endRow}"); 
+                $row = $endRow + 1; 
+            }
 
-    //     $this->excel->getActiveSheet()->mergeCells('A177:k177');
+            $averageColumn = end($cell_bobot) + 1;
 
-    //     $status_sql = "SELECT IT.`nourut` nr,IND.nourut,K.id nokr,K.`nama` nmkriteria,IND.nourut noindi,IND.`nama` nmindi,SI.`nama` nmsubindi,IT.`nama` nmitem,SKOR.skor,IND.bobot,RES.ksmplan, RES.saran
-    //                         FROM `r_mdl1_item` IT
-    //                         JOIN `r_mdl1_sub_indi` SI ON SI.`id`=IT.`subindiid` AND SI.isprov='N'
-    //                         JOIN `r_mdl1_indi` IND ON IND.`id`=SI.`indiid`
-    //                         JOIN  `r_mdl1_krtria` K ON K.`id`=IND.`krtriaid`
-    //                         JOIN `r_mdl1_aspek` A ON A.id = K.aspekid
-    //                         LEFT JOIN `t_mdl1_resume_kabkota` RES ON RES.`aspekid` = A.id AND RES.mapid ='$nilai'
-    //                         LEFT JOIN(
-    //                                 SELECT I.`id` iditem,II.`skor`
-    //                                 FROM `t_mdl1_skor_kabkota` SK
-    //                                 JOIN `r_mdl1_item_indi` II ON II.`id`=SK.`itemindi`
-    //                                 JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-    //                                 WHERE SK.`mapid`='$nilai'
-    //                         ) SKOR ON SKOR.iditem=IT.`id`
-    //             ORDER BY IND.`nourut`,SI.nourut, IT.`nourut` ASC";
+            $row = $rowawal;
+            foreach ($countIndikator as $criteria => $count) {
+                $endRow = $row + $count - 1;
+                foreach($cell_skor as $c){
+                    $knilai = $c-$jmlh_penilai;
+                    $ncells = $excelColumn[$knilai].$row.':'.$excelColumn[$knilai].$endRow;
+                    $this->excel->getActiveSheet()->setCellValue($excelColumn[$c].$row,"=10*sum($ncells)/count($ncells)");
+                    $this->excel->getActiveSheet()->mergeCells($excelColumn[$c].$row.':'.$excelColumn[$c].$endRow);
+                }
 
+                foreach($cell_bobot as $b)
+                {
+                    $kskor = $b-$jmlh_penilai;
+                    $skor = "G".$row.'*'.$excelColumn[$kskor].$row; 
+                    $firstIndex = $cell_bobot[0];
+                    $lastIndex = $cell_bobot[count($cell_bobot) - 1];
+                    $averageRange = $excelColumn[$firstIndex] . $row . ':' . $excelColumn[$lastIndex] . $row;
+                    $average = "AVERAGE(" . $averageRange . ")";
 
-    //     $list_data  = $this->db->query($status_sql);
-    //     $excelColumn = range('A', 'ZZ');
-    //     $index_excelColumn = 0;
-    //     $row = 12;
-    //     $nol = '';
-    //     $no_item = 1;
-    //     foreach ($list_data->result() as $value) {
-    //         ($value->nr == 1 ? $no_item = 1 : $no_item += 1);
-    //         $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->nokr);
-    //         $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->nmkriteria);
-    //         $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->noindi);
-    //         $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->nmindi);
-    //         $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $no_item);
-    //         // $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->nr);
-    //         $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->nmitem);
-    //         $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->skor);
-    //         $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, " " . $value->ksmplan);
-    //         $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->saran);
-    //         $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, '');
-    //         $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value->bobot / 100);
+                    $rekap[$key_kab][] = $excelColumn[$averageColumn].$row;
+                    $this->excel->getActiveSheet()->setCellValue($excelColumn[$b].$row,"=$skor");
+                    $this->excel->getActiveSheet()->mergeCells($excelColumn[$b].$row.':'.$excelColumn[$b].$endRow);
+                    $this->excel->getActiveSheet()->setCellValue($excelColumn[$averageColumn].$row,"=$average");
+                    $this->excel->getActiveSheet()->mergeCells($excelColumn[$averageColumn].$row.':'.$excelColumn[$averageColumn].$endRow);
+                } 
 
-    //         $index_excelColumn = 0;
-    //         $row++;
-    //     }
+                $this->excel->getActiveSheet()->mergeCells("C{$row}:C{$endRow}"); 
+                $this->excel->getActiveSheet()->mergeCells("D{$row}:D{$endRow}"); 
+                $this->excel->getActiveSheet()->mergeCells("G{$row}:G{$endRow}"); 
+                $row = $endRow + 1; 
+            }
 
-    //     $this->excel->getActiveSheet()->mergeCells('J12:J20');
-    //     $this->excel->getActiveSheet()->setCellValue("J12", "=10*SUM(G12:G20)/COUNT(E12:E20))");
-    //     $this->excel->getActiveSheet()->mergeCells('J21:J24');
-    //     $this->excel->getActiveSheet()->setCellValue("J21", "=10*SUM(G21:G24)/COUNT(E21:E24))");
-    //     $this->excel->getActiveSheet()->mergeCells('J25:J30');
-    //     $this->excel->getActiveSheet()->setCellValue("J25", "=10*SUM(G25:G30)/COUNT(E25:E30))");
-    //     $this->excel->getActiveSheet()->mergeCells('J31:J42');
-    //     $this->excel->getActiveSheet()->setCellValue("J31", "=10*SUM(G31:G42)/COUNT(E31:E42))");
-    //     $this->excel->getActiveSheet()->mergeCells('J43:J46');
-    //     $this->excel->getActiveSheet()->setCellValue("J43", "=10*SUM(G43:G46)/COUNT(E43:E46))");
-    //     $this->excel->getActiveSheet()->mergeCells('J47:J54');
-    //     $this->excel->getActiveSheet()->setCellValue("J47", "=10*SUM(G47:G54)/COUNT(E47:E54))");
-    //     $this->excel->getActiveSheet()->mergeCells('J55:J63');
-    //     $this->excel->getActiveSheet()->setCellValue("J55", "=10*SUM(G55:G63)/COUNT(E55:E63))");
-    //     $this->excel->getActiveSheet()->mergeCells('J64:J73');
-    //     $this->excel->getActiveSheet()->setCellValue("J64", "=10*SUM(G64:G73)/COUNT(E64:E73))");
-    //     $this->excel->getActiveSheet()->mergeCells('J74:J76');
-    //     $this->excel->getActiveSheet()->setCellValue("J74", "=10*SUM(G74:G76)/COUNT(E74:E76))");
-    //     $this->excel->getActiveSheet()->mergeCells('J77:J80');
-    //     $this->excel->getActiveSheet()->setCellValue("J77", "=10*SUM(G77:G80)/COUNT(E77:E80))");
-    //     $this->excel->getActiveSheet()->mergeCells('J81:J87');
-    //     $this->excel->getActiveSheet()->setCellValue("J81", "=10*SUM(G81:G87)/COUNT(E81:E87))");
-    //     $this->excel->getActiveSheet()->mergeCells('J88:J92');
-    //     $this->excel->getActiveSheet()->setCellValue("J88", "=10*SUM(G88:G92)/COUNT(E88:E92))");
-    //     $this->excel->getActiveSheet()->mergeCells('J93:J96');
-    //     $this->excel->getActiveSheet()->setCellValue("J93", "=10*SUM(G93:G96)/COUNT(E93:E96))");
-    //     $this->excel->getActiveSheet()->mergeCells('J97:J102');
-    //     $this->excel->getActiveSheet()->setCellValue("J97", "=10*SUM(G97:G102)/COUNT(E97:E102))");
-    //     $this->excel->getActiveSheet()->mergeCells('J103:J107');
-    //     $this->excel->getActiveSheet()->setCellValue("J103", "=10*SUM(G103:G107)/COUNT(E103:E107))");
-    //     $this->excel->getActiveSheet()->mergeCells('J108:J110');
-    //     $this->excel->getActiveSheet()->setCellValue("J108", "=10*SUM(G108:G110)/COUNT(E108:E110))");
-    //     $this->excel->getActiveSheet()->mergeCells('J111:J115');
-    //     $this->excel->getActiveSheet()->setCellValue("J111", "=10*SUM(G111:G115)/COUNT(E111:E115))");
-    //     $this->excel->getActiveSheet()->mergeCells('J116:J119');
-    //     $this->excel->getActiveSheet()->setCellValue("J116", "=10*SUM(G116:G119)/COUNT(E116:E119))");
-    //     $this->excel->getActiveSheet()->mergeCells('J120:J124');
-    //     $this->excel->getActiveSheet()->setCellValue("J120", "=10*SUM(G120:G124)/COUNT(E120:E124))");
-    //     $this->excel->getActiveSheet()->mergeCells('J125:J136');
-    //     $this->excel->getActiveSheet()->setCellValue("J125", "=10*SUM(G125:G136)/COUNT(E125:E136))");
-    //     $this->excel->getActiveSheet()->mergeCells('J137:J144');
-    //     $this->excel->getActiveSheet()->setCellValue("J137", "=10*SUM(G137:G144)/COUNT(E137:E144))");
-    //     $this->excel->getActiveSheet()->mergeCells('J145:J149');
-    //     $this->excel->getActiveSheet()->setCellValue("J145", "=10*SUM(G145:G149)/COUNT(E145:E149))");
-    //     $this->excel->getActiveSheet()->mergeCells('J150:J162');
-    //     $this->excel->getActiveSheet()->setCellValue("J150", "=10*SUM(G150:G162)/COUNT(E150:E162))");
-    //     $this->excel->getActiveSheet()->mergeCells('J163:J176');
-    //     $this->excel->getActiveSheet()->setCellValue("J163", "=10*SUM(G163:G176)/COUNT(E163:E176))");
+            $row = $rowawal;
+            $index_excelColumn = 0;
+            foreach ($query_results as $value) {
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value['NOKRITERIA']);
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value['KRITERIA']);
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value['NOINDI']);
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value['INDIKATOR']);
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value['NOITEM']);
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value['ITEM']);
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, ($value['BOBOT'] / 100));
+                foreach($penilai as $pe)
+                {
+                    $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $value[$pe]);
+                }
+                $lastIndex = $index_excelColumn;
+                $index_excelColumn = 0;
+                $row++;
+            }
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$lastIndex].$row, "Total");
+            $this->excel->getActiveSheet()->mergeCells($excelColumn[$lastIndex].$row.":".$excelColumn[$lastIndex+$jmlh_penilai-1].$row);
+            
+            $index_excelColumn = $lastIndex+$jmlh_penilai-1;
+            $average = $jmlh_penilai+1;
+            $cell_rata2 = array();
 
-    //     $this->excel->getActiveSheet()->getStyle('J12:J177')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
+            for($i=0;$i<$average;$i++)
+            {
+                $index_excelColumn++;
+                $cell_rata2[]=$index_excelColumn;
+                $endofrow = $row-1;
+                $total = $excelColumn[$index_excelColumn].$rowawal.":".$excelColumn[$index_excelColumn].$endofrow;
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn].$row, "=SUM($total)");
+            }
+            $cell_sum[] = $excelColumn[$index_excelColumn].$row;
+            
 
-    //     $this->excel->getActiveSheet()->mergeCells('K12:K20');
-    //     $this->excel->getActiveSheet()->mergeCells('K21:K24');
-    //     $this->excel->getActiveSheet()->mergeCells('K25:K30');
-    //     $this->excel->getActiveSheet()->mergeCells('K31:K42');
-    //     $this->excel->getActiveSheet()->mergeCells('K43:K46');
-    //     $this->excel->getActiveSheet()->mergeCells('K47:K54');
-    //     $this->excel->getActiveSheet()->mergeCells('K55:K63');
-    //     $this->excel->getActiveSheet()->mergeCells('K64:K73');
-    //     $this->excel->getActiveSheet()->mergeCells('K74:K76');
-    //     $this->excel->getActiveSheet()->mergeCells('K77:K80');
-    //     $this->excel->getActiveSheet()->mergeCells('K81:K87');
-    //     $this->excel->getActiveSheet()->mergeCells('K88:K92');
-    //     $this->excel->getActiveSheet()->mergeCells('K93:K96');
-    //     $this->excel->getActiveSheet()->mergeCells('K97:K102');
-    //     $this->excel->getActiveSheet()->mergeCells('K103:K107');
-    //     $this->excel->getActiveSheet()->mergeCells('K108:K110');
-    //     $this->excel->getActiveSheet()->mergeCells('K111:K115');
-    //     $this->excel->getActiveSheet()->mergeCells('K116:K119');
-    //     $this->excel->getActiveSheet()->mergeCells('K120:K124');
-    //     $this->excel->getActiveSheet()->mergeCells('K125:K136');
-    //     $this->excel->getActiveSheet()->mergeCells('K137:K144');
-    //     $this->excel->getActiveSheet()->mergeCells('K145:K149');
-    //     $this->excel->getActiveSheet()->mergeCells('K150:K162');
-    //     $this->excel->getActiveSheet()->mergeCells('K163:K176');
+            $row++;
+            
+            $index1 = $cell_rata2[0];
+            $index2 = $cell_rata2[count($cell_rata2) - 2];
+            
+            $range = $lastIndex+$jmlh_penilai*2;
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$lastIndex].$row, "Range");
+            $this->excel->getActiveSheet()->mergeCells($excelColumn[$lastIndex].$row.":".$excelColumn[$lastIndex+$jmlh_penilai*2-1].$row);
+            
+            $valrange = $excelColumn[$index1].($row-1).":".$excelColumn[$index2].($row-1);
+            $cellRange = $excelColumn[$range].$row;
+            $cell_range[]=$cellRange;
+            $this->excel->getActiveSheet()->setCellValue($cellRange, "=MAX($valrange)-MIN($valrange)");
+            
+            $row++;
+            
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$lastIndex].$row, "Coeffisien Variasi");
+            $this->excel->getActiveSheet()->mergeCells($excelColumn[$lastIndex].$row.":".$excelColumn[$lastIndex+$jmlh_penilai*2-1].$row);
+            
+            $firstrange = $valrange = $excelColumn[$index1].($row-2).":".$excelColumn[$index2].($row-2);
+            $secondrange = $excelColumn[($index2+1)].($row-2);
+            $valcoeff = "=STDEV(".$firstrange.")/".$secondrange."*100";
+            $cellCoeff = $excelColumn[$range].$row;
+            $cell_coeff[] = $cellCoeff;
+            $this->excel->getActiveSheet()->setCellValue($cellCoeff, "$valcoeff");            
 
-    //     $this->excel->getActiveSheet()->mergeCells('L12:L20');
-    //     $this->excel->getActiveSheet()->setCellValue("L12", "=J12*K12");
-    //     $this->excel->getActiveSheet()->mergeCells('L21:L24');
-    //     $this->excel->getActiveSheet()->setCellValue("L21", "=J21*K21");
-    //     $this->excel->getActiveSheet()->mergeCells('L25:L30');
-    //     $this->excel->getActiveSheet()->setCellValue("L25", "=J25*K25");
-    //     $this->excel->getActiveSheet()->mergeCells('L31:L42');
-    //     $this->excel->getActiveSheet()->setCellValue("L31", "=J31*K31");
-    //     $this->excel->getActiveSheet()->mergeCells('L43:L46');
-    //     $this->excel->getActiveSheet()->setCellValue("L43", "=J43*K43");
-    //     $this->excel->getActiveSheet()->mergeCells('L47:L54');
-    //     $this->excel->getActiveSheet()->setCellValue("L47", "=J47*K47");
-    //     $this->excel->getActiveSheet()->mergeCells('L55:L63');
-    //     $this->excel->getActiveSheet()->setCellValue("L55", "=J55*K55");
-    //     $this->excel->getActiveSheet()->mergeCells('L64:L73');
-    //     $this->excel->getActiveSheet()->setCellValue("L64", "=J64*K64");
-    //     $this->excel->getActiveSheet()->mergeCells('L74:L76');
-    //     $this->excel->getActiveSheet()->setCellValue("L74", "=J74*K74");
-    //     $this->excel->getActiveSheet()->mergeCells('L77:L80');
-    //     $this->excel->getActiveSheet()->setCellValue("L77", "=J77*K77");
-    //     $this->excel->getActiveSheet()->mergeCells('L81:L87');
-    //     $this->excel->getActiveSheet()->setCellValue("L81", "=J81*K81");
-    //     $this->excel->getActiveSheet()->mergeCells('L88:L92');
-    //     $this->excel->getActiveSheet()->setCellValue("L88", "=J88*K88");
-    //     $this->excel->getActiveSheet()->mergeCells('L93:L96');
-    //     $this->excel->getActiveSheet()->setCellValue("L93", "=J93*K93");
-    //     $this->excel->getActiveSheet()->mergeCells('L97:L102');
-    //     $this->excel->getActiveSheet()->setCellValue("L97", "=J97*K97");
-    //     $this->excel->getActiveSheet()->mergeCells('L103:L107');
-    //     $this->excel->getActiveSheet()->setCellValue("L103", "=J103*K103");
-    //     $this->excel->getActiveSheet()->mergeCells('L108:L110');
-    //     $this->excel->getActiveSheet()->setCellValue("L108", "=J108*K108");
-    //     $this->excel->getActiveSheet()->mergeCells('L111:L115');
-    //     $this->excel->getActiveSheet()->setCellValue("L111", "=J111*K111");
-    //     $this->excel->getActiveSheet()->mergeCells('L116:L119');
-    //     $this->excel->getActiveSheet()->setCellValue("L116", "=J116*K116");
-    //     $this->excel->getActiveSheet()->mergeCells('L120:L124');
-    //     $this->excel->getActiveSheet()->setCellValue("L120", "=J120*K120");
-    //     $this->excel->getActiveSheet()->mergeCells('L125:L136');
-    //     $this->excel->getActiveSheet()->setCellValue("L125", "=J125*K125");
-    //     $this->excel->getActiveSheet()->mergeCells('L137:L144');
-    //     $this->excel->getActiveSheet()->setCellValue("L137", "=J137*K137");
-    //     $this->excel->getActiveSheet()->mergeCells('L145:L149');
-    //     $this->excel->getActiveSheet()->setCellValue("L145", "=J145*K145");
-    //     $this->excel->getActiveSheet()->mergeCells('L150:L162');
-    //     $this->excel->getActiveSheet()->setCellValue("L150", "=J150*K150");
-    //     $this->excel->getActiveSheet()->mergeCells('L163:L176');
-    //     $this->excel->getActiveSheet()->setCellValue("L163", "=J163*K163");
+            $penilai ='';
+            $index_excelColumn ='';
+
+            $rowKab = $row+3;
+            $rowJudul = $row+4;
+            $row = $row+5;
+            $rowawal = $row;
+        }           
 
 
-    //     $this->excel->getActiveSheet()->getStyle('L12:L177')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
+        $this->excel->createSheet();
+        $this->excel->setActiveSheetIndex(1);
+        $this->excel->getActiveSheet()->setTitle("Rekap Nilai");
 
-    //     //lebar kolom
-    //     $this->excel->getActiveSheet()->getColumnDimension("A")->setWidth("8.64");
-    //     $this->excel->getActiveSheet()->getColumnDimension("B")->setWidth("27");
-    //     $this->excel->getActiveSheet()->getColumnDimension("C")->setWidth("3.3");
-    //     $this->excel->getActiveSheet()->getColumnDimension("D")->setWidth("55");
-    //     $this->excel->getActiveSheet()->getColumnDimension("E")->setWidth("4.64");
-    //     $this->excel->getActiveSheet()->getColumnDimension("F")->setWidth("80");
-    //     $this->excel->getActiveSheet()->getColumnDimension("G")->setWidth("10");
-    //     $this->excel->getActiveSheet()->getColumnDimension("H")->setWidth("57");
-    //     $this->excel->getActiveSheet()->getColumnDimension("I")->setWidth("57");
-    //     $this->excel->getActiveSheet()->getColumnDimension("L")->setWidth("20");
-
-    //     $this->excel->getActiveSheet()->setCellValue("L177", "=SUM(L12:L176)");
-
-    //     $this->excel->getActiveSheet()->getStyle('D12:I175')->getAlignment()->setWrapText(true);
-    //     $this->excel->getActiveSheet()->getStyle('G12:G175')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-    //     $this->excel->getActiveSheet()->getStyle('J12:L175')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-    //     $this->excel->getActiveSheet()->getStyle('A176:L176')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $row = 3;
 
 
-    //     $this->excel->getActiveSheet()->getStyle('A12:A176')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
-    //     $this->excel->getActiveSheet()->getStyle('B12:B176')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
-    //     $this->excel->getActiveSheet()->getStyle('C12:C176')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
-    //     $this->excel->getActiveSheet()->getStyle('D12:D176')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
-    //     $this->excel->getActiveSheet()->getStyle('E12:E176')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
-    //     $this->excel->getActiveSheet()->getStyle('H12:H176')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
-    //     $this->excel->getActiveSheet()->getStyle('I12:I176')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
-    //     $this->excel->getActiveSheet()->getStyle('J12:J176')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
-    //     $this->excel->getActiveSheet()->getStyle('K12:K176')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
-    //     $this->excel->getActiveSheet()->getStyle('l12:l176')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        $o=1;
+        $indi = count($countIndikator);
+        
+        $columnIndex = 1;
+        for($o;$o<=$indi;$o++){
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$columnIndex++].($row-1),"$o");
+        }
+        $this->excel->getActiveSheet()->setCellValue($excelColumn[$columnIndex++].($row-1),"Total Nilai");
+        $this->excel->getActiveSheet()->setCellValue($excelColumn[$columnIndex++].($row-1),"Range");
+        $this->excel->getActiveSheet()->setCellValue($excelColumn[$columnIndex++].($row-1),"Koefisien Variasi");
 
-    //     //$this->excel->getActiveSheet()->getStyle('B12')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
-    //     $this->excel->getActiveSheet()->getStyle('D12:I176')->getAlignment()->setWrapText(true);
-    //     $this->excel->getActiveSheet()->getStyle('G12:G176')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-    //     $this->excel->getActiveSheet()->getStyle('J12:L176')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-    //     $this->excel->getActiveSheet()->getStyle('A177:L177')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $i = 0;
+        
+        foreach($rekap as $key => $val){
+            $this->excel->getActiveSheet()->setCellValue("A".$row,"='Hasil Penilaian'!$key");
+            
+            $value = array_unique($val);
+            $value = array_values($value);
+            
+            $columnIndex = 1;
+            foreach ($value as $k){
+                $this->excel->getActiveSheet()->setCellValue($excelColumn[$columnIndex++].$row,"='Hasil Penilaian'!$k");
+            }
+            
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$columnIndex].$row,"='Hasil Penilaian'!".$cell_sum[$i]."");
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[($columnIndex+1)].$row,"='Hasil Penilaian'!".$cell_range[$i]."");
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[($columnIndex+2)].$row,"='Hasil Penilaian'!".$cell_coeff[$i]."");
+            
+            $i++;
+            $row++;
+        }
+        
+        // die;
+        
+        header("Content-Type:application/vnd.ms-excel");
+        header("Content-Disposition:attachment;filename = Rekap_Nilai_Kota.xls");
+        header("Cache-Control:max-age=0");
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+        $objWriter->save("php://output");
+    }
 
-    //     //$this->excel->getActiveSheet()->getStyle('G10:G192')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); 
-    //     $this->excel->getActiveSheet()->getStyle('J10:L177')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-
-    //     //font
-    //     $this->excel->getActiveSheet()->getStyle('A1:A2')->getFont()->setName('CMIIW');
-    //     $this->excel->getActiveSheet()->getStyle('A10:A11')->getFont()->setName('CMIIW');
-    //     //bolt
-    //     $this->excel->getActiveSheet()->getStyle('A2:C3')->getFont()->setBold(true);
-    //     $this->excel->getActiveSheet()->getStyle('A10:L11')->getFont()->setBold(true);
-    //     $this->excel->getActiveSheet()->getStyle('A177:L177')->getFont()->setBold(true);
-    //     //size    
-    //     $this->excel->getActiveSheet()->getStyle('A1:D5')->getFont()->setSize(20);
-    //     $this->excel->getActiveSheet()->getStyle('A10:L11')->getFont()->setSize(12);
-    //     $this->excel->getActiveSheet()->getStyle('A177')->getFont()->setSize(18);
-    //     $this->excel->getActiveSheet()->getStyle('L177')->getFont()->setSize(18);
-
-    //     $this->excel->getActiveSheet()->setShowGridlines(False);
-
-    //     $this->excel->getActiveSheet()->getProtection()->setSheet(true);
-    //     $this->excel->getActiveSheet()->getProtection()->setSort(true);
-    //     $this->excel->getActiveSheet()->getProtection()->setInsertRows(true);
-    //     $this->excel->getActiveSheet()->getProtection()->setFormatCells(true);
-    //     $this->excel->getActiveSheet()->getProtection()->setPassword('garuda');
-
-    //     header("Content-Type:application/vnd.ms-excel");
-    //     header("Content-Disposition:attachment;filename = Modul1_" . $namakab . "_" . $user_d . ".xls");
-    //     header("Cache-Control:max-age=0");
-    //     $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
-    //     $objWriter->save("php://output");
-    // }
-
-    function rekap_penilaian_tpt_by_user()
+    function rekap_penilaian_tpt_by_user($id)
     {
         $this->load->library("Excel");
         $sharedStyleTitles = new PHPExcel_Style();
 
+        $idcomb = decrypt_base64($id);
+                $tmp = explode('_', $idcomb);
+                if (count($tmp) != 2)
+                    throw new Exception("Invalid ID");
+                $kate_wlyh = $tmp[0];
+            $idmap = $tmp[1];
+
         $this->excel->getActiveSheet()->getSheetView()->setZoomScale(50);
-        $this->excel->getSheet(0)->setTitle('Rekap Penilaian Kota');
+        $this->excel->getSheet(0)->setTitle('Rekap Penilaian Daerah');
 
         //garis
         $sharedStyleTitles->applyFromArray(
@@ -1531,30 +1615,31 @@ class PPD1_status_penilaian_kota extends CI_Controller
         $this->excel->getActiveSheet()->setCellValue("B1", "USERID");
         $this->excel->getActiveSheet()->setCellValue("C1", "NAMA");
         $this->excel->getActiveSheet()->setCellValue("D1", "NAMA PROVINSI");
-        $this->excel->getActiveSheet()->setCellValue("E1", "NAMA KOTA");
+        $this->excel->getActiveSheet()->setCellValue("E1", "NAMA KABUPATEN");
         $this->excel->getActiveSheet()->setCellValue("F1", "PERSENTASE PENILAIAN");
         $this->excel->getActiveSheet()->setCellValue("G1", "LEMBAR PERNYATAAN");
 
         //---------------isi disini--------------------
 
-        $sql = "SELECT t1.*, ROUND((COUNT(skor.id) / (SELECT COUNT(I.`id`) FROM r_mdl1_item I JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT') JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y') * 100), 2) AS persentase_penilaian,
-                CASE
-                    WHEN sttment.id != 'null' THEN 'Sudah upload'
-                    ELSE 'Belum upload'
-                END AS lembar_pernyataan
-                FROM
-                (
-                    SELECT us.group,kabkot.id AS id, kabkot.iduser AS iduser, us.userid AS userid, us.name AS name, kabkot.idkabkot AS idkabkot, prov.nama_provinsi AS nama_provinsi, kab.nama_kabupaten AS nama_kabupaten 
-                    FROM `tbl_user_kabkot` kabkot
-                    JOIN tbl_user us ON kabkot.iduser = us.id
-                    JOIN kabupaten kab ON kabkot.idkabkot = kab.id
-                    JOIN provinsi prov ON kab.prov_id = prov.id_kode
-                ) t1
-                LEFT JOIN t_mdl1_skor_kabkota skor ON t1.id = skor.mapid
-                LEFT JOIN t_mdl1_sttment_kabkota sttment ON t1.id = sttment.mapid
-                WHERE t1.userid NOT IN ('tpt', 'teamtpt', 'peppd01', 'novi', 'dit.peppd', 'testtpt') AND t1.nama_kabupaten LIKE 'Kota %' AND t1.group=2
-                GROUP BY t1.id
-                ORDER BY t1.userid, t1.nama_provinsi";
+        $sql = "SELECT t1.*, ROUND((COUNT(skor.id) / (SELECT COUNT(I.`id`) FROM r_mdl1_item I JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB') JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y') * 100), 2) AS persentase_penilaian,
+                        CASE
+                            WHEN sttment.id != 'null' THEN 'Sudah upload'
+                            ELSE 'Belum upload'
+                        END AS lembar_pernyataan
+                        FROM
+                        (
+                            SELECT us.group,kabkot.id AS id, kabkot.iduser AS iduser, us.userid AS userid, us.name AS name, kabkot.idkabkot AS idkabkot, prov.nama_provinsi AS nama_provinsi, kab.nama_kabupaten AS nama_kabupaten 
+                            FROM `tbl_user_kabkot` kabkot
+                            JOIN tbl_user us ON kabkot.iduser = us.id
+                            JOIN kabupaten kab ON kabkot.idkabkot = kab.id
+                            JOIN provinsi prov ON kab.prov_id = prov.id_kode
+                            WHERE prov.id=$idmap
+                        ) t1
+                        LEFT JOIN t_mdl1_skor_kabkota skor ON t1.id = skor.mapid
+                        LEFT JOIN t_mdl1_sttment_kabkota sttment ON t1.id = sttment.mapid
+                        WHERE t1.userid NOT IN ('tpt', 'teamtpt', 'peppd01', 'novi', 'dit.peppd', 'testtpt') AND t1.group=7
+                        GROUP BY t1.id
+                        ORDER BY t1.userid, t1.nama_provinsi";
         $list_data = $this->db->query($sql);
         if (!$list_data) {
             $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
@@ -1601,16 +1686,147 @@ class PPD1_status_penilaian_kota extends CI_Controller
         $this->excel->getActiveSheet()->setShowGridlines(False);
 
         header("Content-Type:application/vnd.ms-excel");
-        header("Content-Disposition:attachment;filename = rekap_peniaian_kota_tpt_by_user.xls");
+        header("Content-Disposition:attachment;filename = rekap_peniaian_tpt_daerah_by_user.xls");
         header("Cache-Control:max-age=0");
         $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
         $objWriter->save("php://output");
     }
 
-    function rekap_resume_tpt_by_user()
+    function rekap_penilaian_daerah_by_tpt($id)
     {
         $this->load->library("Excel");
         $sharedStyleTitles = new PHPExcel_Style();
+        $idcomb = decrypt_base64($id);
+                $tmp = explode('_', $idcomb);
+                if (count($tmp) != 2)
+                    throw new Exception("Invalid ID");
+                $kate_wlyh = $tmp[0];
+            $idmap = $tmp[1];
+        
+
+        $this->excel->getActiveSheet()->getSheetView()->setZoomScale(50);
+        $this->excel->getSheet(0)->setTitle('Rekap Penilaian Daerah');
+
+        //garis
+        $sharedStyleTitles->applyFromArray(
+            array(
+                'borders' =>
+                array(
+                    'bottom' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                    'top'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                    'left'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                    'right'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+                )
+            )
+        );
+
+        $this->excel->getActiveSheet()->setCellValue("A1", "NO");
+        $this->excel->getActiveSheet()->setCellValue("B1", "DAERAH");
+        $this->excel->getActiveSheet()->setCellValue("C1", "JUMLAH PENILAI YANG BELUM MENILAI");
+        $this->excel->getActiveSheet()->setCellValue("D1", "JUMLAH PENILAI");
+
+        //---------------isi disini--------------------
+
+        $sql = "SELECT A.idkabkot idkab, B.nama_kabupaten, COUNT(CASE WHEN JML.jml IS NULL THEN 1 END) AS jumlah_penilai_yang_belum_menilai, COUNT(A.idkabkot) AS jumlah_penilai
+                FROM tbl_user_kabkot A
+                JOIN `kabupaten` B ON B.`id`=A.`idkabkot`
+                JOIN `tbl_user` C ON C.id = A.iduser AND C.group=7
+                JOIN `provinsi` prov ON prov.id_kode=B.prov_id
+                LEFT JOIN(
+                        SELECT W.`idkabkot` idkab,COUNT(1) jml,W.iduser
+                        FROM `tbl_user_kabkot` W
+                        JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
+                        JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
+                        JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
+                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB','KOTA')
+                        JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
+                        WHERE 1=1
+                        GROUP BY W.`idkabkot`,W.iduser
+                    ) JML ON JML.idkab=A.`idkabkot` AND JML.`iduser` = A.iduser
+                    LEFT JOIN(
+                            SELECT W.`idkabkot` idkab,COUNT(1) jml,W.iduser
+                            FROM `tbl_user_kabkot` W
+                            JOIN `t_mdl1_resume_kabkota` RS ON RS.`mapid`=W.`id` AND RS.stts='Y'
+                            WHERE 1=1
+                            GROUP BY W.`idkabkot`,W.`iduser`
+                            ) RS ON RS.idkab=A.`idkabkot` AND RS.`iduser`=A.iduser      
+                    LEFT JOIN t_mdl1_sttment_kabkota ST ON ST.mapid=A.id
+                    WHERE C.name NOT IN('testtpt', 'testtpt2', 'Dit PEPPD') and prov.id=$idmap
+                    GROUP BY B.nama_kabupaten
+                    ORDER BY idkab ASC";
+        $list_data = $this->db->query($sql);
+        if (!$list_data) {
+            $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
+            log_message("error", $msg);
+            throw new Exception("Invalid SQL!");
+        }
+
+        //---------end isi disini----------------------
+
+        $excelColumn = range('A', 'ZZ');
+        $index_excelColumn = 0;
+        $row = 2;
+        $no = 1;
+        $count_jumlah_daerah_yang_belum_dinilai = 0;
+        $count_jumlah_daerah_yang_belum_dinilai_lebih_dari_3_tpt = 0;
+        foreach ($list_data->result() as $list) {
+            if ($list->jumlah_penilai_yang_belum_menilai == $list->jumlah_penilai) {
+                $count_jumlah_daerah_yang_belum_dinilai = $count_jumlah_daerah_yang_belum_dinilai + 1;
+            }
+
+            if ($list->jumlah_penilai_yang_belum_menilai >= 3) {
+                $count_jumlah_daerah_yang_belum_dinilai_lebih_dari_3_tpt = $count_jumlah_daerah_yang_belum_dinilai_lebih_dari_3_tpt + 1;
+            }
+
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $no);
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $list->nama_kabupaten);
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $list->jumlah_penilai_yang_belum_menilai);
+            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $list->jumlah_penilai);
+            $index_excelColumn = 0;
+            $no++;
+            $row++;
+        }
+
+        $row_belum_dinilai = $row + 1;
+        $row_belum_dinilai_oleh_tpt_kurang_dari_3 = $row + 2;
+        $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn + 1] . $row_belum_dinilai, 'Kabupaten Yang Belum dinilai sama sekali');
+        $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn + 2] . $row_belum_dinilai, $count_jumlah_daerah_yang_belum_dinilai);
+        $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn + 1] . $row_belum_dinilai_oleh_tpt_kurang_dari_3, 'Kabupaten yang Belum dinilai lebih dari 3 Tim Penilai');
+        $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn + 2] . $row_belum_dinilai_oleh_tpt_kurang_dari_3, $count_jumlah_daerah_yang_belum_dinilai_lebih_dari_3_tpt);
+
+        //lebar kolom
+        $this->excel->getActiveSheet()->getColumnDimension("A")->setWidth("8.64");
+        $this->excel->getActiveSheet()->getColumnDimension("B")->setWidth("27");
+        $this->excel->getActiveSheet()->getColumnDimension("C")->setWidth("27");
+        $this->excel->getActiveSheet()->getColumnDimension("D")->setWidth("27");
+        //font
+        $this->excel->getActiveSheet()->getStyle('A1:G1')->getFont()->setName('CMIIW');
+        //bolt
+        $this->excel->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
+        //size    
+        // $this->excel->getActiveSheet()->getStyle('A1:D5')->getFont()->setSize(20);
+
+
+
+        $this->excel->getActiveSheet()->setShowGridlines(False);
+
+        header("Content-Type:application/vnd.ms-excel");
+        header("Content-Disposition:attachment;filename = rekap_peniaian_kabupaten_tpt_by_user.xls");
+        header("Cache-Control:max-age=0");
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+        $objWriter->save("php://output");
+    }
+
+    function rekap_resume_tpt_by_user($id)
+    {
+        $this->load->library("Excel");
+        $sharedStyleTitles = new PHPExcel_Style();
+        $idcomb = decrypt_base64($id);
+                $tmp = explode('_', $idcomb);
+                if (count($tmp) != 2)
+                    throw new Exception("Invalid ID");
+                $kate_wlyh = $tmp[0];
+            $idmap = $tmp[1];
 
         $this->excel->getActiveSheet()->getSheetView()->setZoomScale(50);
         $this->excel->getSheet(0)->setTitle('Rekap Resume User');
@@ -1644,7 +1860,8 @@ class PPD1_status_penilaian_kota extends CI_Controller
                 JOIN tbl_user user ON wil.iduser = user.id
                 JOIN r_mdl1_aspek aspek ON resume_kabkota.aspekid = aspek.id
                 JOIN kabupaten kab ON wil.idkabkot = kab.id
-                WHERE kab.nama_kabupaten LIKE 'Kota %' AND user.group=2
+                JOIN provinsi prov ON prov.id_kode=kab.prov_id
+                WHERE prov.id=$idmap  AND user.group=7
                 ORDER BY iduser, mapid ASC";
         $list_data = $this->db->query($sql);
         if (!$list_data) {
@@ -1692,124 +1909,7 @@ class PPD1_status_penilaian_kota extends CI_Controller
         $this->excel->getActiveSheet()->setShowGridlines(False);
 
         header("Content-Type:application/vnd.ms-excel");
-        header("Content-Disposition:attachment;filename = rekap_resume_tpt_by_user_kota.xls");
-        header("Cache-Control:max-age=0");
-        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
-        $objWriter->save("php://output");
-    }
-
-    function rekap_penilaian_daerah_by_tpt()
-    {
-        $this->load->library("Excel");
-        $sharedStyleTitles = new PHPExcel_Style();
-
-        $this->excel->getActiveSheet()->getSheetView()->setZoomScale(50);
-        $this->excel->getSheet(0)->setTitle('Rekap Penilaian Kota');
-
-        //garis
-        $sharedStyleTitles->applyFromArray(
-            array(
-                'borders' =>
-                array(
-                    'bottom' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-                    'top'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-                    'left'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-                    'right'    => array('style' => PHPExcel_Style_Border::BORDER_THIN),
-                )
-            )
-        );
-
-        $this->excel->getActiveSheet()->setCellValue("A1", "NO");
-        $this->excel->getActiveSheet()->setCellValue("B1", "DAERAH");
-        $this->excel->getActiveSheet()->setCellValue("C1", "JUMLAH PENILAI YANG BELUM MENILAI");
-        $this->excel->getActiveSheet()->setCellValue("D1", "JUMLAH PENILAI");
-
-        //---------------isi disini--------------------
-
-        $sql = "SELECT A.idkabkot idkab, B.nama_kabupaten, COUNT(CASE WHEN JML.jml IS NULL THEN 1 END) AS jumlah_penilai_yang_belum_menilai, COUNT(A.idkabkot) AS jumlah_penilai
-                FROM tbl_user_kabkot A
-                            JOIN `kabupaten` B ON B.`id`=A.`idkabkot` 
-                            JOIN `tbl_user` C ON C.id = A.iduser AND C.group=2
-                            LEFT JOIN(
-                                        SELECT W.`idkabkot` idkab,COUNT(1) jml,W.iduser
-                                        FROM `tbl_user_kabkot` W
-                                        JOIN `t_mdl1_skor_kabkota` SKR ON SKR.`mapid`=W.`id`
-                                        JOIN `r_mdl1_item_indi` II ON II.`id`=SKR.`itemindi`
-                                        JOIN `r_mdl1_item` I ON I.`id`=II.`itemid`
-                                        JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.isprov IN ('ALL', 'KOTKAB', 'KOT')
-                                        JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid`
-                                        WHERE 1=1
-                                        GROUP BY W.`idkabkot`,W.iduser
-                                    ) JML ON JML.idkab=A.`idkabkot` AND JML.`iduser` = A.iduser
-                                LEFT JOIN(
-                                    SELECT W.`idkabkot` idkab,COUNT(1) jml,W.iduser
-                                    FROM `tbl_user_kabkot` W
-                                    JOIN `t_mdl1_resume_kabkota` RS ON RS.`mapid`=W.`id` AND RS.stts='Y'
-                                    WHERE 1=1
-                                    GROUP BY W.`idkabkot`,W.`iduser`
-                                ) RS ON RS.idkab=A.`idkabkot` AND RS.`iduser`=A.iduser      
-                            LEFT JOIN t_mdl1_sttment_kabkota ST ON ST.mapid=A.id 
-                    WHERE C.name NOT IN('testtpt', 'testtpt2', 'Dit PEPPD') AND B.`urutan`=1
-                    GROUP BY B.nama_kabupaten
-                    ORDER BY idkab ASC";
-        $list_data = $this->db->query($sql);
-        if (!$list_data) {
-            $msg = $session->userid . " " . $this->router->fetch_class() . " : " . $this->db->error()["message"];
-            log_message("error", $msg);
-            throw new Exception("Invalid SQL!");
-        }
-
-        //---------end isi disini----------------------
-
-        $excelColumn = range('A', 'ZZ');
-        $index_excelColumn = 0;
-        $row = 2;
-        $no = 1;
-        $count_jumlah_daerah_yang_belum_dinilai = 0;
-        $count_jumlah_daerah_yang_belum_dinilai_lebih_dari_3_tpt = 0;
-        foreach ($list_data->result() as $list) {
-            if ($list->jumlah_penilai_yang_belum_menilai == $list->jumlah_penilai) {
-                $count_jumlah_daerah_yang_belum_dinilai = $count_jumlah_daerah_yang_belum_dinilai + 1;
-            }
-
-            if ($list->jumlah_penilai_yang_belum_menilai >= 3) {
-                $count_jumlah_daerah_yang_belum_dinilai_lebih_dari_3_tpt = $count_jumlah_daerah_yang_belum_dinilai_lebih_dari_3_tpt + 1;
-            }
-
-            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $no);
-            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $list->nama_kabupaten);
-            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $list->jumlah_penilai_yang_belum_menilai);
-            $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn++] . $row, $list->jumlah_penilai);
-            $index_excelColumn = 0;
-            $no++;
-            $row++;
-        }
-
-        $row_belum_dinilai = $row + 1;
-        $row_belum_dinilai_oleh_tpt_kurang_dari_3 = $row + 2;
-        $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn + 1] . $row_belum_dinilai, 'Kota Yang Belum dinilai sama sekali');
-        $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn + 2] . $row_belum_dinilai, $count_jumlah_daerah_yang_belum_dinilai);
-        $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn + 1] . $row_belum_dinilai_oleh_tpt_kurang_dari_3, 'Kota yang Belum dinilai lebih dari 3 Tim Penilai');
-        $this->excel->getActiveSheet()->setCellValue($excelColumn[$index_excelColumn + 2] . $row_belum_dinilai_oleh_tpt_kurang_dari_3, $count_jumlah_daerah_yang_belum_dinilai_lebih_dari_3_tpt);
-
-        //lebar kolom
-        $this->excel->getActiveSheet()->getColumnDimension("A")->setWidth("8.64");
-        $this->excel->getActiveSheet()->getColumnDimension("B")->setWidth("27");
-        $this->excel->getActiveSheet()->getColumnDimension("C")->setWidth("27");
-        $this->excel->getActiveSheet()->getColumnDimension("D")->setWidth("27");
-        //font
-        $this->excel->getActiveSheet()->getStyle('A1:G1')->getFont()->setName('CMIIW');
-        //bolt
-        $this->excel->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
-        //size    
-        // $this->excel->getActiveSheet()->getStyle('A1:D5')->getFont()->setSize(20);
-
-
-
-        $this->excel->getActiveSheet()->setShowGridlines(False);
-
-        header("Content-Type:application/vnd.ms-excel");
-        header("Content-Disposition:attachment;filename = rekap_peniaian_kota_tpt_by_user.xls");
+        header("Content-Disposition:attachment;filename = rekap_resume_tpt_by_user_daerah.xls");
         header("Cache-Control:max-age=0");
         $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
         $objWriter->save("php://output");

@@ -147,10 +147,10 @@ var main = function(){
                          $("#csrf").val(obj.csrf_hash);
                          if(obj.status === 1){
                              $("#t_bahan > tbody").html(obj.str);
- //                            $("._wrapper_wlyh").hide();
- //                            $("._wrapper_bahan").show();
- //                            $("._wrapper_info").show();
-                             $(".stepper-status-penilaian-kabupaten-tpt").hide();
+                            // $("._wrapper_wlyh").hide();
+                            // $("._wrapper_bahan").show();
+                            // $("._wrapper_info").show();
+                             $(".stepper-status-penilaian-kabupaten-tpt-penilaian").show();
                              $("._wrapper_wlyh").hide();
                              $("._wrapper_info").show();
                              $("._wrapper_bahan").show();
@@ -197,6 +197,7 @@ var main = function(){
         
         $(".btnShwHd").click(function(){
             var _self = $(this);
+            $(".stepper-status-penilaian-kabupaten-tpt-penilaian").hide();
             var _show = _self.data("show").split(',');
             var _hide = _self.data("hide").split(',');
             var _hdrhide = _self.data("hdrhide").split(',');

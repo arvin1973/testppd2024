@@ -94,7 +94,8 @@ class PPD4_M_Dokumen_Kota extends CI_Controller
                                     SELECT K.id, K.`nama_kabupaten`,COUNT(1) jml  
                                     FROM  `t_doc_kab` D
                                     JOIN `kabupaten` K  ON K.id=D.kabid
-                                    WHERE D.`isactive`='Y'
+                                    JOIN t_doc_kab_groupuser DGU ON DGU.docid=D.id
+                                    WHERE D.`isactive`='Y' AND DGU.groupid='4'
                                     GROUP BY K.`id`
                                 ) JML ON JML.id=K.id
                         WHERE II.id='$satker' AND K.urutan='1' ";
@@ -787,6 +788,19 @@ class PPD4_M_Dokumen_Kota extends CI_Controller
                     log_message("error", $this->db->error()["message"]);
                     throw new Exception($this->db->error()["code"] . ":Failed save data2", 0);
                 }
+                // add table group doc tpt daerah
+                $this->m_ref->setTableName("t_doc_kab_groupuser");
+                $data_baru = array(
+                    "docid"      => $idd,
+                    "groupid"    => '7',
+                    "cr_dt"      => $current_date_time,
+                    "cr_by"      => $this->session->userdata(SESSION_LOGIN)->userid,
+                );
+                $status_save = $this->m_ref->save($data_baru);
+                if (!$status_save) {
+                    log_message("error", $this->db->error()["message"]);
+                    throw new Exception($this->db->error()["code"] . ":Failed save data2", 0);
+                }
 
                 $output = array(
                     // "satker"    => $satker,
@@ -942,6 +956,19 @@ class PPD4_M_Dokumen_Kota extends CI_Controller
                 $data_baru = array(
                     "docid"      => $idd,
                     "groupid"    => '4',
+                    "cr_dt"      => $current_date_time,
+                    "cr_by"      => $this->session->userdata(SESSION_LOGIN)->userid,
+                );
+                $status_save = $this->m_ref->save($data_baru);
+                if (!$status_save) {
+                    log_message("error", $this->db->error()["message"]);
+                    throw new Exception($this->db->error()["code"] . ":Failed save data2", 0);
+                }
+                // add table group doc tpt daerah
+                $this->m_ref->setTableName("t_doc_kab_groupuser");
+                $data_baru = array(
+                    "docid"      => $idd,
+                    "groupid"    => '7',
                     "cr_dt"      => $current_date_time,
                     "cr_by"      => $this->session->userdata(SESSION_LOGIN)->userid,
                 );

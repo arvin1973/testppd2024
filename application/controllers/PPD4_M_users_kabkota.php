@@ -102,7 +102,7 @@ class PPD4_M_users_kabkota extends CI_Controller {
                 // datatable column index  => database column name
                     $idx++   =>'A.`userid`', 
                     $idx++   =>'A.`name`',
-                    $idx++   =>'A.`email`',
+                    // $idx++   =>'A.`email`',
                     $idx++   =>'B.`name`',
                     $idx++   =>'C.`nama_kabupaten`',
                     $idx++   =>'D.`nama_provinsi`',
@@ -122,7 +122,7 @@ class PPD4_M_users_kabkota extends CI_Controller {
                         $sql.=" AND ( "
                                 . " A.`userid` LIKE '%".$requestData['search']['value']."%' "
                                 . " OR A.`name` LIKE '%".$requestData['search']['value']."%' "
-                                . " OR A.`email` LIKE '%".$requestData['search']['value']."%' "
+                                // . " OR A.`email` LIKE '%".$requestData['search']['value']."%' "
                                 . " OR B.`name` LIKE '%".$requestData['search']['value']."%' "
                                 . " OR C.`nama_kabupaten` LIKE '%".$requestData['search']['value']."%' "
                                 . " OR D.`nama_provinsi` LIKE '%".$requestData['search']['value']."%' "
@@ -155,7 +155,7 @@ class PPD4_M_users_kabkota extends CI_Controller {
                     $nestedData[] = $row->userid;
                     $nestedData[] = $row->name;
                   
-                    $nestedData[] = $row->email;
+                    // $nestedData[] = $row->email;
                     $nestedData[] = $row->nama_kabupaten;
                     //$nestedData[] = $row->groupname;
                     $str = "<span class='badge badge-pink'>Tidak Aktif</span>";
@@ -826,7 +826,7 @@ class PPD4_M_users_kabkota extends CI_Controller {
                 $this->load->library('email', $config);
                 $this->email->initialize($config);
                 // Email dan nama pengirim
-                $this->email->from('no-reply@bappenas.go.id', 'PPD 2022');
+                $this->email->from('no-reply@bappenas.go.id', 'PPD 2025');
                 // Email penerima
                 $this->email->to($email); // Ganti dengan email tujuan
                 // Subject email
@@ -838,8 +838,8 @@ class PPD4_M_users_kabkota extends CI_Controller {
                 . "Salam<br><br><br>"
                 . "Direktorat Pemantauan, Evaluasi, dan Pengendalian Pembangunan Daerah<br><br>"
                 . "--------------------------------------------------------------<br>"
-                . "Email ini dikirim secara otomatis oleh sistem. Anda tidak perlu membalas atau mengirim email ke alamat ini.       <br>"
-                . "© 2022 Direktorat Pemantauan, Evaluasi, dan Pengendalian Pembangunan Daerah | https://peppd.bappenas.go.id/  | dit.peppd@bappenas.go.id ");
+                . "Email ini dikirim secara otomatis oleh sistem. Anda tidak perlu membalas atau mengirim email ke alamat ini.<br>"
+                . "© 2025 Direktorat Pemantauan, Evaluasi, dan Pengendalian Pembangunan Daerah | https://peppd.bappenas.go.id/  | dit.peppd@bappenas.go.id ");
                         
                 // Tampilkan pesan sukses atau error
                 if (!$this->email->send()) {

@@ -19,7 +19,8 @@ var main = function(){
                      data: function(d){
                      },
                      "dataSrc": function ( json ) {
-                         return json.data;
+                        // console.log(json);
+                        return json.data;
                      }
                  },
                  "columnDefs": [                  

@@ -78,7 +78,7 @@
     </div>
 
 
-    <div class="row stepper-status-penilaian-kabupaten-tpt-penilaian">
+    <div class="row stepper-status-penilaian-kabupaten-tpt-penilaian" style="display: none;">
         <!-- start page title -->
         <div class="col-12" style="background-color: #f1f1f1; position: fixed; z-index: 98; border-bottom: 1px solid rgba(49, 126, 235, 0.3); margin-top: 5px; margin-left: -28px;">
             <div class="page-title-box" style="padding: 10px 0px 0px 20px; margin: 0px;">

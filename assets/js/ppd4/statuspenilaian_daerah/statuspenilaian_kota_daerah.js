@@ -23,12 +23,12 @@ var main = function(){
 
                  },
                  "columnDefs": [                  
-//                     { "targets": 0, "orderable": false },
+                    // { "targets": 0, "orderable": false },
                      { "width": "2px", "targets": 0},
                  ],
                  "lengthMenu": [[10, 20, 25, 50], [10, 20, 25, 50]],
                  "initComplete": function(settings, json) {
-     //                console.log(settings);
+                    // console.log(settings);
                  },
                  paging: true,
                  "language": {
@@ -49,6 +49,7 @@ var main = function(){
                 }
             }
         });
+        
 
         $("#export_penilaian").on("click", function(e){
 
@@ -153,7 +154,7 @@ var main = function(){
  //                            $("._wrapper_wlyh").hide();
  //                            $("._wrapper_bahan").show();
  //                            $("._wrapper_info").show();
-                             $(".stepper-status-penilaian-kota-tpt").hide();
+                             $(".stepper-status-penilaian-kota-tpt-penilaian").show();
                              $("._wrapper_wlyh").hide();
                              $("._wrapper_info").show();
                              $("._wrapper_bahan").show();
@@ -199,6 +200,7 @@ var main = function(){
         });
         
         $(".btnShwHd").click(function(){
+            $(".stepper-status-penilaian-kota-tpt-penilaian").hide();
             var _self = $(this);
             var _show = _self.data("show").split(',');
             var _hide = _self.data("hide").split(',');

@@ -114,3 +114,6 @@ ERROR - 2024-11-05 14:57:32 --> 404 Page Not Found: Assets/libs
 ERROR - 2024-11-05 14:57:32 --> 404 Page Not Found: Assets/libs
 ERROR - 2024-11-05 15:05:50 --> 404 Page Not Found: Package/css
 ERROR - 2024-11-05 15:06:02 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-11-05 15:16:18 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-11-05 15:16:18 --> 404 Page Not Found: Assets/libs
+ERROR - 2024-11-05 15:20:43 --> 404 Page Not Found: Assets/video_tutorial_3

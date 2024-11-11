@@ -420,6 +420,9 @@
                         <br/>
                         <div class="table-responsive">
                             <input type="hidden" id="inp_wlyh" />
+                            <input type="hidden" id="inp_nmwlyh" />
+                            <input type="hidden" id="inp_username" value="<?php echo $username ?>" />                            
+                            
                             <table class="table table-bordered table-hover" id="t_indi">
                                 <thead>
                                     <tr>
@@ -653,6 +656,7 @@
                                     <div class="d-flex">
                                         <!-- <a href="" id="btn_sttmntUnduhLink" target="_blank" title="Klik untuk unduh data" class="btn btn-xs btn-link">Unduh Dokumen Lembar Kerja <i class='fas fa-download' style='padding-left: 5px;'></i></a> -->
                                         <a href="" id="btn_sttmntUnduhLink" target="_blank" title="Klik untuk unduh data" class="btn btn-xs btn-primary waves-effect waves-light" style="border-radius: 0px; padding-left: 10px; padding-right: 10px; margin-left: 13px;">Unduh Lembar Kerja <i class='fas fa-download' style='padding-left: 5px;'></i></a>
+                                        
                                         <!-- <a href="" class="btn btn-xs btn-primary waves-effect waves-light" style="border-radius: 0px; padding-left: 10px; padding-right: 10px; margin-right: 5px; background-color: #EFEFEF !important; color: black; border-color: black;">Upload Ulang <i class='fas fa-sync-alt' style='padding-left: 5px;'></i></a> -->
                                         
                                         <input type="file" name="dokumen" style="margin-left: 13px;" required="" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,application/pdf">

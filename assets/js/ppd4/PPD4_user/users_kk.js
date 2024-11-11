@@ -1,7 +1,7 @@
 var main = function(){
     controller = "index.php/PPD4_M_users_kabkota";
     var datatable = function(){
-        var table = $("#dataUser_kabkota");
+        var table = $("#ppd4_dataUser_kabkota");
         var table_p = $("#t_dataProv");
         var table_kk = $("#t_dataKK");
         var datatable = table.DataTable({
@@ -24,10 +24,13 @@ var main = function(){
 
                  },
                  "columnDefs": [                  
-                     { "targets": 2, "orderable": false },
-                     { "width": "2px", "targets": 0},
-                     { "width": "150px", "targets": 1},
-//                     { "width": "80px", "targets": 2}                     
+                    { "targets": 2, "orderable": false },
+                    { "width": "15%", "targets": 0},
+                    { "width": "30%", "targets": 1},
+                    // { "width": "15%", "targets": 2},                     
+                    { "width": "30%", "targets": 2},                     
+                    { "width": "10%", "targets": 3},                     
+                    { "width": "15%", "targets": 4},                     
                  ],
                  "lengthMenu": [[10, 20, 25, 50, 100], [10, 20, 25, 50, "All"]],
                  "initComplete": function(settings, json) {

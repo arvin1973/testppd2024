@@ -91,6 +91,7 @@ var main = function(){
  //                            $("._wrapper_wlyh").hide();
  //                            $("._wrapper_bahan").show();
  //                            $("._wrapper_info").show();
+                             $(".stepper-kertas-kerja-tpt-daerah-list-penilai").show();
                              $("._wrapper_wlyh").hide();
                              $("._wrapper_info").show();
                              $("._wrapper_bahan").show();
@@ -168,7 +169,7 @@ var main = function(){
                                           "debug": false,
                                           "newestOnTop": false,
                                           "progressBar": false,
-                                          "positionClass": "toast-bottom-right",
+                                          "positionClass": "toast-bottom-left",
                                           "preventDuplicates": false,
                                           "onclick": null,
                                           "showDuration": "300",
@@ -299,7 +300,7 @@ var main = function(){
                                   "debug": false,
                                   "newestOnTop": false,
                                   "progressBar": false,
-                                  "positionClass": "toast-bottom-right",
+                                  "positionClass": "toast-bottom-left",
                                   "preventDuplicates": false,
                                   "onclick": null,
                                   "showDuration": "300",
@@ -419,7 +420,7 @@ var main = function(){
                                   "debug": false,
                                   "newestOnTop": false,
                                   "progressBar": false,
-                                  "positionClass": "toast-bottom-right",
+                                  "positionClass": "toast-bottom-left",
                                   "preventDuplicates": false,
                                   "onclick": null,
                                   "showDuration": "300",
@@ -463,6 +464,7 @@ var main = function(){
         
         $(".btnShwHd").click(function(){
             var _self = $(this);
+            $(".stepper-kertas-kerja-tpt-daerah-list-penilai").hide();
             var _show = _self.data("show").split(',');
             var _hide = _self.data("hide").split(',');
             var _hdrhide = _self.data("hdrhide").split(',');

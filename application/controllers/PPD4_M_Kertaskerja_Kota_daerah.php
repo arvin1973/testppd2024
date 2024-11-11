@@ -143,6 +143,7 @@ class PPD4_M_Kertaskerja_Kota_daerah extends CI_Controller {
                     throw new Exception(validation_errors("", ""),0);
                 }
                 
+                $link =base_url()."attachments/kertaskerja/";
                 $idcomb = decrypt_base64($this->input->post("id"));
                 
                 $tmp = explode('-', $idcomb);
@@ -212,12 +213,17 @@ class PPD4_M_Kertaskerja_Kota_daerah extends CI_Controller {
                     $tmped = "class='btnEdi' data-id='".$encrypted_id1."'";
                     $tmped .= " data-nama='".$v->name."'";
                     $tmped .= " data-file='".$v->attachments."'";
+
+                    $downl= $link.$v->attachments;
+                    $filename_kertas_kerja = str_replace(' ','_', $v->name);
+
+
                                         
-                        $str.="<tr class='bg-secondary' title='Dokumen'>";
-                        $str.="<td class='text-right'>".$no++."</td>";
-                        $str.="<td  class='text-uppercase'>".$v->name."</td>";
-                        $str.="<td  class=''><a href='$v->attachments' target='_blank' class='btn btn-xs btn-outline-info waves-purple waves-light '  title='Unduh Data'><i class='ion ion-md-archive'></i><h7 class='mt-3 mb-0'><small></small></h7></a></td>";
-                        $str.="</tr>";
+                    $str.="<tr class='bg-secondary' title='Dokumen'>";
+                    $str.="<td class='text-right'>".$no++."</td>";
+                    $str.="<td  class='text-uppercase'>".$v->name."</td>";
+                    $str.="<td  class=''><a href=".$downl." download='".$filename_kertas_kerja."_kertas_kerja' target='_blank' class='btn btn-xs btn-outline-info waves-purple waves-light '  title='Unduh Data'><i class='ion ion-md-archive'></i><h7 class='mt-3 mb-0'><small></small></h7></a></td>";
+                    $str.="</tr>";
                    
                    
                 }

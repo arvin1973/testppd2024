@@ -193,7 +193,7 @@ var main = function(){
                             $("#stts").html(obj.str_stts);
                             
                             $("._list_user").hide();
-                            $("._edituser").show();
+                            $("._edituser").css("display", "block");
                             
                         }
                         //error msg
@@ -346,7 +346,7 @@ var main = function(){
                                   "debug": false,
                                   "newestOnTop": false,
                                   "progressBar": false,
-                                  "positionClass": "toast-bottom-right",
+                                  "positionClass": "toast-bottom-left",
                                   "preventDuplicates": false,
                                   "onclick": null,
                                   "showDuration": "300",
@@ -681,7 +681,7 @@ var main = function(){
                                           "debug": false,
                                           "newestOnTop": false,
                                           "progressBar": false,
-                                          "positionClass": "toast-bottom-right",
+                                          "positionClass": "toast-bottom-left",
                                           "preventDuplicates": false,
                                           "onclick": null,
                                           "showDuration": "300",
@@ -751,7 +751,7 @@ var main = function(){
             var id      = $(this).data("id");
             var title   = $(this).data("title");
             Swal.fire({ 
-                title: "Anda yakin data dihapus?", 
+                title: "Anda yakin data dihapussssss?", 
                 text: "Hapus data "+title+" ?", 
                 type: "warning", 
                 showCancelButton: !0
@@ -788,7 +788,7 @@ var main = function(){
                                           "debug": false,
                                           "newestOnTop": false,
                                           "progressBar": false,
-                                          "positionClass": "toast-bottom-right",
+                                          "positionClass": "toast-bottom-left",
                                           "preventDuplicates": false,
                                           "onclick": null,
                                           "showDuration": "300",
@@ -896,7 +896,7 @@ var main = function(){
                                           "debug": false,
                                           "newestOnTop": false,
                                           "progressBar": false,
-                                          "positionClass": "toast-bottom-right",
+                                          "positionClass": "toast-bottom-left",
                                           "preventDuplicates": false,
                                           "onclick": null,
                                           "showDuration": "300",
@@ -1003,7 +1003,7 @@ var main = function(){
                                           "debug": false,
                                           "newestOnTop": false,
                                           "progressBar": false,
-                                          "positionClass": "toast-bottom-right",
+                                          "positionClass": "toast-bottom-left",
                                           "preventDuplicates": false,
                                           "onclick": null,
                                           "showDuration": "300",

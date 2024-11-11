@@ -560,15 +560,15 @@ class PPD7_modul1 extends CI_Controller
                                 $color_progress = "#ffd740";
                                 if ($v->jml_rsm == $jml_aspek) {
                                     if (!is_null($v->stts)) {
-                                        $str_tmp = "class='btn btn-sm btn-info waves-effect waves-light btn-status getSttmnt' data-id='" . $encrypted_id . "' data-toggle='tooltip' data-placement='top' title='klik untuk lihat detail lembar pernyataan' style='border-radius: 0px; padding-left: 10px; padding-right: 10px; background-color: #29b6f6;'";
+                                        $str_tmp = "class='btn btn-sm btn-info waves-effect waves-light btn-status getSttmnt' data-id='" . $encrypted_id . "' data-nmwlyh='" . $v->nmprov . "' data-toggle='tooltip' data-placement='top' title='klik untuk lihat detail lembar pernyataan' style='border-radius: 0px; padding-left: 10px; padding-right: 10px; background-color: #29b6f6;'";
                                         $str_icon = "<i class='fas fa-check-circle'></i>";
                                         $color_progress = "#29b6f6";
                                         $notif_warning = "";
                                     } else {
-                                        $str_tmp = "class='btn btn-sm btn-warning waves-effect waves-light btn-status getSttmnt' data-id='" . $encrypted_id . "' data-toggle='tooltip' data-placement='top' title='klik untuk isi lembar pernyataan' style='border-radius: 0px; padding-left: 10px; padding-right: 10px; background-color: #33b86c;'";
+                                        $str_tmp = "class='btn btn-sm btn-warning waves-effect waves-light btn-status getSttmnt' data-id='" . $encrypted_id . "' data-nmwlyh='" . $v->nmprov . "'  data-toggle='tooltip' data-placement='top' title='klik untuk isi lembar pernyataan' style='border-radius: 0px; padding-left: 10px; padding-right: 10px; background-color: #33b86c;'";
                                         $str_icon = "<i class='fas fa-check-circle'></i>";
                                         $color_progress = "#33b86c";
-                                        $notif_warning = "<a href='javascript:void(0);' class='getSttmnt' data-id='" . $encrypted_id . "'><p style='margin-bottom: 0px; color: red !important; font-size: 0.8rem; float: right;'>" . $str_icon . " anda belum menyelesaikan lembar pernyataan</p></a>";
+                                        $notif_warning = "<a href='javascript:void(0);' class='getSttmnt' data-id='" . $encrypted_id . "' data-nmwlyh='" . $v->nmprov . "'><p style='margin-bottom: 0px; color: red !important; font-size: 0.8rem; float: right;'>" . $str_icon . " anda belum menyelesaikan lembar pernyataan</p></a>";
                                     }
                                 }
                                 $str .= "<a href='javascript:void(0);' " . $str_tmp . ">" . $str_icon . "</a>";
@@ -697,15 +697,15 @@ class PPD7_modul1 extends CI_Controller
                                 $color_progress = "#ffd740";
                                 if ($v->jml_rsm == $jml_aspek) {
                                     if (!is_null($v->stts)) {
-                                        $str_tmp = "class='btn btn-sm btn-info waves-effect waves-light btn-status getSttmnt' data-id='" . $encrypted_id . "' title='klik untuk lihat detail lembar pernyataan' style='border-radius: 0px; padding-left: 10px; padding-right: 10px; background-color: #29b6f6;'";
+                                        $str_tmp = "class='btn btn-sm btn-info waves-effect waves-light btn-status getSttmnt' data-id='" . $encrypted_id . "' data-nmwlyh='" . $v->nmkab . "' title='klik untuk lihat detail lembar pernyataan' style='border-radius: 0px; padding-left: 10px; padding-right: 10px; background-color: #29b6f6;'";
                                         $str_icon = "<i class='fas fa-check-circle'></i>";
                                         $color_progress = "#29b6f6";
                                         $notif_warning = "";
                                     } else {
-                                        $str_tmp = "class='btn btn-sm btn-warning waves-effect waves-light btn-status getSttmnt' data-id='" . $encrypted_id . "' title='klik untuk isi lembar pernyataan' style='border-radius: 0px; padding-left: 10px; padding-right: 10px; background-color: #33b86c;'";
+                                        $str_tmp = "class='btn btn-sm btn-warning waves-effect waves-light btn-status getSttmnt' data-id='" . $encrypted_id . "' data-nmwlyh='" . $v->nmkab . "' title='klik untuk isi lembar pernyataan' style='border-radius: 0px; padding-left: 10px; padding-right: 10px; background-color: #33b86c;'";
                                         $str_icon = "<i class='fas fa-check-circle'></i>";
                                         $color_progress = "#33b86c";
-                                        $notif_warning = "<a href='javascript:void(0);' class='getSttmnt' data-id='" . $encrypted_id . "'><p style='margin-bottom: 0px; color: red !important; font-size: 0.8rem; float: right;'>" . $str_icon . " anda belum menyelesaikan lembar pernyataan</p></a>";
+                                        $notif_warning = "<a href='javascript:void(0);' class='getSttmnt' data-id='" . $encrypted_id . "' data-nmwlyh='" . $v->nmkab . "'><p style='margin-bottom: 0px; color: red !important; font-size: 0.8rem; float: right;'>" . $str_icon . " anda belum menyelesaikan lembar pernyataan</p></a>";
                                     }
                                 }
                                 $str .= "<a href='javascript:void(0);' " . $str_tmp . ">" . $str_icon . "</a>";
@@ -836,15 +836,15 @@ class PPD7_modul1 extends CI_Controller
                                 $color_progress = "#ffd740";
                                 if ($v->jml_rsm == $jml_aspek) {
                                     if (!is_null($v->stts)) {
-                                        $str_tmp = "class='btn btn-sm btn-info waves-effect waves-light btn-status getSttmnt' data-id='" . $encrypted_id . "' title='klik untuk lihat detail lembar pernyataan' style='border-radius: 0px; padding-left: 10px; padding-right: 10px; background-color: #29b6f6;'";
+                                        $str_tmp = "class='btn btn-sm btn-info waves-effect waves-light btn-status getSttmnt' data-id='" . $encrypted_id . "' data-nmwlyh='" . $v->nmkab . "' title='klik untuk lihat detail lembar pernyataan' style='border-radius: 0px; padding-left: 10px; padding-right: 10px; background-color: #29b6f6;'";
                                         $str_icon = "<i class='fas fa-check-circle'></i>";
                                         $color_progress = "#29b6f6";
                                         $notif_warning = "";
                                     } else {
-                                        $str_tmp = "class='btn btn-sm btn-warning waves-effect waves-light btn-status getSttmnt' data-id='" . $encrypted_id . "' title='klik untuk isi lembar pernyataan' style='border-radius: 0px; padding-left: 10px; padding-right: 10px; background-color: #33b86c;'";
+                                        $str_tmp = "class='btn btn-sm btn-warning waves-effect waves-light btn-status getSttmnt' data-id='" . $encrypted_id . "' data-nmwlyh='" . $v->nmkab . "' title='klik untuk isi lembar pernyataan' style='border-radius: 0px; padding-left: 10px; padding-right: 10px; background-color: #33b86c;'";
                                         $str_icon = "<i class='fas fa-check-circle'></i>";
                                         $color_progress = "#33b86c";
-                                        $notif_warning = "<a href='javascript:void(0);' class='getSttmnt' data-id='" . $encrypted_id . "'><p style='margin-bottom: 0px; color: red !important; font-size: 0.8rem; float: right;'>" . $str_icon . " anda belum menyelesaikan lembar pernyataan</p></a>";
+                                        $notif_warning = "<a href='javascript:void(0);' class='getSttmnt' data-id='" . $encrypted_id . "' data-nmwlyh='" . $v->nmkab . "'><p style='margin-bottom: 0px; color: red !important; font-size: 0.8rem; float: right;'>" . $str_icon . " anda belum menyelesaikan lembar pernyataan</p></a>";
                                     }
                                 }
                                 $str .= "<a href='javascript:void(0);' " . $str_tmp . ">" . $str_icon . "</a>";

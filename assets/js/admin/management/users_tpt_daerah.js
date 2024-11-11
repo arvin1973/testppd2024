@@ -197,7 +197,6 @@ var main = function(){
                 }
             });
         }
-        table_detail.DataTable();
 
         table.on("click","a.getUser",function(e){
             var _self       = $(this);

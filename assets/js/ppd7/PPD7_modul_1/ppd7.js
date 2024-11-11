@@ -609,6 +609,8 @@ var main = function(){
         
         function g_sttmnt(){
             var id          =$("#inp_wlyh").val();
+            var nmwlyh      =$("#inp_nmwlyh").val();
+            var username      =$("#inp_username").val();
             clickable=false;
             loading.show();
             ajax_url = controller+"/g_det_sttmnt";
@@ -637,6 +639,11 @@ var main = function(){
                                 $("#btn_sttmntUnduhLink").attr("href",obj.link).show();
 
                             $("#mdl_sttmnt").modal("show");
+                            $("#mdl_sttmnt #lbl_jdl_wlyh").html(nmwlyh);
+
+                            var nama_kertas_kerja = nmwlyh+"_kertas_kerja_"+username;
+                            $("#btn_sttmntUnduhLink").attr("download",nama_kertas_kerja);
+                            
                             loading.hide();
                             clickable=true;
 
@@ -676,7 +683,10 @@ var main = function(){
         twlyh.on("click","a.getSttmnt",function(e){
             var _self       = $(this);
             var id          = _self.data("id");
+            var nmwlyh      = _self.data("nmwlyh");
             $("#inp_wlyh").val(id);
+            $("#inp_nmwlyh").val(nmwlyh);
+
             g_sttmnt();
         });
         var frm_sttmnt = $("#frm_sttmnt");

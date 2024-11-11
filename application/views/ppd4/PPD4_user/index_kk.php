@@ -43,25 +43,25 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header" style="background: url(<?php echo base_url(); ?>/assets/icons/bg_modal_5.jpg) no-repeat center center; background-size: cover; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover;">
-                        <h2 class="card-title" style="font-size: 12px"></h2>
+                        <h2 class="card-title"></h2>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12">
+                                <button class="btn btn-info" id="modal_add_show" style="border-radius: 0px; padding-left: 10px; padding-right: 10px;margin-right: 5px; margin-bottom: 30px;">Tambah User <i class="fas fa-plus" style="margin-left: 5px;"></i></button>
                                 <div class="table-responsive isitable">
-                                    <button class="btn btn-info" id="modal_add_show" style="border-radius: 0px; padding-left: 10px; padding-right: 10px;margin-right: 5px; margin-bottom: 30px;">Tambah User <i class="fas fa-plus" style="margin-left: 5px;"></i></button>
-                                    <table id="dataUser_kabkota" class="table table-small-font table-bordered table-striped" style="width:100%">
+                                    <table id="ppd4_dataUser_kabkota" class="table table-condensed table-bordered table-striped" style="border: 1px solid black; border-collapse: separate !important; border-spacing: 1.5px; width: 100%;">
                                         <thead style="background-color: rgb(31, 56, 100) !important; color: white;">
                                             <tr>
-                                                <th style="font-size: 12px">Id </th>
-                                                <th style="font-size: 12px">Nama</th>
-                                                <th style="font-size: 12px">Email</th>
-                                                <th style="font-size: 12px">Kabupaten</th>
-                                                <th style="font-size: 12px">Status</th>
-                                                <th style="font-size: 12px">Aksi</th>
+                                                <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black; width: 15%;"><center>Id </center></th>
+                                                <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black; width: 20%;"><center>Nama</center></th>
+                                                <!-- <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black; width: 15%;"><center>Email</center></th> -->
+                                                <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black; width: 20%;"><center>Kabupaten</center></th>
+                                                <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black; width: 15%;"><center>Status</center></th>
+                                                <th style="padding-left: 10px; padding-right: 10px; border: 1px solid black; width: 15%;"><center>Aksi</center></th>
                                             </tr>
                                         </thead>
-                                        <tbody style="font-size: 11px"></tbody>
+                                        <tbody></tbody>
                                     </table>
 
                                 </div>

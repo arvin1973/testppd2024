@@ -146,7 +146,9 @@ var main = function(){
                      {
                          $("#csrf").val(obj.csrf_hash);
                          if(obj.status === 1){
+                            $("#btnDownAll").empty();
                              $("#t_bahan > tbody").html(obj.str);
+                             $("#btnDownAll").append(obj.btn);
                             // $("._wrapper_wlyh").hide();
                             // $("._wrapper_bahan").show();
                             // $("._wrapper_info").show();
@@ -193,6 +195,12 @@ var main = function(){
             var prov   = $("#inp_wlyh").val();
             ajax_url = controller+"/penilaian_excel";
             window.open(base_url+controller+"/Download_nilai?timid="+id+"&provid="+prov);
+        });
+
+        $(document).on('click', '#downAll', function(e) {
+            e.preventDefault();
+            var kab = $(this).data('pr');
+            window.open(base_url + controller + "/downloadAllNilai?kabid=" + kab); 
         });
         
         $(".btnShwHd").click(function(){

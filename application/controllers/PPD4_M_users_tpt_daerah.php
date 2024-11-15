@@ -180,9 +180,14 @@ class PPD4_M_users_tpt_daerah extends CI_Controller {
                     $nestedData[] = "<a href='javascript:void(0)' ".$tmp." title='Daftar Wilayah Dinilai'>".$row->name."</a>";
                     $nestedData[] = $row->email;
                     $nestedData[] = $row->groupname;
-                    $str = "<span class='badge badge-pink'>Tidak Aktif</span>";
-                    if($row->active_flag=='Y')
+                    $str = "<span class='badge badge-warning'>Belum Aktif</span>";
+                    if ($row->active_flag == 'Y'){
                         $str = "<span class='badge badge-success'>Aktif</span>";
+                    }elseif($row->active_flag=='D'){
+                        $str = "<span class='badge badge-pink'>Dinonaktifkan</span>";
+                    }else{
+                        $str = "<span class='badge badge-warning'>Belum Aktif</span>";
+                    }
                     $nestedData[] = $str;
                     $nestedData[] = $row->last_access;
                     $nestedData[] = "<a href='javascript:void(0)' ".$tmp." title='Daftar Wilayah Dinilai'><i class='text fas  ion ion-md-clipboard'></i></a>  "
@@ -324,8 +329,8 @@ class PPD4_M_users_tpt_daerah extends CI_Controller {
                 }
                 
                 //LIST STATUS
-                $_arr_stts = array("Y","N");
-                $_arr_stts_lbl = array("Y"=>"Active","N"=>"Not Active");
+                $_arr_stts = array("Y","D");
+                $_arr_stts_lbl = array("Y"=>"Aktif","D"=>"Nonaktifkan");
                 $str_stts = "<option value=''> - Choose - </option>";
                 $statt='';
                 foreach ($_arr_stts as $v) {
@@ -343,6 +348,7 @@ class PPD4_M_users_tpt_daerah extends CI_Controller {
                         $statt='Tidak Aktif';
                             
                 }
+                // echo $idusr;
                 
                 $hasPlant = 'N';
                 $_arr = array("G2","G5","G6");
@@ -387,8 +393,10 @@ class PPD4_M_users_tpt_daerah extends CI_Controller {
                 foreach ($list_kab->result() as $r_kab) {
                     $id      = $r_kab->id;
                     $id1     = "kabko_".$r_kab->kodewil;
+                    $id2     = "kabko_".$r_kab->id;
                     $encrypted_id= base64_encode(openssl_encrypt($id1,"AES-128-ECB",ENCRYPT_PASS));
-                    $tmp = "class='text-danger btn btn-sm btnDel' data-id='".$encrypted_id."'";
+                    $encrypted_id2= base64_encode(openssl_encrypt($id2,"AES-128-ECB",ENCRYPT_PASS));
+                    $tmp = "class='text-danger btn btn-sm btnDel' data-id='".$encrypted_id."'. data-kab='".$encrypted_id2."'";
                     $tmp .= " data-title='".$r_kab->nama_kabupaten."'";
                     $content_k.="<tr style='background-color: #E9E9E9;' class='odd gradeX'>";
                     $content_k.="<td style=''><a class='isinilai' data-id='".encrypt_text($id)."' >".$no_k++."</a></td>";
@@ -969,7 +977,41 @@ class PPD4_M_users_tpt_daerah extends CI_Controller {
                     throw new Exception("Invalid ID");
                 $kate_wlyh = $tmp[0];
                 $wilid = $tmp[1];
+
+                $idcomb2 = decrypt_base64($this->input->post("kab"));
+                $tmp2 = explode('_', $idcomb2);
+                if(count($tmp2)!=2)
+                    throw new Exception("Invalid ID");
+                $kate_wlyh2 = $tmp2[0];
+                $wilid2 = $tmp2[1];
+
+                $satkercode = $this->session->userdata(SESSION_LOGIN)->satker;
+
+                $get_nilai = $this->db->query("SELECT t1.*, ROUND((COUNT(skor.id) / (SELECT COUNT(I.`id`) FROM r_mdl1_item I JOIN `r_mdl1_sub_indi` SI ON SI.`id`=I.`subindiid` AND SI.`isactive`='Y' AND SI.isprov IN ('ALL', 'KOTKAB', 'KAB') JOIN `r_mdl1_indi` MI ON MI.`id`=SI.`indiid` AND MI.`isactive`='Y') * 100), 2) AS persentase_penilaian,
+                        CASE
+                            WHEN sttment.id != 'null' THEN 'Sudah upload'
+                            ELSE 'Belum upload'
+                        END AS lembar_pernyataan
+                        FROM
+                        (
+                            SELECT us.satker,us.group,kabkot.id AS id, kabkot.iduser AS iduser, us.userid AS userid, us.name AS name, kabkot.idkabkot AS idkabkot, prov.nama_provinsi AS nama_provinsi, kab.nama_kabupaten AS nama_kabupaten 
+                            FROM `tbl_user_kabkot` kabkot
+                            JOIN tbl_user us ON kabkot.iduser = us.id
+                            JOIN kabupaten kab ON kabkot.idkabkot = kab.id
+                            JOIN provinsi prov ON kab.prov_id = prov.id_kode
+                        ) t1
+                        LEFT JOIN t_mdl1_skor_kabkota skor ON t1.id = skor.mapid
+                        LEFT JOIN t_mdl1_sttment_kabkota sttment ON t1.id = sttment.mapid
+                        WHERE t1.userid NOT IN ('tpt', 'teamtpt', 'peppd01', 'novi', 'dit.peppd', 'testtpt') AND t1.group=7 AND t1.satker=$satkercode AND t1.id=$wilid
+                        GROUP BY t1.id
+                        ORDER BY t1.userid, t1.nama_provinsi")->row_array();
+
+                if($get_nilai['persentase_penilaian']>0){
+                    throw new Exception($get_nilai['name']." telah melakukan input nilai ".$get_nilai['nama_kabupaten'],0);
+                }
+
                 
+
                 $this->m_ref->setTableName("tbl_user_kabkot");
                 $select = array();
                 $cond = array(

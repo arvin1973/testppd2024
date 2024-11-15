@@ -246,7 +246,7 @@ class M_users_tpitpu extends CI_Controller
                 $sql = "SELECT A.id, A.userid,A.`name`,A.email,A.`active_flag`,A.`group`,B.`groupid`,B.`name` groupname,A.satker, A.last_access
                         FROM tbl_user A
                         INNER JOIN `tbl_user_group` B ON A.`group`=B.`id`
-                        WHERE B.`id`='3' AND A.active_flag!='D'";
+                        WHERE B.`id`='3' ";//AND A.active_flag!='D'
 
                 $totalData = $this->db->query($sql)->num_rows();
                 $totalFiltered = $totalData;
@@ -294,10 +294,15 @@ class M_users_tpitpu extends CI_Controller
                     $nestedData[] = "<a href='javascript:void(0)' " . $tmp . " title='Daftar Wilayah Dinilai'>" . $row->name . "</a>";
                     $nestedData[] = $row->email;
                     $nestedData[] = $row->groupname;
-                    $str = "<span class='badge badge-pink'>Tidak Aktif</span>";
-                    if ($row->active_flag == 'Y')
-                        $str = "<span class='badge badge-success'>Aktif</span>";
-                    $nestedData[] = $str;
+                    $text = "<span class='badge badge-warning'>Belum Aktif</span>";
+                    if ($row->active_flag == 'Y'){
+                        $text = "<span class='badge badge-success'>Aktif</span>";
+                    }elseif($row->active_flag=='D'){
+                        $text = "<span class='badge badge-pink'>Dinonaktifkan</span>";
+                    }else{
+                        $text = "<span class='badge badge-warning'>Belum Aktif</span>";
+                    }
+                    $nestedData[] = $text;
                     $nestedData[] = $row->last_access;
                     $nestedData[] = "<a href='javascript:void(0)' " . $tmp . " title='Daftar Wilayah Dinilai'><i class='text fas  ion ion-md-clipboard'></i></a>  "
                         . "<a href='javascript:void(0)' " . $tmp1 . " title='Edit Data'><i class='fas fa-pencil-alt'></i></a> "
@@ -445,8 +450,8 @@ class M_users_tpitpu extends CI_Controller
                 }
 
                 //LIST STATUS
-                $_arr_stts = array("Y", "N");
-                $_arr_stts_lbl = array("Y" => "Active", "N" => "Not Active");
+                $_arr_stts = array("Y", "N","D");
+                $_arr_stts_lbl = array("Y" => "Aktif", "N" => "Belum Aktif", "D" => "Nonaktifkan");
                 $str_stts = "<option value=''> - Choose - </option>";
                 $statt = '';
                 foreach ($_arr_stts as $v) {

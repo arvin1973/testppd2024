@@ -1253,12 +1253,15 @@ class PPD1_status_penilaian_daerah extends CI_Controller
             throw new Exception("Invalid ID");
         $kate_wlyh = $tmp[0];
         $idmap = $tmp[1];
+        $nama_prov = $this->db->query("SELECT nama_provinsi FROM provinsi WHERE id=$idmap")->row_array();
+        $nama_prov = $nama_prov['nama_provinsi'];
         
         $kabkota = $this->db->query("SELECT K.id FROM `kabupaten` K 
                     JOIN `provinsi` P ON K.prov_id=P.id_kode 
                     WHERE P.id='$idmap'")->result_array();
 
         $kabkota_ids_string = implode(",", array_column($kabkota, 'id'));
+       
         
         
         $select = "SELECT W.id,W.iduser,W.idkabkot, P.nama_kabupaten, U.userid,U.name 
@@ -1279,6 +1282,10 @@ class PPD1_status_penilaian_daerah extends CI_Controller
             
             $grouped_data[$idkabkot][] = $entry; 
         }
+
+        uksort($grouped_data, function($a, $b) {
+            return $a - $b;
+        });
 
         $key_kolom = '';
         $kolom_nama = '';
@@ -1387,7 +1394,7 @@ class PPD1_status_penilaian_daerah extends CI_Controller
                 }
             }
             
-            $this->excel->getActiveSheet()->setCellValue('A'.$rowKab, "Nama Kota");
+            $this->excel->getActiveSheet()->setCellValue('A'.$rowKab, "Kota/Kabupaten");
             $this->excel->getActiveSheet()->setCellValue('B'.$rowKab, ":");
             $this->excel->getActiveSheet()->setCellValue('C'.$rowKab, $namakab);
 
@@ -1575,9 +1582,11 @@ class PPD1_status_penilaian_daerah extends CI_Controller
         }
         
         // die;
+        $file_name = "Rekap Nilai Tahap I Kab/Kota di " . $nama_prov .".xls";
+        
         
         header("Content-Type:application/vnd.ms-excel");
-        header("Content-Disposition:attachment;filename = Rekap_Nilai_Kota.xls");
+        header("Content-Disposition:attachment;filename = $file_name");
         header("Cache-Control:max-age=0");
         $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
         $objWriter->save("php://output");

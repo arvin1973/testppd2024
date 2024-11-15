@@ -1,0 +1,33 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2024-11-15 13:49:32 --> 404 Page Not Found: Package/css
+ERROR - 2024-11-15 14:07:49 --> 404 Page Not Found: Package/css
+ERROR - 2024-11-15 14:08:01 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-11-15 14:08:13 --> 404 Page Not Found: Package/css
+ERROR - 2024-11-15 14:08:25 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:08:26 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:08:49 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:08:49 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:17:39 --> 404 Page Not Found: Package/css
+ERROR - 2024-11-15 14:17:49 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-11-15 14:21:56 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-11-15 14:38:07 --> 404 Page Not Found: Assets/video_tutorial_3
+ERROR - 2024-11-15 14:39:10 --> 404 Page Not Found: Package/css
+ERROR - 2024-11-15 14:39:23 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:39:23 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:39:30 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:39:30 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:39:31 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:39:31 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:39:31 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:39:32 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:39:32 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:39:32 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:40:14 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:40:14 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:40:18 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:40:18 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:40:19 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:40:19 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:40:55 --> 404 Page Not Found: Assets/js
+ERROR - 2024-11-15 14:40:55 --> 404 Page Not Found: Assets/js

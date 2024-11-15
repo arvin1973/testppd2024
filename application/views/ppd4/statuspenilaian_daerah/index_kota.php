@@ -173,6 +173,7 @@
                     <h2 class="card-title" style="font-size: 12px"></h2>
                 </div>
                 <div class="card-body">
+                    <div id="btnDownAll"></div>
                     <div class="table-responsive">
                         <input type="hidden" id="inp_wlyh" />
                         <table class="table table-condensed table-bordered table-striped" id="t_bahan" style="border: 1px solid black; border-collapse: separate !important; border-spacing: 1.5px; width: 100%;">

@@ -779,7 +779,7 @@ class PPD1_M_Dokumen_Prov extends CI_Controller
                 $this->m_ref->setTableName("t_doc_prov");
                 $data_baru = array(
                     "provid"    => $idmap,
-                    "jenisid"    => '11',
+                    "jenisid"    => '19',
                     "judul"      => $inp_nm,
                     "tautan"    => $inp_urldoc,
                     "isactive"  => 'Y',
@@ -1503,65 +1503,6 @@ class PPD1_M_Dokumen_Prov extends CI_Controller
         }
     }
 
-    // function unduhspesifik()
-    // {
-    //     if (!$this->session->userdata(SESSION_LOGIN)) {
-    //         session_write_close();
-    //         throw new Exception("Session expired, please login", 2);
-    //     }
-
-    //     $file = $this->input->post('id');
-        
-    //     // Count total documents
-    //     $countQuery = "SELECT COUNT(tbl_jenis_doc.nama) AS jumlah 
-    //                 FROM t_doc_prov 
-    //                 JOIN tbl_jenis_doc ON t_doc_prov.jenisid = tbl_jenis_doc.id 
-    //                 WHERE t_doc_prov.isactive = 'Y' AND t_doc_prov.jenisid = $file";
-    //     $countResult = $this->db->query($countQuery)->row();
-    //     $totalDocuments = (int) $countResult->jumlah;
-
-    //     $chunkSize = 5; // Number of documents per part
-    //     $numParts = ceil($totalDocuments / $chunkSize); // Calculate total parts
-
-    //     $namafile = "provinsi_part.zip";
-    //     $zipFilePath = FCPATH . 'attachments/provinsi/' . $namafile;
-    //     $zip = new ZipArchive();
-
-    //     if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE) {
-    //         throw new Exception("Cannot open ZIP file", 3);
-    //     }
-
-    //     // Fetch and add files in chunks
-    //     for ($i = 0; $i < $numParts; $i++) {
-    //         $offset = $i * $chunkSize;
-    //         $sql = "SELECT tbl_jenis_doc.nama, t_doc_prov.judul, t_doc_prov.tautan 
-    //                 FROM t_doc_prov 
-    //                 JOIN tbl_jenis_doc ON t_doc_prov.jenisid = tbl_jenis_doc.id 
-    //                 WHERE t_doc_prov.isactive = 'Y' AND t_doc_prov.jenisid = $file 
-    //                 LIMIT $chunkSize OFFSET $offset";
-    //         $data = $this->db->query($sql)->result_array();
-
-    //         foreach ($data as $item) {
-    //             $filePath = FCPATH . 'attachments/provinsi/' . $item['tautan'];
-    //             if (file_exists($filePath)) {
-    //                 $extensi = pathinfo($item['tautan'], PATHINFO_EXTENSION);
-    //                 $judul = $item['judul'] . '.' . $extensi;
-    //                 $zip->addFile($filePath, $judul);
-    //             }
-    //         }
-    //     }
-
-    //     $zip->close();
-
-    //     if (file_exists($zipFilePath)) {
-    //         header('Content-Type: application/zip');
-    //         header('Content-Disposition: attachment; filename="' . $namafile . '"');
-    //         readfile($zipFilePath);
-    //         unlink($zipFilePath); // Remove the zip file after download
-    //     } else {
-    //         throw new Exception("Failed to create ZIP file", 4);
-    //     }
-    // }
     function d_bahaninovasi()
     {
         $this->load->library("Excel");

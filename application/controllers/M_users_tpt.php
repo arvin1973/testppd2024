@@ -285,12 +285,20 @@ class M_users_tpt extends CI_Controller
 
                     $tmp3 = "class='text-danger btn btn-sm btnDel' data-id='" . $encrypted_id . "'";
                     $tmp3 .= " data-title='" . $row->name . "'";
+                    $text = "<span class='badge badge-warning'>Belum Aktif</span>";
+                    if ($row->active_flag == 'Y'){
+                        $text = "<span class='badge badge-success'>Aktif</span>";
+                    }elseif($row->active_flag=='D'){
+                        $text = "<span class='badge badge-pink'>Dinonaktifkan</span>";
+                    }else{
+                        $text = "<span class='badge badge-warning'>Belum Aktif</span>";
+                    }
 
                     $nestedData[] = $row->userid;
                     $nestedData[] = "<a href='javascript:void(0)' " . $tmp . " title='Daftar Wilayah Dinilai'>" . $row->name . "</a>";
                     $nestedData[] = $row->email;
                     $nestedData[] = $row->groupname;
-                    $nestedData[] = ($row->active_flag == "Y" ? "<span class='badge badge-success'>Aktif</span>" : "<span class='badge badge-pink'>Tidak Aktif</span>");
+                    $nestedData[] = $text;
                     $nestedData[] = $row->last_access;
                     $nestedData[] = "<a href='javascript:void(0)' " . $tmp . " title='Daftar Wilayah Dinilai'><i class='text fas  ion ion-md-clipboard'></i></a>  "
                         . "<a href='javascript:void(0)' " . $tmp1 . " title='Edit Data'><i class='fas fa-pencil-alt'></i></a> "
@@ -440,7 +448,7 @@ class M_users_tpt extends CI_Controller
 
                 //LIST STATUS
                 $_arr_stts = array("Y", "N", "D");
-                $_arr_stts_lbl = array("Y" => "Active", "N" => "Not Active", "D" => "Delete");
+                $_arr_stts_lbl = array("Y" => "Aktif", "N" => "Belum Aktif", "D" => "Nonaktifkan");
                 $str_stts = "<option value=''> - Choose - </option>";
                 $statt = '';
                 foreach ($_arr_stts as $v) {

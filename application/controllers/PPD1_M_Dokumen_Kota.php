@@ -776,7 +776,7 @@ class PPD1_M_Dokumen_Kota extends CI_Controller
                 $this->m_ref->setTableName("t_doc_kab");
                 $data_baru = array(
                     "kabid"    => $idmap,
-                    "jenisid"      => "11",
+                    "jenisid"      => "19",
                     "judul"      => $inp_nm,
                     "tautan"    => $inp_urldoc,
                     "isactive"  => 'Y',

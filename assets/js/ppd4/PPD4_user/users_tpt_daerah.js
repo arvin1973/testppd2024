@@ -751,7 +751,7 @@ var main = function(){
             var id      = $(this).data("id");
             var title   = $(this).data("title");
             Swal.fire({ 
-                title: "Anda yakin data dihapussssss?", 
+                title: "Anda yakin data dihapus?", 
                 text: "Hapus data "+title+" ?", 
                 type: "warning", 
                 showCancelButton: !0
@@ -964,6 +964,7 @@ var main = function(){
         table_kk.on('click', 'a.btnDel', function(e){
             e.preventDefault();
             var id      = $(this).data("id");
+            var kab      = $(this).data("kab");
             var title   = $(this).data("title");
             Swal.fire({ 
                 title: "Anda yakin data dihapus?", 
@@ -976,6 +977,7 @@ var main = function(){
                     if (result.value) {
                         ajax_url = controller+"/delete_kabko";
                         ajax_data = "id="+id;
+                        ajax_data+="&kab="+kab;
                         ajax_data+="&"+csrf_name+"="+$("#csrf").val();
                         loading.show();
                         jQuery.ajax({

@@ -56,6 +56,7 @@
                                     <span class="menu-arrow"></span>
                                 </a>
                                 <ul class="nav-second-level" aria-expanded="false">
+                                    <li><a href="javascript:void(0);" class="waves-effect link_target" data-target="<?php echo site_url("PPD4_status_penilaian_daerah") ?>">Rekap Penilaian</a></li>
                                     <li><a href="javascript:void(0);" class="waves-effect link_target" data-target="<?php echo site_url("PPD4_status_penilaian_kab_daerah") ?>">Kabupaten </a></li>
                                     <li><a href="javascript:void(0);" class="waves-effect link_target" data-target="<?php echo site_url("PPD4_status_penilaian_kota_daerah") ?>">Kota</a></li>
                                  </ul>
@@ -105,7 +106,7 @@
                         <p style="font-size: 12px; line-height: 0.5; margin-bottom: 0.5rem;"><i class="fab fa-whatsapp"></i> <a href="https://wa.me/6285640970092?text=Hallo%20helpdesk%20Sistem%20Digital%20Penilaian%20PPD,%20Izin%20bertanya" target="_blank">0856 4097 0092</a> (Laily)</p>
                         <!-- <br> <a href="#" style="font-size: 12px;">0877 3871 8978</a> -->
                         <p style="font-size: 12px; line-height: 0.5; margin-bottom: 0.5rem;"><i class="fab fa-whatsapp"></i> <a href="https://wa.me/6285603050558?text=Hallo%20helpdesk%20Sistem%20Digital%20Penilaian%20PPD,%20Izin%20bertanya" target="_blank">0856 0305 0558</a> (Munawir)</p>
-                        <p style="font-size: 12px; line-height: 0.5; margin-bottom: 0.5rem;"><i class="fab fa-whatsapp"></i> <a href="https://wa.me/6281539297878?text=Hallo%20helpdesk%20Sistem%20Digital%20Penilaian%20PPD,%20Izin%20bertanya" target="_blank">0815 3939 7878</a> (Arvin)</p>                                              
+                        <p style="font-size: 12px; line-height: 0.5; margin-bottom: 0.5rem;"><i class="fab fa-whatsapp"></i> <a href="https://wa.me/6281539297878?text=Hallo%20helpdesk%20Sistem%20Digital%20Penilaian%20PPD,%20Izin%20bertanya" target="_blank">0815 3929 7878</a> (Arvin)</p>                                              
 			</p>
                     </div>
 
